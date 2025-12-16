@@ -1,0 +1,86 @@
+.yc {
+  color: #fff;
+}
+
+.yc__header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.yc__title {
+  font-size: 24px;
+}
+
+.yc__add-button {
+  border: none;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+}
+.yc__save-button {
+  border: none;
+  background: none;
+  color: #0CD27C;
+  cursor: pointer;
+}
+.material-symbols-outlined {
+    top: 5px;
+    position: relative;
+}
+
+.yc__elements {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+
+.yc__element-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 1;
+}
+
+.yc__element-button--active {
+  opacity: 1;
+}
+
+.yc__elements--dim-inactive .yc__element-button:not(.yc__element-button--active) {
+  opacity: 0.6;
+}
+
+.yc__element-icon {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.yc__content {
+  min-height: 240px;
+  display: flex;
+  justify-content: center;
+}
+
+.yc__empty {
+  margin-top: 40px;
+  text-align: center;
+  color: #c0c3d6;
+}
+
+.yc__empty-text {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.yc__empty-subtext {
+  font-size: 14px;
+}

@@ -1,0 +1,55 @@
+<section class="yc">
+  <header class="yc__header-row">
+    @if (!charactersPanelOpened()) {
+    <h1 class="yc__title">Your Characters</h1>
+    <button class="yc__add-button fs_24" (click)="onAddCharacters()">
+      Add Characters +
+    </button>
+    } @else {
+    <h1 class="yc__title color-green">Select Characters you have</h1>
+
+    @if (showCharacters()) {
+    <button class="yc__save-button fs_24" (click)="onSaveAddCharacters()">
+      Save
+      <span class="material-symbols-outlined color-green">
+        bookmark_check
+      </span>
+    </button>
+    }
+    }
+  </header>
+
+  <!-- ELEMENT FILTER -->
+  <div class="yc__elements" [class.yc__elements--dim-inactive]="shouldDimInactive()">
+    @for (type of elementTypes; track type) {
+    <button class="yc__element-button" [class.yc__element-button--active]="characterStore.activeElements().has(type)"
+      (click)="toggleElement(type)">
+      <img class="yc__element-icon" [src]="getElementIconPath(type)" />
+    </button>
+    }
+  </div>
+
+  @if (charactersArrayEmpty() && !charactersPanelOpened()) {
+  <section class="yc__empty">
+    <p class="yc__empty-text"> Looks like you haven't added any characters yet. </p>
+    <p class="yc__empty-subtext"> Click "Edit" to add characters. </p>
+  </section>
+  }
+
+  @if (charactersPanelOpened() && localstorageUserCharactersEmpty()) {
+  <section class="yc__empty">
+    <p class="yc__empty-text"> Select all characters that are exist on your account. </p>
+    <p class="yc__empty-subtext"> It’s best to choose those who are above level 70. </p>
+  </section>
+  }
+  @if (!localstorageUserCharactersEmpty()) {
+  <section class="yc__empty">
+    <p class="yc__empty-text"> {{characterStore.selectedCharacters().length}} characters selected </p>
+  </section>
+  }
+
+  @if (showCharacters() || hasUserCharactersInStorage()) {
+  <section class="yc__content">
+    <app-character-grid [characters]="displayCharacters" [activeElements]="characterStore.activeElements" />
+  </section>
+  }

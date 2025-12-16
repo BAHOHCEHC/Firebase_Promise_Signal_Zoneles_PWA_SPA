@@ -1,1 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: 'Genshin';
+  src: url('/assets/fonts/zh-cn.ttf') format('truetype');
+}
+
+/* Глобально для всех элементов */
+*,
+*::before,
+*::after {
+  font-family: 'Genshin', sans-serif;
+}
+
+.fs {
+  &_24 {
+    font-size: 24px;
+  }
+  &_16 {
+    font-size: 16px;
+  }
+  &_14 {
+    font-size: 14px;
+  }
+}
+
+.color {
+  &-green {
+    color: #0cd27c;
+  }
+}

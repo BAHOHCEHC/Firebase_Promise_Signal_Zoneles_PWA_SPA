@@ -1,0 +1,98 @@
+:host {
+  display: block;
+}
+
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #252734;
+  color: #fff;
+}
+
+.app-header {
+  height: 80px;
+  padding: 0 32px;
+  background: #343545;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-header .container {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-header__left {
+  display: flex;
+  align-items: center;
+}
+
+.app-logo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.app-nav {
+  display: flex;
+  gap: 32px;
+  align-items: stretch;
+  min-height: 78px;
+}
+
+.app-nav__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #eee;
+  text-decoration: none;
+  padding: 0 4px;
+}
+
+.app-nav__link--active {
+  color: #ffa857;
+}
+
+.app-nav__link--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: #ffa857;
+}
+
+.app-header__right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-header__circle-button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #c35546;
+  cursor: pointer;
+}
+
+.app-main {
+  flex: 1;
+  padding: 32px 48px 48px;
+  background: #252734;
+  display: flex;
+  justify-content: center;
+}
+
+.app-main .container {
+  width: 100%;
+  max-width: 1400px;
+}

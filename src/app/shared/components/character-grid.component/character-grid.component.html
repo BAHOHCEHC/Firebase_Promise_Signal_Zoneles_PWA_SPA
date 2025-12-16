@@ -1,0 +1,22 @@
+<div class="grid">
+  @for (c of visibleCharacters(); track c.id) {
+    <button
+      class="char"
+      [class.dimmed]="hasSelection() && !isSelected(c)"
+      [class.selected]="isSelected(c)"
+      (click)="toggle(c)"
+    >
+      <img class="bg" [src]="c.rarity.bgUrl" />
+      <img class="avatar" [src]="c.avatarUrl" />
+      <img class="element" [src]="c.element.iconUrl" />
+
+      @if ((c.newIndex?.expiresAt ?? 0) > now) {
+        <img class="new" src="assets/images/new.svg" />
+      }
+    </button>
+  } @empty {
+    <div class="empty-state">
+      No characters
+    </div>
+  }
+</div>
