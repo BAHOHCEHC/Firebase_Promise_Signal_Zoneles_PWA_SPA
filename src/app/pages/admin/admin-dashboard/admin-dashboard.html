@@ -1,1 +1,16 @@
-<p>admin-dashboard works!</p>
+<h1 class="admin__title fs_24">
+  Lineup simulator <span>Admin panel</span>
+</h1>
+
+<!-- TABS -->
+<div class="admin__tabs">
+  @for (tab of tabs(); track tab.key) {
+  <a class="admin__tab" [class.admin__tab--active]="activeTab() === tab.key" [routerLink]="tab.route">
+    {{ tab.label }}
+  </a>
+  }
+</div>
+<!-- CONTENT -->
+<div class="admin__content">
+  <router-outlet></router-outlet>
+</div>

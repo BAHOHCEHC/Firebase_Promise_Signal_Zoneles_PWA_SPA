@@ -36,7 +36,7 @@ function createCharacter(
   isNew = false,
 ): Character {
   return {
-    id,
+    id: id.toString(),
     name: `Character ${id}`,
     avatarUrl: 'assets/images/char_icon.png',
     rarity,
