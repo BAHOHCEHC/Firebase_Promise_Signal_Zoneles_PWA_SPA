@@ -24,13 +24,13 @@ export interface Wave {
 }
 
 export interface Character {
-  id: number;
+  id: string;
   name: string;
   avatarUrl: string;
   rarity: CharacterRarityID;
-  element: ElementType;
+  element?: ElementType;
   energy: number;
-  active: boolean;
+  active?: boolean;
   newIndex?: TimedValue;
 }
 
@@ -110,9 +110,9 @@ export interface TimedValue {
 }
 
 export interface ElementType {
-  id: number;
+  id?: number;
   name: ElementTypeName;
-  iconUrl: string;
+  iconUrl?: string;
 }
 
 export interface CharacterRarityID {

@@ -7,8 +7,6 @@
     </button>
     } @else {
     <h1 class="yc__title color-green">Select Characters you have</h1>
-
-    @if (showCharacters()) {
     <button class="yc__save-button fs_24" (click)="onSaveAddCharacters()">
       Save
       <span class="material-symbols-outlined color-green">
@@ -16,40 +14,43 @@
       </span>
     </button>
     }
-    }
   </header>
 
-  <!-- ELEMENT FILTER -->
+  <!-- Фільтри елементів -->
   <div class="yc__elements" [class.yc__elements--dim-inactive]="shouldDimInactive()">
     @for (type of elementTypes; track type) {
     <button class="yc__element-button" [class.yc__element-button--active]="characterStore.activeElements().has(type)"
       (click)="toggleElement(type)">
-      <img class="yc__element-icon" [src]="getElementIconPath(type)" />
+      <img class="yc__element-icon" [src]="getElementIconPath(type)" [alt]="type" />
     </button>
     }
   </div>
 
+  <!-- Порожні стани -->
   @if (charactersArrayEmpty() && !charactersPanelOpened()) {
   <section class="yc__empty">
-    <p class="yc__empty-text"> Looks like you haven't added any characters yet. </p>
-    <p class="yc__empty-subtext"> Click "Edit" to add characters. </p>
+    <p class="yc__empty-text">Looks like you haven't added any characters yet.</p>
+    <p class="yc__empty-subtext">Click "Add Characters" to start.</p>
   </section>
   }
 
-  @if (charactersPanelOpened() && localstorageUserCharactersEmpty()) {
+  @if (charactersPanelOpened() && characterStore.selectedCharacters().length === 0) {
   <section class="yc__empty">
-    <p class="yc__empty-text"> Select all characters that are exist on your account. </p>
-    <p class="yc__empty-subtext"> It’s best to choose those who are above level 70. </p>
-  </section>
-  }
-  @if (!localstorageUserCharactersEmpty()) {
-  <section class="yc__empty">
-    <p class="yc__empty-text"> {{characterStore.selectedCharacters().length}} characters selected </p>
+    <p class="yc__empty-text">Select all characters that exist on your account.</p>
+    <p class="yc__empty-subtext">It’s best to choose those who are above level 70.</p>
   </section>
   }
 
-  @if (showCharacters() || hasUserCharactersInStorage()) {
+  @if (hasSelectedCharacters()) {
+  <section class="yc__empty">
+    <p class="yc__empty-text">{{ characterStore.selectedCharacters().length }} characters selected</p>
+  </section>
+  }
+
+  <!-- Грид персонажів — показується, якщо є персонажі або відкрита панель редагування -->
+  @if (shouldShowCharacterGrid()) {
   <section class="yc__content">
     <app-character-grid [characters]="displayCharacters" [activeElements]="characterStore.activeElements" />
   </section>
   }
+</section>

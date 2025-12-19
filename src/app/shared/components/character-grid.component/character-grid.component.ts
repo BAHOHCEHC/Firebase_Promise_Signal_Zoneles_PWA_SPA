@@ -29,7 +29,7 @@ export class CharacterGridComponent {
 
     if (!filters || filters.size === 0) return chars;
 
-    return chars.filter(c => filters.has(c.element.name));
+    return chars.filter(c => c.element && filters.has(c.element.name));
   });
 
   readonly hasSelection = computed(() => characterStore.hasSelection());

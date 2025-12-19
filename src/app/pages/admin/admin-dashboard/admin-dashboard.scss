@@ -1,0 +1,65 @@
+/* ===== ROOT ===== */
+.admin {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #2b2c3d 0%, #1b1c29 100%);
+  color: #ffffff;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+/* ===== CONTENT ===== */
+.admin__content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 0;
+}
+
+.admin__title {
+  font-size: 24px;
+  font-weight: 600;
+
+  span {
+    opacity: 0.85;
+  }
+}
+
+/* ===== TABS ===== */
+.admin__tabs {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.admin__tab {
+  min-width: calc(25% - 20px);
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+  border: 1px solid rgba(140, 90, 255, 0.5);
+  background: transparent;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #8c5aff;
+    box-shadow: 0 0 0 1px rgba(140, 90, 255, 0.5);
+  }
+
+  &--active {
+    background: linear-gradient(180deg, #6d46ff 0%, #5433cc 100%);
+    border-color: transparent;
+  }
+}
+
+/* ===== WORKSPACE ===== */
+.admin__workspace {
+  min-height: 600px;
+  padding-top: 24px;
+}

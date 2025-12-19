@@ -24,7 +24,7 @@ class CharacterStore {
 
     if (elements.size === 0) return list;
 
-    return list.filter(c => elements.has(c.element.name));
+    return list.filter(c => c.element && elements.has(c.element.name));
   });
 
   /** Сохранить выбранных персонажей в localStorage */
@@ -73,6 +73,46 @@ class CharacterStore {
 
   isSelected(char: Character) {
     return this.selectedCharacters().some(c => c.id === char.id);
+  }
+
+  /** Додати нового персонажа */
+  addCharacter(char: Character) {
+    this.allCharacters.set([...this.allCharacters(), char]);
+  }
+
+  /** Видалити персонажа за id */
+  removeCharacter(id: string) {
+    this.allCharacters.set(
+      this.allCharacters().filter(c => c.id !== id)
+    );
+
+    // Також видаляємо з обраних, якщо був
+    this.selectedCharacters.set(
+      this.selectedCharacters().filter(c => c.id !== id)
+    );
+  }
+
+  /** ОНОВИТИ існуючого персонажа */
+  updateCharacter(updatedChar: Character) {
+    if (!updatedChar.id) {
+      console.warn('Cannot update character without id');
+      return;
+    }
+
+    this.allCharacters.set(
+      this.allCharacters().map(c =>
+        c.id === updatedChar.id ? updatedChar : c
+      )
+    );
+
+    // Якщо персонаж був у обраних — оновлюємо і там
+    const selected = this.selectedCharacters();
+    const index = selected.findIndex(c => c.id === updatedChar.id);
+    if (index !== -1) {
+      const newSelected = [...selected];
+      newSelected[index] = updatedChar;
+      this.selectedCharacters.set(newSelected);
+    }
   }
 }
 
