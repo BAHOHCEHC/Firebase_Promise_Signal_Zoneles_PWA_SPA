@@ -1,9 +1,10 @@
 import { CharacterGridComponent } from './../../shared/components/character-grid.component/character-grid.component';
-import { Component, signal, computed, OnInit } from '@angular/core';
+import { Component, signal, computed, OnInit, inject } from '@angular/core';
 import { ElementTypeName } from '../../../models/models';
 import { sortCharacters } from '../../../utils/sorting-characters';
-import { CHARACTERS_MOCK } from '../../../utils/characters.mock';
+// import { CHARACTERS_MOCK } from '../../../utils/characters.mock';
 import { characterStore } from '../../store/character.store';
+import { CharacterService } from '../../shared/services/charater.service';
 
 @Component({
   selector: 'app-your-characters',
@@ -13,6 +14,8 @@ import { characterStore } from '../../store/character.store';
   styleUrls: ['./your-characters.scss'],
 })
 export class YourCharacters implements OnInit {
+  private characterService = inject(CharacterService);
+
   readonly elementTypes = [
     'pyro', 'hydro', 'electro', 'cryo', 'dendro', 'anemo', 'geo'
   ] as const;
@@ -22,7 +25,6 @@ export class YourCharacters implements OnInit {
   readonly charactersPanelOpened = signal(false);
   readonly filtersWereUsed = signal(false);
 
-  // Чи є хоча б один обраний персонаж
   readonly hasSelectedCharacters = computed(() =>
     characterStore.selectedCharacters().length > 0
   );
@@ -31,12 +33,10 @@ export class YourCharacters implements OnInit {
     characterStore.selectedCharacters().length === 0
   );
 
-  // Чи потрібно показувати грид персонажів
   readonly shouldShowCharacterGrid = computed(() =>
     this.hasSelectedCharacters() || this.charactersPanelOpened()
   );
 
-  // Персонажі для відображення
   readonly displayCharacters = computed(() => {
     if (this.charactersPanelOpened()) {
       return characterStore.allCharacters();
@@ -48,10 +48,21 @@ export class YourCharacters implements OnInit {
     this.filtersWereUsed() && characterStore.activeElements().size > 0
   );
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // ❌ стара mock-логіка
+    /*
     if (characterStore.allCharacters().length === 0) {
       characterStore.setCharacters(sortCharacters(CHARACTERS_MOCK));
     }
+    */
+
+    // ✅ нова логіка: Firestore → Store
+    if (characterStore.allCharacters().length === 0) {
+      const characters = await this.characterService.getAllCharacters();
+      characterStore.setCharacters(sortCharacters(characters));
+    }
+
+    // localStorage — як і було
     characterStore.loadFromLocalStorage();
   }
 
@@ -67,7 +78,6 @@ export class YourCharacters implements OnInit {
   onSaveAddCharacters(): void {
     characterStore.saveToLocalStorage();
     this.charactersPanelOpened.set(false);
-    // Не потрібно loadFromLocalStorage() — стор вже оновлений!
   }
 
   getElementIconPath(type: string): string {

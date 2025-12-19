@@ -5,7 +5,7 @@
     <img class="bg" [src]="c.rarity.bgUrl" />
     <img class="avatar" [src]="c.avatarUrl" />
     @if (c.element) {
-    <img class="element" [src]="c.element.iconUrl" />
+    <img class="element" [src]="'/assets/images/ElementType_' + c.element.name + '.png'" />
     }
 
     @if ((c.newIndex?.expiresAt ?? 0) > now) {

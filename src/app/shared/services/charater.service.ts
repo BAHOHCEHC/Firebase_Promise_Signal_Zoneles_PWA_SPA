@@ -26,7 +26,7 @@ export class CharacterService {
   }
 
   /** Видалити персонажа */
-  delete(id: String): Promise<void> {
+  delete(id: string): Promise<void> {
     const ref = doc(this.firestore, 'characters', String(id));
     return deleteDoc(ref);
   }

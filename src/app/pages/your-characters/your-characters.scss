@@ -22,19 +22,19 @@
 .yc__save-button {
   border: none;
   background: none;
-  color: #0CD27C;
+  color: #0cd27c;
   cursor: pointer;
 }
 .material-symbols-outlined {
-    top: 5px;
-    position: relative;
+  top: 5px;
+  position: relative;
 }
 
 .yc__elements {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   justify-content: center;
 }
 
@@ -71,14 +71,17 @@
 }
 
 .yc__empty {
-  margin-top: 40px;
   text-align: center;
   color: #c0c3d6;
+  min-height: 55px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .yc__empty-text {
   font-size: 16px;
-  margin-bottom: 8px;
 }
 
 .yc__empty-subtext {
