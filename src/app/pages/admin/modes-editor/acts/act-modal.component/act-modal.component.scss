@@ -1,0 +1,280 @@
+$bg: #303040;
+
+$btn-primary-default: #5233af;
+$btn-primary-hover: #7e63d0;
+
+$btn-secondary-default: #292935;
+$btn-secondary-hover: #333345;
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  width: 550px;
+  height: 350px;
+  background: $bg;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__title {
+  margin: 0 0 8px;
+}
+
+.options {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  label {
+    display: flex;
+    gap: 6px;
+    font-size: 14px;
+  }
+}
+.section {
+  margin: 22px 0;
+}
+.input {
+  background: #1f1f2e;
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  color: white;
+}
+
+.actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn {
+  border-radius: 6px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  color: white;
+  width: 80px;
+  height: 40px;
+  &.primary {
+    background: $btn-primary-default;
+
+    &:hover {
+      background: $btn-primary-hover;
+    }
+  }
+
+  &.secondary {
+    background: $btn-secondary-default;
+
+    &:hover {
+      background: $btn-secondary-hover;
+    }
+  }
+}
+.checkbox_sections {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #e0e0ff; /* Текст завжди видимий */
+  user-select: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #fff; /* Підсвічуємо при ховері */
+  }
+  &:focus-visible {
+    border: none;
+  }
+
+  input {
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: #252734;
+    position: relative;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    margin: 0;
+
+    &:checked {
+      &::after {
+        background-color: #0cd27c;
+        content: '';
+        position: absolute;
+        top: 60%;
+        left: 30%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        width: 2px;
+        height: 7px;
+      }
+      &::before {
+        background-color: #0cd27c;
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 60%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        width: 2px;
+        height: 16px;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      border-color: #7e63d0;
+    }
+  }
+
+  /* Якщо хочеш підсвітити текст при виборі */
+  input:checked ~ .radio-text,
+  input:checked + .radio-text {
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+input[type='checkbox'] {
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: #252734;
+  position: relative;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin: 0;
+  display: inline-block;
+  vertical-align: middle;
+  &:checked {
+    &::after {
+      background-color: #0cd27c;
+      content: '';
+      position: absolute;
+      top: 60%;
+      left: 30%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      width: 2px;
+      height: 7px;
+    }
+    &::before {
+      background-color: #0cd27c;
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 60%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 2px;
+      height: 16px;
+    }
+  }
+}
+
+// Стилі для інпута типу number
+input[type='number'] {
+  font-size: 14px;
+  width: 45px;
+  height: 38px;
+  text-align: center;
+  border: none;
+  border-radius: 6px;
+  background: #252734;
+  color: #fff;
+  padding: 0;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+  margin: 0 8px;
+
+  // Прибираємо стрілочки в Webkit браузерах (Chrome, Safari, Edge)
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  // Фокус
+  &:focus {
+    outline: none;
+    border-color: #7e63d0;
+    box-shadow: 0 0 0 2px rgba(126, 99, 208, 0.2);
+  }
+
+  // Ховер
+  &:hover:not(:disabled) {
+    border-color: #7e63d0;
+  }
+
+  // Відключений стан
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.name_control_block {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-messages .error {
+  color: #f44336;
+  font-size: 12px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.hint {
+  color: #666;
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

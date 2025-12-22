@@ -3,8 +3,7 @@ export interface Mode {
   name: string;
   min_characters: number;
   max_characters: number;
-  Chambers: Act []
-
+  chambers: Act []
 }
 
 
@@ -16,7 +15,6 @@ export interface Act {
   variation_fight_settings: Variation_fight;
   enemy_selection: Enemy[]
   variations: Wave[]
-
 }
 
 export interface Wave {
@@ -43,7 +41,6 @@ export interface Enemy {
   specialMark: boolean; // зображення мітки
   categoryId: EnemyCategory;
   groupId: EnemyGroup;
-
 }
 
 export interface User {
@@ -71,10 +68,10 @@ export type Fight_type =
 
 // Опції ворогів
 export interface Enemy_options {
-  Amount?: number;
-  Timer?: number;
-  Defeat?: number;
-  Special_type?: boolean;
+  amount?: boolean;
+  timer?: boolean;
+  defeat?: boolean;
+  special_type?: boolean;
   }
 
 export type CharacterRarity =

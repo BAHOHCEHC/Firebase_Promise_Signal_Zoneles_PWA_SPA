@@ -1,0 +1,117 @@
+<div class="modal-backdrop" (click)="close.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h2 class="modal__title">Add Act</h2>
+    <form [formGroup]="form" (ngSubmit)="save()">
+
+      <!-- Fight type -->
+      <div class="section">
+        <p class="label fs_14">Fight type</p>
+        <div class="checkbox_sections">
+          <label for="Boss_fight" class="radio">
+            <span class="radio-text">Boss fight</span>
+            <input type="radio" value="Boss_fight" formControlName="type" id="Boss_fight" />
+          </label>
+          <label for="Variation_fight" class="radio">
+            <span class="radio-text">Variation fight</span>
+            <input type="radio" value="Variation_fight" formControlName="type" id="Variation_fight" />
+          </label>
+          <label for="Arcana_fight" class="radio">
+            <span class="radio-text">Arcana fight</span>
+            <input type="radio" value="Arcana_fight" formControlName="type" id="Arcana_fight" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Options for enemies -->
+      <div class="section" formGroupName="options">
+        <p class="label fs_14">Options for enemies</p>
+        <div class="checkbox_sections">
+          <label for="amount" class="radio">
+            Amount
+            <input type="checkbox" formControlName="amount" id="amount" />
+          </label>
+          <label for="timer" class="radio">
+            Timer
+            <input type="checkbox" formControlName="timer" id="timer" />
+          </label>
+          <label for="defeat" class="radio">
+            Defeat
+            <input type="checkbox" formControlName="defeat" id="defeat" />
+          </label>
+          <label for="special_type" class="radio">
+            Special type
+            <input type="checkbox" formControlName="special_type" id="special_type" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Act number -->
+      <div class="section">
+        <p class="fs_14">Act number</p>
+        <div class="name_control_block">
+          <div class="left_block">
+            <label class="label" for="name">{{ actLabel() }}</label>
+            <input type="number" formControlName="name" name="name" id="name" [min]="1" [max]="maxValue()"
+              [attr.required]="typeSignal() !== 'Arcana_fight' ? true : null" (input)="onNameChange()"
+              (blur)="form.controls.name.updateValueAndValidity()"
+              [class.error]="form.controls.name.invalid && form.controls.name.touched" />
+          </div>
+
+          <div class="right_block">
+            <!-- Блок загальних помилок -->
+            @if (errorMessage()) {
+            <div class="error-messages">
+              <small class="error">{{ errorMessage() }}</small>
+            </div>
+            }
+
+            <!-- Блок валідаційних помилок -->
+            @if (form.controls.name.invalid && form.controls.name.touched && !errorMessage()) {
+            <div class="error-messages">
+              @if (form.controls.name.errors?.['required']) {
+              <small class="error">Це поле обов'язкове</small>
+              }
+              @if (form.controls.name.errors?.['min']) {
+              <small class="error">Мінімальне значення: 1</small>
+              }
+              @if (form.controls.name.errors?.['max']) {
+              <small class="error">Максимальне значення: {{ maxValue() }}</small>
+              }
+              @if (form.controls.name.errors?.['pattern'] || form.controls.name.errors?.['notANumber']) {
+              <small class="error">Введіть тільки цифри</small>
+              }
+              @if (form.controls.name.errors?.['notInteger']) {
+              <small class="error">Введіть ціле число</small>
+              }
+              @if (form.controls.name.errors?.['duplicate']) {
+              <small class="error">Акт з таким номером вже існує</small>
+              }
+            </div>
+            }
+
+            <!-- Підказка про обмеження -->
+            <small class="hint">
+              Дозволені значення: від 1 до {{ maxValue() }}
+              {{ typeSignal() === 'Arcana_fight' ? '(Arcana)' : '(Act)' }}
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button type="button" class="btn secondary" (click)="cancel()" [disabled]="isLoading()">
+          Cancel
+        </button>
+
+        <button type="submit" class="btn primary" [disabled]="form.invalid || isLoading() || !isNameValidForSave()">
+          @if (isLoading()) {
+          <span class="spinner"></span>
+          } @else {
+          Save
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
