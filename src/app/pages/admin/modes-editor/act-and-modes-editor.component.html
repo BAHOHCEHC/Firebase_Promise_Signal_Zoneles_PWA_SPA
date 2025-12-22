@@ -1,0 +1,45 @@
+<section class="editor">
+  <!-- HEADER -->
+  <header class="editor__header">
+    <h2 class="editor__header-title">Acts & Arcanas</h2>
+
+    <div class="editor__actions">
+      <button class="btn fs_24" (click)="openActModal()">
+        Add Act
+        <span class="material-symbols-outlined">swords</span>
+      </button>
+
+      <button class="btn fs_24" (click)="openModeModal()">
+        Add Mode
+        <span class="material-symbols-outlined">skull</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ACTS -->
+  <app-acts-table
+    [acts]="acts"
+    [loading]="loading()"
+    [error]="error"
+    (editAct)="onEditAct($event)"
+    (refresh)="loadActs()"
+  />
+
+  <!-- MODES -->
+  <h2 class="section-title">Modes</h2>
+  <app-modes-table />
+
+  <!-- Модалка Add/Edit Act -->
+  @if (showActModal()) {
+    <app-act-modal
+      [actToEdit]="editingAct()"
+      (close)="closeActModal()"
+      (saved)="loadActs()"
+    />
+  }
+
+  <!-- Модалка Add Mode -->
+  @if (showModeModal()) {
+    <app-mode-modal (close)="closeModeModal()" />
+  }
+</section>

@@ -18,6 +18,9 @@
   background: none;
   color: #fff;
   cursor: pointer;
+  &:hover {
+    color: #7e63d0;
+  }
 }
 .yc__save-button {
   border: none;

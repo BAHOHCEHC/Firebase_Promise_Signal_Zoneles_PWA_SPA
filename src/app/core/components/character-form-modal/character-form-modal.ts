@@ -71,36 +71,6 @@ export class CharacterFormModal implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  // async save(): Promise<void> {
-  //   if (this.form.invalid) return;
-
-  //   const characterData: Character = {
-  //     id: this.character?.id ?? Date.now(), // Якщо редагуємо — зберігаємо старий id
-  //     name: this.form.value.name!,
-  //     avatarUrl: this.previewImage() ?? this.character?.avatarUrl ?? '',
-  //     rarity: this.selectedRarity(),
-  //     element: { name: this.selectedElement() },
-  //     energy: 2,
-  //     newIndex: { value: this.character?.id ?? Date.now(), expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 }
-  //   };
-
-  //   try {
-  //     if (this.isEditMode()) {
-  //       // Оновлюємо існуючого
-  //       await this.service.update(characterData);
-  //       characterStore.updateCharacter(characterData);
-  //     } else {
-  //       // Створюємо нового (id вже згенеровано вище)
-  //       await this.service.create(characterData);
-  //       characterStore.addCharacter(characterData);
-  //     }
-
-  //     this.close.emit();
-  //   } catch (error) {
-  //     console.error('Error saving character:', error);
-  //     alert('Помилка збереження персонажа');
-  //   }
-  // }
   async save(): Promise<void> {
   if (this.form.invalid) return;
 

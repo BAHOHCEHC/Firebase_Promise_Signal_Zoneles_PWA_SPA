@@ -1,0 +1,88 @@
+<section class="acts-section">
+  <div class="section-header">
+    <h2 class="section-title">Acts</h2>
+
+    <button class="btn-icon" (click)="onRefresh()" title="Refresh">
+      <span class="material-symbols-outlined">refresh</span>
+    </button>
+  </div>
+
+  <!-- Стан завантаження -->
+  @if (loading) {
+    <div class="loading-state">
+      <span class="material-symbols-outlined spin">progress_activity</span>
+      <p>Loading acts...</p>
+    </div>
+  }
+
+  <!-- Помилка -->
+  @else if (error) {
+    <div class="error-state">
+      <span class="material-symbols-outlined">error</span>
+      <p>{{ error }}</p>
+      <button class="btn secondary" (click)="onRefresh()">Try Again</button>
+    </div>
+  }
+
+  <!-- Таблиця з актами -->
+  @else if (acts.length > 0) {
+    <div class="table-container">
+      <table class="acts-table">
+        <thead>
+          <tr>
+            <th>Act Name</th>
+            <th>Type</th>
+            <th>Options</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (act of acts; track act.id) {
+            <tr class="act-row">
+              <td class="act-name">
+                {{ getActDisplayName(act) }}
+              </td>
+              <td class="act-type">
+                <span class="type-badge" [class]="act.type">
+                  {{ getTypeDisplay(act.type) }}
+                </span>
+              </td>
+              <td class="act-options">
+                @if (getActiveOptions(act).length > 0) {
+                  <div class="options-list">
+                    @for (option of getActiveOptions(act); track option) {
+                      <span class="option-badge">{{ option }}</span>
+                    }
+                  </div>
+                } @else {
+                  <span class="no-options">No options</span>
+                }
+              </td>
+              <td class="act-actions">
+                <button
+                  class="btn-icon edit-btn"
+                  (click)="onEditClick(act)"
+                  title="Edit Act"
+                >
+                  <span class="material-symbols-outlined">border_color</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span class="count-info">Total: {{ acts.length }} acts</span>
+    </div>
+  }
+
+  <!-- Порожній стан -->
+  @else {
+    <div class="empty-state">
+      <span class="material-symbols-outlined">inbox</span>
+      <p>No acts found. Create your first act!</p>
+    </div>
+  }
+</section>

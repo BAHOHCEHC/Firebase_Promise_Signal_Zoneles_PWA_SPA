@@ -7,7 +7,7 @@ import { SeasonDetails } from './pages/season-details/season-details';
 import { YourCharacters } from './pages/your-characters/your-characters';
 import { CharacterListEditor } from './pages/admin/character-list-editor/character-list-editor';
 import { EnemiesEditor } from './pages/admin/enemies-editor/enemies-editor';
-import { ModesEditor } from './pages/admin/modes-editor/modes-editor';
+import { ActAndModesEditor } from './pages/admin/modes-editor/act-and-modes-editor.component';
 import { SeasonsEditor } from './pages/admin/seasons-editor/seasons-editor';
 
 
@@ -27,7 +27,7 @@ export const routes: Routes = [
 
       { path: 'characters', component: CharacterListEditor },
       { path: 'enemies', component: EnemiesEditor },
-      { path: 'modes', component: ModesEditor },
+      { path: 'modes', component: ActAndModesEditor },
       { path: 'seasons', component: SeasonsEditor },
     ]
   }

@@ -1,0 +1,97 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #2d1b69;
+  border-radius: 16px;
+  padding: 24px;
+  width: 480px;
+  max-width: 90vw;
+  color: #e0d4ff;
+}
+
+.modal-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.form-group {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #b0a0ff;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px 14px;
+    background: #3a2a7a;
+    border: 1px solid #555;
+    border-radius: 8px;
+    color: #fff;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+
+  .form-group {
+    flex: 1;
+  }
+}
+
+.acts-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.act-btn {
+  padding: 8px 16px;
+  background: #3a2a7a;
+  border: 1px solid #555;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 14px;
+
+  &.special {
+    background: #4a3a9a;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-cancel {
+  padding: 10px 24px;
+  background: #444;
+  color: #ccc;
+  border: none;
+  border-radius: 8px;
+}
+
+.btn-save {
+  padding: 10px 24px;
+  background: #a78bfa;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+}

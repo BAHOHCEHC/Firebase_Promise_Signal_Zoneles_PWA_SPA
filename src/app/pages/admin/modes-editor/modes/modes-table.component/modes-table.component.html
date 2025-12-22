@@ -1,0 +1,17 @@
+<div class="table">
+
+  <div
+    class="row"
+    *ngFor="let mode of store.modes()"
+  >
+    <div>{{ mode.name }}</div>
+    <div>{{ mode.min_characters }} - {{ mode.max_characters }}</div>
+
+    <button (click)="store.removeMode(mode.id)">✖</button>
+  </div>
+
+  <p *ngIf="!store.hasModes()">
+    Looks like you haven't added any modes
+  </p>
+
+</div>
