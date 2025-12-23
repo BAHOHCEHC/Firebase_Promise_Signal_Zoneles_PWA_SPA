@@ -5,7 +5,8 @@ import { ActsTableComponent } from './acts/acts-table.component/acts-table.compo
 import { ModesTableComponent } from './modes/modes-table.component/modes-table.component';
 import { ModeModalComponent } from './modes/modes-modal.component/modes-modal.component';
 import { ActModsService } from '../../../shared/services/act-mods.service';
-import { Act } from '../../../../models/models';
+// Update imports to include Mode
+import { Act, Mode } from '../../../../models/models';
 import { ConfirmModal } from '../../../core/components/confirm-modal/confirm-modal';
 
 @Component({
@@ -25,18 +26,21 @@ import { ConfirmModal } from '../../../core/components/confirm-modal/confirm-mod
 export class ActAndModesEditor implements OnInit {
   private service = inject(ActModsService);
 
-  loading = signal(false); // Використовуємо signal замість звичайної властивості
+  loading = signal(false);
+  loadingModes = signal(false); // New signal for modes loading state
   acts: Act[] = [];
+  modes: Mode[] = []; // Property to hold modes
   error: string | null = null;
+  errorModes: string | null = null; // Property for modes error
 
   readonly showActModal = signal(false);
   readonly showModeModal = signal(false);
   readonly showConfirmModal = signal(false);
   readonly editingAct = signal<Act | null>(null);
+  readonly editingMode = signal<Mode | null>(null);
   readonly deletingItem = signal<{ type: 'act' | 'mode', data: any } | null>(null);
 
   constructor() {
-    // Виправлений effect - додаємо затримку та запобігаємо зацикленню
     effect(() => {
       const showActModalValue = this.showActModal();
 
@@ -47,6 +51,17 @@ export class ActAndModesEditor implements OnInit {
           this.loadActs();
         }, 100);
         this.editingAct.set(null);
+      }
+    }, { allowSignalWrites: true });
+
+    // Effect for Mode modal
+    effect(() => {
+      const showModeModalValue = this.showModeModal();
+      if (!showModeModalValue) {
+        setTimeout(() => {
+          this.loadModes();
+        }, 100);
+        this.editingMode.set(null);
       }
     }, { allowSignalWrites: true });
   }
@@ -64,10 +79,17 @@ export class ActAndModesEditor implements OnInit {
   }
 
   private async loadModes(): Promise<void> {
+    if (this.loadingModes()) return;
+    this.loadingModes.set(true);
+    this.errorModes = null;
     try {
-      await this.service.getAllModes();
-    } catch (error) {
+      this.modes = await this.service.getAllModes();
+      console.log('Loaded modes:', this.modes.length);
+    } catch (error: any) {
       console.error('Error loading modes:', error);
+      this.errorModes = error.message || 'Error loading modes';
+    } finally {
+      this.loadingModes.set(false);
     }
   }
 
@@ -77,7 +99,6 @@ export class ActAndModesEditor implements OnInit {
       console.log('Завантаження вже виконується, пропускаємо');
       return;
     }
-
     this.loading.set(true);
     this.error = null;
 
@@ -144,7 +165,7 @@ export class ActAndModesEditor implements OnInit {
         console.log('Act deleted:', item.data.id);
       } else if (item.type === 'mode') {
         // Видалити мод
-        // await this.service.deleteMode(item.data.id);
+        await this.service.deleteMode(item.data.id);
         console.log('Mode deleted:', item.data.id);
       }
 
@@ -207,6 +228,11 @@ export class ActAndModesEditor implements OnInit {
   onEditAct(act: Act): void {
     this.editingAct.set(act);
     this.showActModal.set(true);
+  }
+
+  onEditMode(mode: Mode): void {
+    this.editingMode.set(mode);
+    this.showModeModal.set(true);
   }
 
   // Метод для ручного оновлення (через кнопку Refresh)

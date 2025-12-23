@@ -28,3 +28,19 @@
     color: #0cd27c;
   }
 }
+
+/* Глобальні стилі для всіх інпутів типу number у додатку */
+*[type='number']::-webkit-inner-spin-button,
+*[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+*[type='number'] {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+.tac{
+  margin: 0;
+  text-align: center;
+}

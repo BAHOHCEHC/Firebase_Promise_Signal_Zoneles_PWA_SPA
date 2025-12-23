@@ -1,0 +1,102 @@
+.modes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.empty-state{
+  text-align: center;
+}
+.mode-item {
+  background: #2a2a35;
+  border-radius: 8px;
+  padding: 5px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+.mods-grid-header {
+  display: flex;
+  font-weight: 600;
+  font-size: 14px;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.mode-info {
+  display: flex;
+  align-items: center;
+}
+
+.mode-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #fff;
+}
+
+.mode-details {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+  color: #ccc;
+  strong {
+    color: #fff;
+    font-weight: 600;
+  }
+}
+.act-actions-header {
+  width: 98px;
+  text-align: center;
+}
+.detail-part {
+  display: flex;
+  gap: 6px;
+}
+.grid-cell{
+  min-width: 100px;
+  text-align: center;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #71767b;
+  }
+
+  .material-symbols-outlined,
+  svg {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .material-symbols-outlined.red,
+  svg.red {
+    color: red;
+  }
+
+  .material-symbols-outlined.color-green,
+  svg.color-green {
+    color: #4caf50;
+  }
+
+  .refresh {
+    color: #fff;
+    font-size: 34px;
+    width: 34px;
+    height: 34px;
+  }
+}

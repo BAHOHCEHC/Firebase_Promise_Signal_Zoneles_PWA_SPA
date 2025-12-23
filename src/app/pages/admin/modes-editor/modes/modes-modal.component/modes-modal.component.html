@@ -1,36 +1,90 @@
-<!-- mode-modal.component.html -->
-<div class="modal-backdrop" (click)="close.emit()">
+<div class="modal-overlay" (click)="close.emit()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <h3 class="modal-title">Add Mode</h3>
+    <h2>{{ modeToEdit ? 'Edit mode' : 'Add mode' }}</h2>
 
-    <div class="form-group">
-      <label>Mode name</label>
-      <input formControlName="name" placeholder="Hard mode" />
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>Min</label>
-        <input type="number" formControlName="min" />
+    <div class="form-container" [formGroup]="form">
+      <div class="field-group">
+        <label>Mode name</label>
+        <input type="text" formControlName="name" placeholder="Hard mode"
+          [class.error]="form.get('name')?.invalid && form.get('name')?.touched" />
+        @if (form.get('name')?.invalid && form.get('name')?.touched) {
+        <div class="error-message">
+          @if (form.get('name')?.errors?.['required']) {
+          <small>Mode name is required</small>
+          }
+          @if (form.get('name')?.errors?.['minlength']) {
+          <small>At least 2 characters required</small>
+          }
+        </div>
+        }
       </div>
-      <div class="form-group">
-        <label>Max</label>
-        <input type="number" formControlName="max" />
+
+      <div class="row">
+        <div class="field-group small">
+          <h5 class="tac">Min</h5>
+          <input min="1" type="number" formControlName="min" class="number-input"
+            [class.error]="form.get('min')?.invalid && form.get('min')?.touched" />
+        </div>
+        <div class="field-group small">
+          <h5 class="tac">Max</h5>
+          <input min="2" type="number" formControlName="max" class="number-input"
+            [class.error]="form.get('max')?.invalid && form.get('max')?.touched" />
+        </div>
+      </div>
+
+    </div>
+    <!-- Помилка min > max -->
+    @if (form.errors?.['minGreaterThanMax']) {
+    <div class="form-error">
+      <small>Min value cannot be greater than Max value</small>
+    </div>
+    }
+
+    <div class="acts-section">
+      <div class="acts-header">
+        <h5>Select active acts</h5>
+        <div class="acts-actions">
+          <button class="select-all-btn" (click)="toggleSelectAll()" [class.active]="allSelected()">
+            {{ allSelected() ? 'Deselect All' : 'Select All' }}
+          </button>
+          <button class="clear-btn" (click)="clearSelection()" [disabled]="selectedCount() === 0">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <div class="selected-count">
+        Selected: {{ selectedCount() }} of {{ acts().length }}
+      </div>
+
+      <div class="acts-grid">
+        <button *ngFor="let act of normalActs()" class="act-btn" (click)="toggleSelection(act)"
+          [class.active]="isSelected(act)">
+          {{act.name}}
+        </button>
+        <button *ngFor="let act of arcanaActs()" class="act-btn wide arcana-btn" (click)="toggleSelection(act)"
+          [class.active]="isSelected(act)">
+          Arcana {{act.name}}
+        </button>
       </div>
     </div>
 
-    <label>Select active acts</label>
-    <div class="acts-selection">
-      @for (i of [1,2,3,4,5,6,7,8,9,10]; track i) {
-        <button type="button" class="act-btn">{{ i }}</button>
-      }
-      <button type="button" class="act-btn special">Arcana 1</button>
-      <button type="button" class="act-btn special">Arcana 2</button>
+    <!-- Підсумок помилок -->
+    @if (form.invalid || selectedCount() === 0) {
+    <div class="validation-summary">
+      <ul>
+        @for (error of getValidationErrors(); track error) {
+        <li><small>{{ error }}</small></li>
+        }
+      </ul>
     </div>
+    }
 
     <div class="actions">
-      <button class="btn-cancel" (click)="close.emit()">Cancel</button>
-      <button class="btn-save" [disabled]="form.invalid">Save</button>
+      <button class="cancel-btn" (click)="close.emit()">Cancel</button>
+      <button class="save-btn" (click)="save()" [disabled]="isSaveDisabled()" [class.disabled]="isSaveDisabled()">
+        {{ modeToEdit ? 'Update' : 'Save' }}
+      </button>
     </div>
   </div>
 </div>
