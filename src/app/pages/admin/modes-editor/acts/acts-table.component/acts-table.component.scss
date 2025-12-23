@@ -1,5 +1,4 @@
 .acts-section {
-  background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -10,13 +9,206 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 
   .section-title {
     margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+  }
+}
+
+// Стилі для груп актів
+.act-section-group {
+  margin-bottom: 32px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-group-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+
+  .section-icon {
+    font-size: 24px;
+    color: #666;
+  }
+
+  .section-group-title {
+    margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: #333;
+    color: #fff;
+  }
+
+  .section-count {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    background: #f5f5f5;
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+}
+
+// Стилі для Variation Chambers
+.act-section-group:first-child .section-group-header {
+  border-bottom-color: #2196f3;
+
+  .section-icon {
+    color: #2196f3;
+  }
+}
+
+// Стилі для Boss Chambers
+.act-section-group:nth-child(2) .section-group-header {
+  border-bottom-color: #f44336;
+
+  .section-icon {
+    color: #f44336;
+  }
+}
+
+// Стилі для Arcana Chambers
+.act-section-group:nth-child(3) .section-group-header {
+  border-bottom-color: #4caf50;
+
+  .section-icon {
+    color: #4caf50;
+  }
+}
+
+// Грід контейнер з Flexbox
+.acts-grid {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.acts-grid-header {
+  display: flex;
+  font-weight: 600;
+  font-size: 14px;
+  justify-content: space-between;
+}
+
+.act-card {
+  display: flex;
+  margin: 5px 0;
+  border-radius: 10px;
+  justify-content: space-between;
+  background-color: #303040;
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+// Загальні стилі для клітинок
+.grid-cell {
+  padding: 0px 20px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+// Розподіл ширини колонок
+.act-name-header,
+.act-name-cell {
+  flex: 0 0 25%; // 25% ширини
+  min-width: 150px;
+}
+
+.act-type-header,
+.act-type-cell {
+  flex: 0 0 15%; // 15% ширини
+  min-width: 100px;
+  justify-content: center;
+}
+
+.act-options-header,
+.act-options-cell {
+  flex: 0 0 35%; // 35% ширини
+  min-width: 200px;
+  justify-content: flex-end;
+}
+
+.act-actions-header,
+.act-actions-cell {
+  flex: 0 0 10%; // 10% ширини
+  min-width: 80px;
+  justify-content: center;
+}
+.act-actions-cell {
+  justify-content: space-around;
+}
+
+// Стилі для вмісту клітинок
+.act-name-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.act-name-text {
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+
+  &.Boss_fight {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+
+  &.Variation_fight {
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+
+  &.Arcana_fight {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+}
+
+.act-options-cell {
+  .options-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+
+  .option-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #e0f2f1;
+    color: #00695c;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .no-options {
+    color: #999;
+    font-style: italic;
+    font-size: 14px;
   }
 }
 
@@ -32,12 +224,25 @@
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #f5f5f5;
+    background-color: #71767b;
   }
 
   .material-symbols-outlined {
-    font-size: 20px;
-    color: #666;
+    font-size: 22px;
+  }
+  .material-symbols-outlined.red {
+    color: red;
+  }
+  .refresh {
+    color: #fff;
+    font-size: 34px;
+  }
+}
+
+.edit-btn,
+.delete-btn {
+  &:hover {
+    background-color: #71767b;
   }
 }
 
@@ -72,119 +277,11 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.table-container {
-  overflow-x: auto;
-}
-
-.acts-table {
-  width: 100%;
-  border-collapse: collapse;
-
-  th {
-    text-align: left;
-    padding: 12px 16px;
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #dee2e6;
-    font-weight: 600;
-    color: #495057;
-    font-size: 14px;
+  from {
+    transform: rotate(0deg);
   }
-
-  td {
-    padding: 16px;
-    border-bottom: 1px solid #eee;
-    vertical-align: middle;
-  }
-
-  .act-row {
-    &:hover {
-      background-color: #f9f9f9;
-    }
-
-    &:last-child td {
-      border-bottom: none;
-    }
-  }
-}
-
-.act-name {
-  font-weight: 500;
-  color: #333;
-  font-size: 15px;
-}
-
-.act-type {
-  .type-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-
-    &.Boss_fight {
-      background-color: #ffebee;
-      color: #c62828;
-    }
-
-    &.Variation_fight {
-      background-color: #e3f2fd;
-      color: #1565c0;
-    }
-
-    &.Arcana_fight {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-    }
-  }
-}
-
-.act-options {
-  .options-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .option-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    background-color: #e0f2f1;
-    color: #00695c;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
-  }
-
-  .no-options {
-    color: #999;
-    font-style: italic;
-    font-size: 14px;
-  }
-}
-
-.act-actions {
-  text-align: right;
-
-  .edit-btn {
-    background-color: #f8f9fa;
-
-    &:hover {
-      background-color: #e9ecef;
-
-      .material-symbols-outlined {
-        color: #2196f3;
-      }
-    }
-
-    .material-symbols-outlined {
-      font-size: 18px;
-    }
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -200,22 +297,149 @@
   }
 }
 
-// Адаптивність
+// Адаптивність для мобільних пристроїв
 @media (max-width: 768px) {
-  .acts-table {
-    th, td {
-      padding: 12px 8px;
-      font-size: 13px;
-    }
+  .acts-grid-header {
+    display: none; // Ховаємо заголовки на мобільних
+  }
 
-    .type-badge {
-      font-size: 11px;
-      padding: 3px 8px;
-    }
+  .act-card {
+    flex-direction: column;
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    gap: 12px;
 
-    .option-badge {
-      font-size: 11px;
-      padding: 3px 6px;
+    &:last-child {
+      border-bottom: none;
     }
+  }
+
+  .grid-cell {
+    padding: 0;
+    width: 100%;
+    justify-content: flex-start !important;
+  }
+
+  // Перетворюємо на "картки" для мобільних
+  .act-name-cell,
+  .act-type-cell,
+  .act-options-cell,
+  .act-actions-cell {
+    flex: 1 0 100%;
+    min-width: 100%;
+  }
+
+  .act-name-cell {
+    order: 1;
+    .act-name-content {
+      width: 100%;
+    }
+  }
+
+  .act-type-cell {
+    order: 2;
+    justify-content: flex-start !important;
+  }
+
+  .act-options-cell {
+    order: 3;
+    justify-content: flex-start !important;
+
+    .options-list {
+      justify-content: flex-start !important;
+    }
+  }
+
+  .act-actions-cell {
+    order: 4;
+    justify-content: flex-start !important;
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+    margin-top: 8px;
+  }
+
+  // Додаємо підписи для мобільних
+  .act-card {
+    position: relative;
+
+    &::before {
+      display: none; // Можна додати підписи, якщо потрібно
+    }
+  }
+
+  .section-group-header {
+    flex-wrap: wrap;
+
+    .section-group-title {
+      font-size: 16px;
+    }
+  }
+
+  .type-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .option-badge {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}
+
+// Альтернативний адаптивний варіант з інлайн-підписами
+@media (max-width: 576px) {
+  .act-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .grid-cell {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 8px;
+    align-items: center;
+  }
+
+  // Додаємо підписи для кожної клітинки
+  .act-name-cell::before {
+    content: 'Act Name:';
+    font-weight: 600;
+    color: #666;
+    font-size: 12px;
+  }
+
+  .act-type-cell::before {
+    content: 'Type:';
+    font-weight: 600;
+    color: #666;
+    font-size: 12px;
+  }
+
+  .act-options-cell::before {
+    content: 'Options:';
+    font-weight: 600;
+    color: #666;
+    font-size: 12px;
+    align-self: flex-start;
+  }
+
+  .act-actions-cell::before {
+    content: 'Actions:';
+    font-weight: 600;
+    color: #666;
+    font-size: 12px;
+  }
+
+  .act-actions-cell {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  // Приховуємо контент після підписів
+  .act-actions-cell .btn-icon {
+    grid-column: 2;
   }
 }

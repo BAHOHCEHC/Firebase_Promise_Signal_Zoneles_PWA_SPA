@@ -21,8 +21,9 @@
     [acts]="acts"
     [loading]="loading()"
     [error]="error"
-    (editAct)="onEditAct($event)"
+    (deleteAct)="onDeleteAct($event)"
     (refresh)="loadActs()"
+    (editAct)="onEditAct($event)"
   />
 
   <!-- MODES -->
@@ -41,5 +42,18 @@
   <!-- Модалка Add Mode -->
   @if (showModeModal()) {
     <app-mode-modal (close)="closeModeModal()" />
+  }
+
+  <!-- Модалка Confirm delete -->
+  @if (showConfirmModal()) {
+    <app-confirm-modal
+      [title]="getConfirmTitle()"
+      [message]="getConfirmMessage()"
+      [confirmButtonText]="'Delete'"
+      [cancelButtonText]="'Cancel'"
+      [type]="'danger'"
+      (confirm)="onConfirmDelete()"
+      (close)="closeConfirmModal()"
+    />
   }
 </section>
