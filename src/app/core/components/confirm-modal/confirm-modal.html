@@ -1,0 +1,35 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal confirm-modal" (click)="$event.stopPropagation()">
+
+    <!-- Іконка -->
+    <div class="confirm-modal__icon" [class]="'type-' + type">
+      <span class="material-symbols-outlined">{{ getIcon() }}</span>
+    </div>
+
+    <!-- Заголовок -->
+    <h3 class="confirm-modal__title">{{ title }}</h3>
+
+    <!-- Повідомлення -->
+    <p class="confirm-modal__message">{{ message }}</p>
+
+    <!-- Кнопки -->
+    <div class="confirm-modal__actions">
+      <button
+        type="button"
+        class="btn secondary"
+        (click)="onCancel()"
+      >
+        {{ cancelButtonText }}
+      </button>
+
+      <button
+        type="button"
+        [class]="getConfirmButtonClass()"
+        (click)="onConfirm()"
+      >
+        {{ confirmButtonText }}
+      </button>
+    </div>
+
+  </div>
+</div>

@@ -3,86 +3,109 @@
     <h2 class="section-title">Acts</h2>
 
     <button class="btn-icon" (click)="onRefresh()" title="Refresh">
-      <span class="material-symbols-outlined">refresh</span>
+      <span class="material-symbols-outlined refresh">refresh</span>
     </button>
   </div>
 
   <!-- Стан завантаження -->
   @if (loading) {
-    <div class="loading-state">
-      <span class="material-symbols-outlined spin">progress_activity</span>
-      <p>Loading acts...</p>
-    </div>
+  <div class="loading-state">
+    <span class="material-symbols-outlined spin">progress_activity</span>
+    <p>Loading acts...</p>
+  </div>
   }
 
   <!-- Помилка -->
   @else if (error) {
-    <div class="error-state">
-      <span class="material-symbols-outlined">error</span>
-      <p>{{ error }}</p>
-      <button class="btn secondary" (click)="onRefresh()">Try Again</button>
-    </div>
+  <div class="error-state">
+    <span class="material-symbols-outlined">error</span>
+    <p>{{ error }}</p>
+    <button class="btn secondary" (click)="onRefresh()">Try Again</button>
+  </div>
   }
 
-  <!-- Таблиця з актами -->
+  <!-- Секції з актами -->
   @else if (acts.length > 0) {
-    <div class="table-container">
-      <table class="acts-table">
-        <thead>
-          <tr>
-            <th>Act Name</th>
-            <th>Type</th>
-            <th>Options</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (act of acts; track act.id) {
-            <tr class="act-row">
-              <td class="act-name">
-                {{ getActDisplayName(act) }}
-              </td>
-              <td class="act-type">
-                <span class="type-badge" [class]="act.type">
-                  {{ getTypeDisplay(act.type) }}
-                </span>
-              </td>
-              <td class="act-options">
-                @if (getActiveOptions(act).length > 0) {
-                  <div class="options-list">
-                    @for (option of getActiveOptions(act); track option) {
-                      <span class="option-badge">{{ option }}</span>
-                    }
-                  </div>
-                } @else {
-                  <span class="no-options">No options</span>
-                }
-              </td>
-              <td class="act-actions">
-                <button
-                  class="btn-icon edit-btn"
-                  (click)="onEditClick(act)"
-                  title="Edit Act"
-                >
-                  <span class="material-symbols-outlined">border_color</span>
-                </button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+  <!-- Проходимо по кожній секції -->
+  @for (section of sortedActs(); track section.type) {
+  <div class="act-section-group">
+    <!-- Заголовок секції -->
+    <div class="section-group-header">
+      <span class="material-symbols-outlined section-icon">
+        {{ getTypeIcon(section.type) }}
+      </span>
+      <h3 class="section-group-title">{{ section.title }}</h3>
+      <span class="section-count">({{ section.acts.length }})</span>
     </div>
 
-    <div class="table-footer">
-      <span class="count-info">Total: {{ acts.length }} acts</span>
+    <!-- Контейнер для актів -->
+    <div class="acts-grid">
+      <!-- Заголовки колонок -->
+      <div class="acts-grid-header">
+        <div class="grid-cell act-name-header">Act Name</div>
+        <div class="grid-cell act-type-header">Type</div>
+        <div class="grid-cell act-options-header">Options</div>
+        <div class="grid-cell act-actions-header">Actions</div>
+      </div>
+
+      <!-- Рядки з актами -->
+      @for (act of section.acts; track act.id) {
+      <div class="act-card">
+        <!-- Назва акта -->
+        <div class="grid-cell act-name-cell">
+          <div class="act-name-content">
+            <span class="act-name-text">{{ getActDisplayName(act) }}</span>
+          </div>
+        </div>
+
+        <!-- Тип акта -->
+        <div class="grid-cell act-type-cell">
+          <span class="type-badge" [class]="act.type">
+            {{ getTypeDisplay(act.type) }}
+          </span>
+        </div>
+
+        <!-- Опції -->
+        <div class="grid-cell act-options-cell">
+          @if (getActiveOptions(act).length > 0) {
+          <div class="options-list">
+            @for (option of getActiveOptions(act); track option) {
+            <span class="option-badge">{{ option }}</span>
+            }
+          </div>
+          } @else {
+          <span class="no-options">No options</span>
+          }
+        </div>
+
+        <!-- Дії -->
+        <div class="grid-cell act-actions-cell ">
+          <button class="btn-icon edit-btn" (click)="onEditClick(act)" title="Edit Act">
+            <span class="material-symbols-outlined color-green">border_color</span>
+          </button>
+          <button class="btn-icon delete-btn" (click)="onDeleteClick(act)" title="Delete Act">
+            <span class="material-symbols-outlined red">
+              delete
+            </span>
+          </button>
+        </div>
+      </div>
+      }
     </div>
+  </div>
+  }
+
+  <!-- Підсумок -->
+  <div class="table-footer">
+    <span class="count-info">Total: {{ totalActsCount() }} acts</span>
+  </div>
   }
 
   <!-- Порожній стан -->
   @else {
-    <div class="empty-state">
-      <span class="material-symbols-outlined">inbox</span>
-      <p>No acts found. Create your first act!</p>
-    </div>
+  <div class="empty-state">
+    <span class="material-symbols-outlined">inbox</span>
+    <p>No acts found. Create your first act!</p>
+  </div>
   }
 </section>

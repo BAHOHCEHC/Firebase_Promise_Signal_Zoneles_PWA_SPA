@@ -11,7 +11,8 @@ import {
   CollectionReference,
   DocumentData,
   updateDoc,
-  doc
+  doc,
+  deleteDoc
 } from '@angular/fire/firestore';
 import { Act, Fight_type, Mode } from '../../../models/models';
 
@@ -355,29 +356,17 @@ export class ActModsService {
 
   // Метод для видалення акта
   async deleteAct(id: string): Promise<void> {
-    // У Firestore потрібно використовувати deleteDoc()
-    // Для цього потрібно імпортувати deleteDoc та doc
-    // import { deleteDoc, doc } from '@angular/fire/firestore';
-
-    // Приклад реалізації:
-    // try {
-    //   const actDoc = doc(this.firestore, 'acts', id);
-    //   await deleteDoc(actDoc);
-    // } catch (error) {
-    //   console.error('Помилка при видаленні акта:', error);
-    //   throw error;
-    // }
-
-    console.warn('Метод deleteAct не реалізований. Потрібно додати імпорт deleteDoc та doc.');
-    throw new Error('Метод deleteAct не реалізований');
+    try {
+      const actDoc = doc(this.firestore, 'acts', id);
+      await deleteDoc(actDoc);
+    } catch (error) {
+      console.error('Помилка при видаленні акта:', error);
+      throw error;
+    }
   }
 
   // Метод для оновлення акта
   async updateAct(id: string, updates: Partial<Act>): Promise<void> {
-    // У Firestore потрібно використовувати updateDoc()
-    // Для цього потрібно імпортувати updateDoc та doc
-
-    // Приклад реалізації:
     try {
       const actDoc = doc(this.firestore, 'acts', id);
       await updateDoc(actDoc, {
@@ -388,9 +377,40 @@ export class ActModsService {
       console.error('Помилка при оновленні акта:', error);
       throw error;
     }
+  }
 
-    console.warn('Метод updateAct не реалізований. Потрібно додати імпорт updateDoc та doc.');
-    throw new Error('Метод updateAct не реалізований');
+  // У ActModsService
+  getAllActsSorted(): Promise<Act[]> {
+    return this.getAllActs().then(acts => {
+      // Порядок типів
+      const typeOrder = ['Variation_fight', 'Boss_fight', 'Arcana_fight'];
+
+      // Групуємо за типами
+      const actsByType: Record<string, Act[]> = {};
+
+      acts.forEach(act => {
+        if (!actsByType[act.type]) {
+          actsByType[act.type] = [];
+        }
+        actsByType[act.type].push(act);
+      });
+
+      // Сортуємо всередині груп
+      Object.values(actsByType).forEach(group => {
+        group.sort((a, b) => a.name - b.name);
+      });
+
+      // Об'єднуємо в правильному порядку
+      const sortedActs: Act[] = [];
+
+      typeOrder.forEach(type => {
+        if (actsByType[type]) {
+          sortedActs.push(...actsByType[type]);
+        }
+      });
+
+      return sortedActs;
+    });
   }
 
   getAllModes(): Promise<Mode[]> {
