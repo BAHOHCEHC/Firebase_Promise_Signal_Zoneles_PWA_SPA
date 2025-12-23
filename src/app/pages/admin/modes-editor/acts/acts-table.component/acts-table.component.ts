@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Act } from '../../../../../../models/models';
 
@@ -10,7 +10,15 @@ import { Act } from '../../../../../../models/models';
   styleUrls: ['./acts-table.component.scss']
 })
 export class ActsTableComponent {
-  @Input() acts: Act[] = [];
+  private _acts = signal<Act[]>([]);
+
+  @Input() set acts(value: Act[]) {
+    this._acts.set(value);
+  }
+  get acts() {
+    return this._acts();
+  }
+
   @Input() loading: boolean = false;
   @Input() error: string | null = null;
 
@@ -33,12 +41,13 @@ export class ActsTableComponent {
 
   // Розділені та відсортовані акти
   readonly sortedActs = computed(() => {
-    if (!this.acts.length) return [];
+    const acts = this._acts();
+    if (!acts.length) return [];
 
     // Групуємо акти за типом
     const actsByType: Record<string, Act[]> = {};
 
-    this.acts.forEach(act => {
+    acts.forEach(act => {
       if (!actsByType[act.type]) {
         actsByType[act.type] = [];
       }
@@ -68,7 +77,7 @@ export class ActsTableComponent {
 
   // Загальна кількість актів
   readonly totalActsCount = computed(() => {
-    return this.acts.length;
+    return this._acts().length;
   });
 
   // Метод для отримання списку активних опцій

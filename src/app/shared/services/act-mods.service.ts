@@ -413,7 +413,84 @@ export class ActModsService {
     });
   }
 
-  getAllModes(): Promise<Mode[]> {
-    return Promise.resolve([]);
+  async createMode(mode: Mode): Promise<void> {
+    try {
+      const existingMode = await this.checkModeExists(mode.name);
+      if (existingMode) {
+        throw new Error(`Режим з назвою ${mode.name} вже існує`);
+      }
+
+      const modesCollection = collection(this.firestore, 'modes');
+      const { id: modeId, ...modeData } = mode;
+
+      await addDoc(modesCollection, {
+        ...modeData,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+
+    } catch (error) {
+      console.error('Помилка при створенні режиму:', error);
+      throw error;
+    }
+  }
+
+  async checkModeExists(name: string): Promise<boolean> {
+    try {
+      const modesCollection = collection(this.firestore, 'modes');
+      const q = query(modesCollection, where('name', '==', name));
+      const querySnapshot = await getDocs(q);
+      return !querySnapshot.empty;
+    } catch (error) {
+      console.error('Помилка при перевірці режиму:', error);
+      throw error;
+    }
+  }
+
+  async getAllModes(): Promise<Mode[]> {
+    try {
+      const modesCollection = collection(this.firestore, 'modes');
+      const querySnapshot = await getDocs(modesCollection);
+      const modes: Mode[] = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const { id: dataId, ...cleanData } = data;
+        modes.push({
+          id: doc.id,
+          ...cleanData as any
+        } as Mode);
+      });
+
+      return modes;
+      return modes;
+    } catch (error) {
+      console.error('Помилка при отриманні режимів:', error);
+      throw error;
+    }
+  }
+
+  async deleteMode(id: string): Promise<void> {
+    try {
+      const modeDoc = doc(this.firestore, 'modes', id);
+      await deleteDoc(modeDoc);
+    } catch (error) {
+      console.error('Помилка при видаленні режиму:', error);
+      throw error;
+    }
+  }
+
+  async updateMode(mode: Mode): Promise<void> {
+    try {
+      const modeDoc = doc(this.firestore, 'modes', mode.id);
+      const { id: modeId, ...modeData } = mode;
+      await updateDoc(modeDoc, {
+        ...modeData,
+        updatedAt: new Date()
+      });
+    } catch (error) {
+      console.error('Помилка при оновленні режиму:', error);
+      throw error;
+    }
   }
 }

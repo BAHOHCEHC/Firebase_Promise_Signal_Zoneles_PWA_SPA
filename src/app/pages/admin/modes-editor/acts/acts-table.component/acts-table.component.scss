@@ -1,7 +1,6 @@
 .acts-section {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
   margin-bottom: 30px;
 }
 
@@ -34,27 +33,34 @@
   gap: 12px;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid #6e4bd7;
 
   .section-icon {
     font-size: 24px;
-    color: #666;
+    color: #6e4bd7;
   }
 
   .section-group-title {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: #fff;
   }
 
   .section-count {
-    color: #666;
     font-size: 14px;
     font-weight: 500;
-    background: #f5f5f5;
-    padding: 2px 8px;
-    border-radius: 12px;
+  }
+}
+
+.fight {
+  &_variation {
+    color: #4caf50;
+  }
+  &_boss {
+    color: red;
+  }
+  &_arcana {
+    color: #6e4bd7;
   }
 }
 
@@ -69,19 +75,18 @@
 
 // Стилі для Boss Chambers
 .act-section-group:nth-child(2) .section-group-header {
-  border-bottom-color: #f44336;
+  border-bottom-color: #4caf50;
 
   .section-icon {
-    color: #f44336;
+    color: #4caf50;
   }
 }
 
 // Стилі для Arcana Chambers
 .act-section-group:nth-child(3) .section-group-header {
-  border-bottom-color: #4caf50;
-
+  border-bottom-color: red;
   .section-icon {
-    color: #4caf50;
+    color: red;
   }
 }
 
@@ -97,14 +102,16 @@
   font-weight: 600;
   font-size: 14px;
   justify-content: space-between;
+  padding-left: 20px;
 }
 
 .act-card {
   display: flex;
   margin: 5px 0;
-  border-radius: 10px;
   justify-content: space-between;
-  background-color: #303040;
+  background: #2a2a35;
+  border-radius: 8px;
+  padding: 5px 0px 5px 20px;
   &:last-child {
     border-bottom: none;
   }
@@ -112,7 +119,6 @@
 
 // Загальні стилі для клітинок
 .grid-cell {
-  padding: 0px 20px;
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -145,8 +151,9 @@
   min-width: 80px;
   justify-content: center;
 }
+
 .act-actions-cell {
-  justify-content: space-around;
+  gap: 20px;
 }
 
 // Стилі для вмісту клітинок
@@ -227,15 +234,29 @@
     background-color: #71767b;
   }
 
-  .material-symbols-outlined {
+  .material-symbols-outlined,
+  svg {
     font-size: 22px;
+    width: 22px;
+    height: 22px;
   }
-  .material-symbols-outlined.red {
+
+  .material-symbols-outlined.red,
+  svg.red {
     color: red;
   }
+
+  .material-symbols-outlined.color-green,
+  svg.color-green {
+    color: #4caf50;
+    /* Assuming standard green or taking from existing if defined */
+  }
+
   .refresh {
     color: #fff;
     font-size: 34px;
+    width: 34px;
+    height: 34px;
   }
 }
 
@@ -269,7 +290,7 @@
 }
 
 .error-state .material-symbols-outlined {
-  color: #f44336;
+  color: red;
 }
 
 .loading-state .spin {
@@ -280,6 +301,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -331,6 +353,7 @@
 
   .act-name-cell {
     order: 1;
+
     .act-name-content {
       width: 100%;
     }
