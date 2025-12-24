@@ -27,10 +27,6 @@
   transition: all 0.2s;
   color: #fff;
   background: none;
-
-  &.fs_24 {
-    font-size: 16px; // User class name says fs_24 but visuals look smaller/standard button. Keeping generic for now or adjusting.
-  }
   &:hover {
     color: $btn-primary-hover;
   }
@@ -162,9 +158,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-}
-
-.enemy-item {
 }
 
 .enemy-card {

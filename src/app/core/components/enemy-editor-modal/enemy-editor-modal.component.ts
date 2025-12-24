@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit, signal, computed, ViewChild, ElementRef, inject, DestroyRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, signal, computed, ViewChild, ElementRef, inject, DestroyRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -52,6 +52,27 @@ export class EnemyEditorModalComponent implements OnInit {
   public isEditMode = computed(() => {
     return !!this.data && !!this.data.id;
   });
+
+  // Effect to auto-select last group
+  constructor() {
+    effect(() => {
+      const groups = this.filteredGroups();
+      if (this.type === 'enemy' && groups.length > 0 && !this.data?.id) {
+        // Auto-select last group if creating new enemy
+        const lastGroup = groups[groups.length - 1];
+        // We need to wait for form to be ready or just set it
+        // Use setTimeout to ensure form is ready if this runs too early, but effect runs asynchronously usually
+        // However, form might not be initialized in constructor.
+        // Safer to check this.form
+        if (this.form && this.form.get('groupId')) {
+          const currentVal = this.form.get('groupId')?.value;
+          if (!currentVal) {
+            this.form.patchValue({ groupId: lastGroup.id });
+          }
+        }
+      }
+    });
+  }
 
   public ngOnInit(): void {
     this.initForm();
