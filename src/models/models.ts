@@ -3,7 +3,7 @@ export interface Mode {
   name: string;
   min_characters: number;
   max_characters: number;
-  chambers: Act []
+  chambers: Act[]
 }
 
 
@@ -35,12 +35,14 @@ export interface Character {
 export interface Enemy {
   id: string;
   name: string;
-  avatarUrl: string;
   element: ElementType;
+  avatarUrl: string;
+  specialMark: boolean;
   quantity: number;
-  specialMark: boolean; // зображення мітки
-  categoryId: EnemyCategory;
-  groupId: EnemyGroup;
+  categoryId: string; // Reference to category ID
+  groupId: string; // Reference to group ID (це має бути string)
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface User {
@@ -72,7 +74,7 @@ export interface Enemy_options {
   timer?: boolean;
   defeat?: boolean;
   special_type?: boolean;
-  }
+}
 
 export type CharacterRarity =
   | "legendary"
@@ -125,15 +127,17 @@ export interface UserRole {
 
 export interface EnemyCategory {
   id: string;
-  title: EnemyCategoryName;
+  title: string;
   groups: EnemyGroup[]; // кожна категорія має список груп
 }
 
 export interface EnemyGroup {
   id: string;
   title: string;
+  categoryId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
-
 
 export interface Season_details {
   elemental_type_limided: ElementType[]; //Разрешенные 3 шт.
@@ -157,4 +161,4 @@ export type Wave_type =
   | "custom";
 
 
-
+export type ModalType = 'categories' | 'group' | 'enemy';

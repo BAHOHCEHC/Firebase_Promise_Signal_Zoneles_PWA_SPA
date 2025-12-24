@@ -1,0 +1,120 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        @switch (type) {
+        @case ('categories') {
+        <span>Add Categories</span>
+        }
+        @case ('group') {
+        <span>Add group</span>
+        }
+        @case ('enemy') {
+        <span>Add new enemy</span>
+        }
+        }
+      </h2>
+    </div>
+
+    <form [formGroup]="form" class="modal-form" (ngSubmit)="onSave()">
+
+
+      @if (type === 'categories') {
+      <div class="form-group">
+        <label class="form-label">Categories name</label>
+        <input type="text" class="form-control" formControlName="title" placeholder="Type name">
+      </div>
+      }
+
+
+      @if (type === 'group') {
+      <div class="form-group">
+        <label class="form-label">Group name</label>
+        <input type="text" class="form-control" formControlName="title" placeholder="Type name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Select Category</label>
+        <div class="custom-select-wrapper">
+          <select class="form-control" formControlName="categoryId">
+            @for (cat of categories; track cat.id) {
+            <option [value]="cat.id">{{ cat.title }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      }
+
+      @if (type === 'enemy') {
+      <div class="form-group">
+        <label class="form-label">Select element</label>
+        <div class="element-selector">
+          @for (el of elementTypes; track el) {
+          <div class="element-icon" [class.active]="form.get('element')?.value === el" (click)="selectElement(el)">
+            <img [src]="'assets/images/ElementType_' + el + '.png'" [alt]="el">
+          </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <input #fileInput type="file" accept="image/*" (change)="onImagePick($event)" hidden>
+
+        <div class="avatar-upload" (click)="onAvatarClick(fileInput)" [class.has-avatar]="form.get('avatarUrl')?.value"
+          [class.has-error]="form.get('avatarUrl')?.invalid && form.get('avatarUrl')?.touched">
+
+          @if (!form.get('avatarUrl')?.value) {
+          <div class="avatar-placeholder">
+            <span class="plus-icon">+</span>
+          </div>
+          } @else {
+          <div class="avatar-preview">
+            <img [src]="form.get('avatarUrl')?.value" alt="Avatar preview" class="avatar-image">
+          </div>
+          }
+
+          @if (form.get('avatarUrl')?.invalid && form.get('avatarUrl')?.touched) {
+          <div class="avatar-error">
+            <span class="material-symbols-outlined">error</span>
+            <span>Avatar is required</span>
+          </div>
+          }
+        </div>
+
+        <div class="form-group flex-grow">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-control" formControlName="name" placeholder="Type name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Select Category</label>
+        <select class="form-control" formControlName="categoryId">
+          @for (cat of categories; track cat.id) {
+          <option [value]="cat.id">{{ cat.title }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Select Group</label>
+        <select class="form-control" formControlName="groupId">
+          @for (grp of filteredGroups; track grp.id) {
+          <option [value]="grp.id">{{ grp.title }}</option>
+          }
+        </select>
+      </div>
+      }
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="onClose()">
+          Cancel
+        </button>
+
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
