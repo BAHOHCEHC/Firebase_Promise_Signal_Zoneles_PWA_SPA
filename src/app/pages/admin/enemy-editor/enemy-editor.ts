@@ -21,7 +21,7 @@ export class EnemyEditor implements OnInit {
 
   // Modal State
   public isEditorModalOpen = signal(false);
-  readonly editorModalType = signal<ModalType>('categories');
+  public readonly editorModalType = signal<ModalType>('categories');
   public editorModalData = signal<any>(null);
 
   public isConfirmModalOpen = signal(false);
@@ -45,11 +45,11 @@ export class EnemyEditor implements OnInit {
     return !!cat && cat.groups.length > 0;
   });
 
-  async ngOnInit(): Promise<void> {
+  public async ngOnInit(): Promise<void> {
     await this.loadData();
   }
 
-  async loadData(): Promise<void> {
+  public async loadData(): Promise<void> {
     this.isLoading.set(true);
     this.error.set(null);
 
@@ -68,7 +68,7 @@ export class EnemyEditor implements OnInit {
     }
   }
 
-  openEnemiesUniversalModal(type: ModalType): void {
+  public openEnemiesUniversalModal(type: ModalType): void {
     this.editorModalType.set(type);
 
     // Очищаємо попередні дані
@@ -89,7 +89,7 @@ export class EnemyEditor implements OnInit {
     this.isEditorModalOpen.set(true);
   }
 
-  async onSaveEditor(data: any): Promise<void> {
+  public async onSaveEditor(data: any): Promise<void> {
     try {
       const type = this.editorModalType();
 
@@ -125,12 +125,12 @@ export class EnemyEditor implements OnInit {
     }
   }
 
-  selectCategory(id: string): void {
+  public selectCategory(id: string): void {
     this.activeCategoryId.set(id);
   }
 
   // Edit Group
-  onEditGroup(group: EnemyGroup, categoryId: string): void {
+  public onEditGroup(group: EnemyGroup, categoryId: string): void {
     this.editorModalType.set('group');
     this.editorModalData.set({
       id: group.id, // Include ID for update
@@ -141,12 +141,12 @@ export class EnemyEditor implements OnInit {
   }
 
   // Delete Enemy
-  onDeleteEnemy(enemyId: string): void {
+  public onDeleteEnemy(enemyId: string): void {
     this.enemyToDeleteId.set(enemyId);
     this.isConfirmModalOpen.set(true);
   }
 
-  async confirmDelete(): Promise<void> {
+  public async confirmDelete(): Promise<void> {
     const id = this.enemyToDeleteId();
     if (id) {
       try {
@@ -161,21 +161,17 @@ export class EnemyEditor implements OnInit {
     }
   }
 
-  getEnemiesForGroup(groupId: string): Enemy[] {
+  public getEnemiesForGroup(groupId: string): Enemy[] {
     return this.enemiesService.getEnemiesForGroup(groupId);
   }
 
-  getEnemiesByGroup(groupId: string): Enemy[] {
-    return this.enemiesService.getEnemiesByGroup(groupId);
-  }
-
   // Helper method for template
-  getCategoryGroups(categoryId: string): EnemyGroup[] {
+  public getCategoryGroups(categoryId: string): EnemyGroup[] {
     return this.enemiesService.getGroupsForCategory(categoryId);
   }
 
   // Refresh data
-  async refresh(): Promise<void> {
+  public async refresh(): Promise<void> {
     await this.loadData();
   }
 }

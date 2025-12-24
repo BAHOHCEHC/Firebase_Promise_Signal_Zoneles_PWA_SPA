@@ -60,16 +60,16 @@
       <div class="form-row">
         <input #fileInput type="file" accept="image/*" (change)="onImagePick($event)" hidden>
 
-        <div class="avatar-upload" (click)="onAvatarClick(fileInput)" [class.has-avatar]="form.get('avatarUrl')?.value"
+        <div class="avatar-upload" (click)="onAvatarClick(fileInput)" [class.has-avatar]="avatarUrl()"
           [class.has-error]="form.get('avatarUrl')?.invalid && form.get('avatarUrl')?.touched">
 
-          @if (!form.get('avatarUrl')?.value) {
+          @if (!avatarUrl()) {
           <div class="avatar-placeholder">
             <span class="plus-icon">+</span>
           </div>
           } @else {
           <div class="avatar-preview">
-            <img [src]="form.get('avatarUrl')?.value" alt="Avatar preview" class="avatar-image">
+            <img [src]="avatarUrl()" alt="Avatar preview" class="avatar-image">
           </div>
           }
 
@@ -99,7 +99,7 @@
       <div class="form-group">
         <label class="form-label">Select Group</label>
         <select class="form-control" formControlName="groupId">
-          @for (grp of filteredGroups; track grp.id) {
+          @for (grp of filteredGroups(); track grp.id) {
           <option [value]="grp.id">{{ grp.title }}</option>
           }
         </select>
@@ -111,7 +111,7 @@
           Cancel
         </button>
 
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
           Save
         </button>
       </div>

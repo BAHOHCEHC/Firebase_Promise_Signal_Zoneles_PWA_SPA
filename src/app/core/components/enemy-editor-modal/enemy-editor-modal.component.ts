@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, signal, computed, ViewChild, ElementRef, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ElementTypeName, EnemyCategory, EnemyGroup } from '../../../../models/models';
 
 export type ModalType = 'categories' | 'group' | 'enemy';
@@ -13,36 +14,59 @@ export type ModalType = 'categories' | 'group' | 'enemy';
   styleUrl: './enemy-editor-modal.component.scss'
 })
 export class EnemyEditorModalComponent implements OnInit {
-  @Input() type: ModalType = 'categories';
-  @Input() data: any = null; // Data for editing
-  @Input() categories: EnemyCategory[] = []; // Pass categories for dropdown
-  @Input() groups: EnemyGroup[] = []; // Pass groups for dropdown if needed globally or filter locally
-  @Input() activeCategoryId: string | null = null; // To prefill category
+  @Input() public type: ModalType = 'categories';
+  @Input() public data: any = null; // Data for editing
+  @Input() public categories: EnemyCategory[] = []; // Pass categories for dropdown
+  @Input() public groups: EnemyGroup[] = []; // Pass groups for dropdown if needed globally or filter locally
+  @Input() public activeCategoryId: string | null = null; // To prefill category
 
-  @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<any>();
+  @Output() public close = new EventEmitter<void>();
+  @Output() public save = new EventEmitter<any>();
 
-  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInput', { static: false }) public fileInput!: ElementRef<HTMLInputElement>;
+
+  private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   public form!: FormGroup;
   public elementTypes: ElementTypeName[] = [
     "empty", "pyro", "hydro", "electro", "cryo", "dendro", "anemo", "geo"
   ];
 
-  readonly isUploading = signal(false);
-  readonly uploadError = signal<string | null>(null);
+  public readonly isUploading = signal(false);
+  public readonly uploadError = signal<string | null>(null);
 
-  constructor(private fb: FormBuilder) { }
+  // Signal for filtering groups
+  public selectedCategoryId = signal<string | null>(null);
+  // Signal for avatar preview (reactivity fix for zoneless)
+  public avatarUrl = signal<string | null>(null);
+
+  public filteredGroups = computed(() => {
+    const catId = this.selectedCategoryId();
+    if (!catId) return [];
+    const cat = this.categories.find(c => c.id === catId);
+    return cat ? cat.groups : [];
+  });
 
   public ngOnInit(): void {
     this.initForm();
+    this.setupFormSignalSync();
+
     if (this.data) {
       this.form.patchValue(this.data);
+      // Sync signal with initial data
+      if (this.data.categoryId) {
+        this.selectedCategoryId.set(this.data.categoryId);
+      }
+      if (this.data.avatarUrl) {
+        this.avatarUrl.set(this.data.avatarUrl);
+      }
     } else {
       // Prefill logic
       if (this.type === 'group' || this.type === 'enemy') {
         if (this.activeCategoryId) {
           this.form.patchValue({ categoryId: this.activeCategoryId });
+          this.selectedCategoryId.set(this.activeCategoryId);
         }
       }
     }
@@ -62,16 +86,38 @@ export class EnemyEditorModalComponent implements OnInit {
       this.form = this.fb.group({
         element: ['', Validators.required],
         name: ['', Validators.required],
-        avatarUrl: [''], // Required but handled by custom control (placeholder +)
+        avatarUrl: ['', Validators.required], // STRICT VALIDATION
         categoryId: ['', Validators.required],
         groupId: ['', Validators.required]
       });
     }
   }
 
+  private setupFormSignalSync(): void {
+    const categoryIdControl = this.form.get('categoryId');
+    if (categoryIdControl) {
+      categoryIdControl.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(id => {
+          this.selectedCategoryId.set(id);
+        });
+    }
+
+    const avatarUrlControl = this.form.get('avatarUrl');
+    if (avatarUrlControl) {
+      avatarUrlControl.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(url => {
+          this.avatarUrl.set(url);
+        });
+    }
+  }
+
   public onSave(): void {
     if (this.form.valid) {
       this.save.emit(this.form.value);
+    } else {
+      this.form.markAllAsTouched(); // Show validation errors
     }
   }
 
@@ -79,23 +125,15 @@ export class EnemyEditorModalComponent implements OnInit {
     this.close.emit();
   }
 
-  // Helper for filtered groups based on selected category in form
-  public get filteredGroups(): EnemyGroup[] {
-    const catId = this.form.get('categoryId')?.value;
-    if (!catId) return [];
-    const cat = this.categories.find(c => c.id === catId);
-    return cat ? cat.groups : [];
-  }
-
   public selectElement(type: ElementTypeName): void {
     this.form.patchValue({ element: type });
   }
 
-  onAvatarClick(fileInput: HTMLInputElement): void {
+  public onAvatarClick(fileInput: HTMLInputElement): void {
     fileInput.click();
   }
 
-  onImagePick(event: Event): void {
+  public onImagePick(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
@@ -119,20 +157,15 @@ export class EnemyEditorModalComponent implements OnInit {
     reader.onload = (e: ProgressEvent<FileReader>) => {
       const imageUrl = e.target?.result as string;
 
-      // Відкладаємо зміни — уникаємо ExpressionChangedAfterItHasBeenCheckedError
-      setTimeout(() => {
-        this.form.patchValue({ avatarUrl: imageUrl });
-        this.form.get('avatarUrl')?.setErrors(null);
-        this.isUploading.set(false);
-        input.value = '';
-      }, 0);
+      this.form.patchValue({ avatarUrl: imageUrl });
+      this.form.get('avatarUrl')?.setErrors(null);
+      this.isUploading.set(false);
+      input.value = '';
     };
 
     reader.onerror = () => {
-      setTimeout(() => {
-        this.uploadError.set('Failed to read image file');
-        this.isUploading.set(false);
-      }, 0);
+      this.uploadError.set('Failed to read image file');
+      this.isUploading.set(false);
     };
 
     reader.readAsDataURL(file);
