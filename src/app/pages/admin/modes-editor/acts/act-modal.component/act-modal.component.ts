@@ -113,7 +113,7 @@ export class ActModalComponent implements OnInit {
       }
 
       nameControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-    }, { allowSignalWrites: true });
+    });
   }
 
   // ---------- COMPUTED ----------

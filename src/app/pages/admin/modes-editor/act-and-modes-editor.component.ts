@@ -52,7 +52,7 @@ export class ActAndModesEditor implements OnInit {
         }, 100);
         this.editingAct.set(null);
       }
-    }, { allowSignalWrites: true });
+    });
 
     // Effect for Mode modal
     effect(() => {
@@ -63,7 +63,7 @@ export class ActAndModesEditor implements OnInit {
         }, 100);
         this.editingMode.set(null);
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   ngOnInit(): void {
