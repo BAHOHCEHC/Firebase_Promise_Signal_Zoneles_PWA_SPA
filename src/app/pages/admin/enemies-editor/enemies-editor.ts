@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { multiFactor } from 'firebase/auth';
 
 @Component({
   standalone: true,
@@ -8,5 +9,7 @@ import { Component } from '@angular/core';
   styleUrl: './enemies-editor.scss',
 })
 export class EnemiesEditor {
-
+  openEnemiesUniversalModal(entity: string): void {
+    console.log('realization');
+  }
 }
