@@ -3,10 +3,10 @@ import { multiFactor } from 'firebase/auth';
 
 @Component({
   standalone: true,
-  selector: 'app-enemies-editor',
+  selector: 'app-enemy-editor',
   imports: [],
-  templateUrl: './enemies-editor.html',
-  styleUrl: './enemies-editor.scss',
+  templateUrl: './enemy-editor.html',
+  styleUrl: './enemy-editor.scss',
 })
 export class EnemiesEditor {
   openEnemiesUniversalModal(entity: string): void {
