@@ -22,6 +22,7 @@ export class EnemyEditorModalComponent implements OnInit {
 
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<any>();
+  @Output() public delete = new EventEmitter<any>();
 
   @ViewChild('fileInput', { static: false }) public fileInput!: ElementRef<HTMLInputElement>;
 
@@ -46,6 +47,10 @@ export class EnemyEditorModalComponent implements OnInit {
     if (!catId) return [];
     const cat = this.categories.find(c => c.id === catId);
     return cat ? cat.groups : [];
+  });
+
+  public isEditMode = computed(() => {
+    return !!this.data && !!this.data.id;
   });
 
   public ngOnInit(): void {
@@ -119,6 +124,10 @@ export class EnemyEditorModalComponent implements OnInit {
     } else {
       this.form.markAllAsTouched(); // Show validation errors
     }
+  }
+
+  public onDelete(): void {
+    this.delete.emit();
   }
 
   public onClose(): void {

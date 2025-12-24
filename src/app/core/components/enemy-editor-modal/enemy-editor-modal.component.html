@@ -4,10 +4,18 @@
       <h2 class="modal-title">
         @switch (type) {
         @case ('categories') {
+        @if (isEditMode()) {
+        <span>Edit Category</span>
+        } @else {
         <span>Add Categories</span>
         }
+        }
         @case ('group') {
+        @if (isEditMode()) {
+        <span>Edit group</span>
+        } @else {
         <span>Add group</span>
+        }
         }
         @case ('enemy') {
         <span>Add new enemy</span>
@@ -122,7 +130,14 @@
       }
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" (click)="onClose()">
+        @if ((type === 'group' || type === 'categories') && isEditMode()) {
+        <button type="button" class="btn-delete" (click)="onDelete()">
+          Delete
+        </button>
+        }
+
+
+        <button type="button" class="btn secondary" (click)="onClose()">
           Cancel
         </button>
 

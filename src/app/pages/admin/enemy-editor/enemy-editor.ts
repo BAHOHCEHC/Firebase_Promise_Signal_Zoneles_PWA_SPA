@@ -26,6 +26,9 @@ export class EnemyEditor implements OnInit {
 
   public isConfirmModalOpen = signal(false);
   public enemyToDeleteId = signal<string | null>(null);
+  public groupToDeleteId = signal<string | null>(null);
+  public categoryToDeleteId = signal<string | null>(null);
+  public deleteContext = signal<'enemy' | 'group' | 'category' | null>(null);
 
   // Loading state
   public isLoading = signal(true);
@@ -94,10 +97,16 @@ export class EnemyEditor implements OnInit {
       const type = this.editorModalType();
 
       if (type === 'categories') {
-        await this.enemiesService.addCategory(data.title);
-        // Auto-select if first one
-        if (this.categories().length === 1) {
-          this.activeCategoryId.set(this.categories()[0].id);
+        if (data.id) {
+          // Edit existing category
+          await this.enemiesService.updateCategory(data.id, { title: data.title });
+        } else {
+          // Create new category
+          await this.enemiesService.addCategory(data.title);
+          // Auto-select if first one
+          if (this.categories().length === 1) {
+            this.activeCategoryId.set(this.categories()[0].id);
+          }
         }
       } else if (type === 'group') {
         if (data.id) {
@@ -129,6 +138,18 @@ export class EnemyEditor implements OnInit {
     this.activeCategoryId.set(id);
   }
 
+  // Edit Category
+  public onEditCategory(catId: string): void {
+    const category = this.categories().find(c => c.id === catId);
+    if (category) {
+      this.editorModalType.set('categories');
+      this.editorModalData.set({
+        id: category.id,
+        title: category.title
+      });
+      this.isEditorModalOpen.set(true);
+    }
+  }
   // Edit Group
   public onEditGroup(group: EnemyGroup, categoryId: string): void {
     this.editorModalType.set('group');
@@ -142,22 +163,64 @@ export class EnemyEditor implements OnInit {
 
   // Delete Enemy
   public onDeleteEnemy(enemyId: string): void {
+    this.deleteContext.set('enemy');
     this.enemyToDeleteId.set(enemyId);
     this.isConfirmModalOpen.set(true);
   }
 
-  public async confirmDelete(): Promise<void> {
-    const id = this.enemyToDeleteId();
-    if (id) {
-      try {
-        await this.enemiesService.deleteEnemy(id);
-        this.isConfirmModalOpen.set(false);
-        this.enemyToDeleteId.set(null);
-        await this.loadData(); // Refresh data
-      } catch (error) {
-        console.error('Error deleting enemy:', error);
-        this.error.set('Failed to delete enemy');
+  // Generic Delete Handler from Modal
+  public onDeleteFromModal(): void {
+    const data = this.editorModalData();
+    const type = this.editorModalType();
+
+    if (data && data.id) {
+      this.isEditorModalOpen.set(false); // Close editor modal
+
+      if (type === 'group') {
+        this.deleteContext.set('group');
+        this.groupToDeleteId.set(data.id);
+        this.isConfirmModalOpen.set(true);
+      } else if (type === 'categories') {
+        this.deleteContext.set('category');
+        this.categoryToDeleteId.set(data.id);
+        this.isConfirmModalOpen.set(true);
       }
+    }
+  }
+
+  public async confirmDelete(): Promise<void> {
+    const context = this.deleteContext();
+
+    try {
+      if (context === 'enemy') {
+        const id = this.enemyToDeleteId();
+        if (id) {
+          await this.enemiesService.deleteEnemy(id);
+        }
+      } else if (context === 'group') {
+        const id = this.groupToDeleteId();
+        if (id) {
+          await this.enemiesService.deleteGroup(id);
+        }
+      } else if (context === 'category') {
+        const id = this.categoryToDeleteId();
+        if (id) {
+          await this.enemiesService.deleteCategory(id);
+          // Reset active category if deleted
+          if (this.activeCategoryId() === id) {
+            this.activeCategoryId.set(null);
+          }
+        }
+      }
+
+      this.isConfirmModalOpen.set(false);
+      this.enemyToDeleteId.set(null);
+      this.groupToDeleteId.set(null);
+      this.deleteContext.set(null);
+      await this.loadData(); // Refresh data
+    } catch (error) {
+      console.error(`Error deleting ${context}:`, error);
+      this.error.set(`Failed to delete ${context}`);
     }
   }
 

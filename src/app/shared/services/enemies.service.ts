@@ -142,6 +142,47 @@ export class EnemiesService {
     }
   }
 
+  async deleteCategory(categoryId: string): Promise<void> {
+    try {
+      // 1. Get all groups for this category
+      const groupsRef = collection(this.firestore, 'groups');
+      const qGroups = query(groupsRef, where('categoryId', '==', categoryId));
+      const groupsSnapshot = await getDocs(qGroups);
+
+      const batch = writeBatch(this.firestore);
+
+      // 2. Delete the category itself
+      const categoryRef = doc(this.firestore, 'categories', categoryId);
+      batch.delete(categoryRef);
+
+      // 3. Delete groups and their enemies
+      for (const groupDoc of groupsSnapshot.docs) {
+        // Delete group
+        batch.delete(groupDoc.ref);
+
+        // Find enemies for this group
+        const enemiesRef = collection(this.firestore, 'enemies');
+        const qEnemies = query(enemiesRef, where('groupId', '==', groupDoc.id));
+        const enemiesSnapshot = await getDocs(qEnemies);
+
+        // Delete enemies
+        enemiesSnapshot.forEach(enemyDoc => {
+          batch.delete(enemyDoc.ref);
+        });
+      }
+
+      await batch.commit();
+
+      // Refresh data
+      await this.loadCategories();
+      await this.loadGroups();
+      await this.loadEnemies();
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      throw error;
+    }
+  }
+
   // ========== GROUPS ==========
   async loadGroups(): Promise<void> {
     try {
