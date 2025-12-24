@@ -50,9 +50,24 @@
         <label class="form-label">Select element</label>
         <div class="element-selector">
           @for (el of elementTypes; track el) {
+          <!-- <div class="element-icon" [class.active]="form.get('element')?.value === el" (click)="selectElement(el)">
+            <img [src]="'assets/images/ElementType_' + el + '.png'" [alt]="el">
+          </div> -->
+          @if (el === 'empty') {
+          <!-- SVG квадрат з пунктиром -->
+          <div class="element-icon" [class.active]="form.get('element')?.value === el" (click)="selectElement(el)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 27 27" fill="none">
+              <path
+                d="M3 24V27C2.175 27 1.46875 26.7063 0.88125 26.1188C0.29375 25.5312 0 24.825 0 24H3ZM0 21V18H3V21H0ZM0 15V12H3V15H0ZM0 9V6H3V9H0ZM3 3H0C0 2.175 0.29375 1.46875 0.88125 0.88125C1.46875 0.29375 2.175 0 3 0V3ZM6 27V24H9V27H6ZM6 3V0H9V3H6ZM12 27V24H15V27H12ZM12 3V0H15V3H12ZM18 27V24H21V27H18ZM18 3V0H21V3H18ZM24 24H27C27 24.825 26.7063 25.5312 26.1188 26.1188C25.5312 26.7063 24.825 27 24 27V24ZM24 21V18H27V21H24ZM24 15V12H27V15H24ZM24 9V6H27V9H24ZM24 3V0C24.825 0 25.5312 0.29375 26.1188 0.88125C26.7063 1.46875 27 2.175 27 3H24Z"
+                fill="white" />
+            </svg>
+          </div>
+          } @else {
           <div class="element-icon" [class.active]="form.get('element')?.value === el" (click)="selectElement(el)">
             <img [src]="'assets/images/ElementType_' + el + '.png'" [alt]="el">
           </div>
+          }
+
           }
         </div>
       </div>

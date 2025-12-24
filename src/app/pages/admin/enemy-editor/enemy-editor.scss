@@ -44,7 +44,6 @@
       color: #666;
     }
   }
-
 }
 
 // Tabs
@@ -168,7 +167,9 @@
     z-index: 3;
 
     span {
-      font-size: 20px;
+      font-size: 30px;
+      color: red;
+      font-weight: 600;
     }
   }
 
