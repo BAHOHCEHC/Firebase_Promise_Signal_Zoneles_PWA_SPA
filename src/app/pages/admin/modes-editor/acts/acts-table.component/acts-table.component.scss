@@ -1,7 +1,6 @@
+@import '../../../../../../styles/_variables';
 .acts-section {
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .section-header {
@@ -20,7 +19,7 @@
 
 // Стилі для груп актів
 .act-section-group {
-  margin-bottom: 32px;
+  margin-bottom: 10px;
 
   &:last-child {
     margin-bottom: 0;
@@ -33,11 +32,11 @@
   gap: 12px;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 2px solid #6e4bd7;
+  border-bottom: 2px solid $btn-primary-default;
 
   .section-icon {
     font-size: 24px;
-    color: #6e4bd7;
+    color: $btn-primary-default;
   }
 
   .section-group-title {
@@ -54,39 +53,39 @@
 
 .fight {
   &_variation {
-    color: #4caf50;
+    color: $green-color;
   }
   &_boss {
-    color: red;
+    color: $orange-color;
   }
   &_arcana {
-    color: #6e4bd7;
+    color: $btn-primary-default;
   }
 }
 
 // Стилі для Variation Chambers
 .act-section-group:first-child .section-group-header {
-  border-bottom-color: #2196f3;
+  border-bottom-color: $green-color;
 
   .section-icon {
-    color: #2196f3;
+    color: $green-color;
   }
 }
 
 // Стилі для Boss Chambers
 .act-section-group:nth-child(2) .section-group-header {
-  border-bottom-color: #4caf50;
+  border-bottom-color: $orange-color;
 
   .section-icon {
-    color: #4caf50;
+    color: $orange-color;
   }
 }
 
 // Стилі для Arcana Chambers
 .act-section-group:nth-child(3) .section-group-header {
-  border-bottom-color: red;
+  border-bottom-color: $btn-primary-default;
   .section-icon {
-    color: red;
+    color: $btn-primary-default;
   }
 }
 
@@ -99,7 +98,6 @@
 
 .acts-grid-header {
   display: flex;
-  font-weight: 600;
   font-size: 14px;
   justify-content: space-between;
   padding-left: 20px;
@@ -109,12 +107,9 @@
   display: flex;
   margin: 5px 0;
   justify-content: space-between;
-  background: #2a2a35;
+  background: $grey-bg;
   border-radius: 8px;
   padding: 5px 0px 5px 20px;
-  &:last-child {
-    border-bottom: none;
-  }
 }
 
 // Загальні стилі для клітинок
@@ -178,18 +173,18 @@
   white-space: nowrap;
 
   &.Boss_fight {
-    background-color: #ffebee;
-    color: #c62828;
+    background-color: $orange-bg;
+    color: $orange-color;
   }
 
   &.Variation_fight {
-    background-color: #e3f2fd;
-    color: #1565c0;
+    background-color: $green-bg;
+    color: $green-color;
   }
 
   &.Arcana_fight {
-    background-color: #e8f5e9;
-    color: #2e7d32;
+    background-color: $primary-bg;
+    color: $btn-primary-hover;
   }
 }
 
@@ -204,16 +199,29 @@
   .option-badge {
     display: inline-block;
     padding: 5px 10px;
-    background-color: #e0f2f1;
-    color: #00695c;
-    border-radius: 4px;
+    border-radius: 5px;
     font-size: 12px;
-    font-weight: 500;
     white-space: nowrap;
+    &.amount {
+      color: $blue-color;
+      background-color: $blue-bg;
+    }
+    &.timer {
+      color: $pink-color;
+      background-color: $pink-bg;
+    }
+    &.defeat {
+      color: $red-color;
+      background-color: $red-bg;
+    }
+    &.specialtype {
+      color: $yelow-color;
+      background-color: $yelow-bg;
+    }
   }
 
   .no-options {
-    color: #999;
+    color: $grey-color;
     font-style: italic;
     font-size: 14px;
   }
@@ -231,7 +239,7 @@
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #71767b;
+    background-color: $grey-color;
   }
 
   .material-symbols-outlined,
@@ -243,13 +251,12 @@
 
   .material-symbols-outlined.red,
   svg.red {
-    color: red;
+    color: $red-color;
   }
 
   .material-symbols-outlined.color-green,
   svg.color-green {
-    color: #4caf50;
-    /* Assuming standard green or taking from existing if defined */
+    color: $green-color;
   }
 
   .refresh {
@@ -263,7 +270,7 @@
 .edit-btn,
 .delete-btn {
   &:hover {
-    background-color: #71767b;
+    background-color: $grey-color;
   }
 }
 
@@ -290,7 +297,7 @@
 }
 
 .error-state .material-symbols-outlined {
-  color: red;
+  color: $red-color;
 }
 
 .loading-state .spin {
@@ -308,161 +315,9 @@
 }
 
 .table-footer {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
   text-align: right;
-
   .count-info {
     color: #666;
     font-size: 14px;
-  }
-}
-
-// Адаптивність для мобільних пристроїв
-@media (max-width: 768px) {
-  .acts-grid-header {
-    display: none; // Ховаємо заголовки на мобільних
-  }
-
-  .act-card {
-    flex-direction: column;
-    padding: 16px;
-    border-bottom: 1px solid #eee;
-    gap: 12px;
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-
-  .grid-cell {
-    padding: 0;
-    width: 100%;
-    justify-content: flex-start !important;
-  }
-
-  // Перетворюємо на "картки" для мобільних
-  .act-name-cell,
-  .act-type-cell,
-  .act-options-cell,
-  .act-actions-cell {
-    flex: 1 0 100%;
-    min-width: 100%;
-  }
-
-  .act-name-cell {
-    order: 1;
-
-    .act-name-content {
-      width: 100%;
-    }
-  }
-
-  .act-type-cell {
-    order: 2;
-    justify-content: flex-start !important;
-  }
-
-  .act-options-cell {
-    order: 3;
-    justify-content: flex-start !important;
-
-    .options-list {
-      justify-content: flex-start !important;
-    }
-  }
-
-  .act-actions-cell {
-    order: 4;
-    justify-content: flex-start !important;
-    border-top: 1px solid #eee;
-    padding-top: 12px;
-    margin-top: 8px;
-  }
-
-  // Додаємо підписи для мобільних
-  .act-card {
-    position: relative;
-
-    &::before {
-      display: none; // Можна додати підписи, якщо потрібно
-    }
-  }
-
-  .section-group-header {
-    flex-wrap: wrap;
-
-    .section-group-title {
-      font-size: 16px;
-    }
-  }
-
-  .type-badge {
-    font-size: 11px;
-    padding: 4px 8px;
-  }
-
-  .option-badge {
-    font-size: 11px;
-    padding: 3px 6px;
-  }
-}
-
-// Альтернативний адаптивний варіант з інлайн-підписами
-@media (max-width: 576px) {
-  .act-card {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 12px;
-  }
-
-  .grid-cell {
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    gap: 8px;
-    align-items: center;
-  }
-
-  // Додаємо підписи для кожної клітинки
-  .act-name-cell::before {
-    content: 'Act Name:';
-    font-weight: 600;
-    color: #666;
-    font-size: 12px;
-  }
-
-  .act-type-cell::before {
-    content: 'Type:';
-    font-weight: 600;
-    color: #666;
-    font-size: 12px;
-  }
-
-  .act-options-cell::before {
-    content: 'Options:';
-    font-weight: 600;
-    color: #666;
-    font-size: 12px;
-    align-self: flex-start;
-  }
-
-  .act-actions-cell::before {
-    content: 'Actions:';
-    font-weight: 600;
-    color: #666;
-    font-size: 12px;
-  }
-
-  .act-actions-cell {
-    border-top: none;
-    padding-top: 0;
-    margin-top: 0;
-  }
-
-  // Приховуємо контент після підписів
-  .act-actions-cell .btn-icon {
-    grid-column: 2;
   }
 }

@@ -236,7 +236,7 @@ export class ActAndModesEditor implements OnInit {
   }
 
   // Метод для ручного оновлення (через кнопку Refresh)
-  refreshActs(): void {
-    this.loadActs();
+  async onRefresh(): Promise<void> {
+    await this.loadInitialData();
   }
 }

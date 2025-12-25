@@ -1,7 +1,12 @@
 <section class="editor">
   <!-- HEADER -->
   <header class="editor__header">
-    <h2 class="editor__header-title">Acts & Arcanas</h2>
+    <div class="editor-header_wrapper">
+      <h2 class="editor__header-title">Acts & Arcanas</h2>
+      <button class="btn-icon" (click)="onRefresh()" title="Refresh">
+        <span class="material-symbols-outlined refresh">refresh</span>
+      </button>
+    </div>
 
     <div class="editor__actions">
       <button class="btn fs_24" (click)="openActModal()">
