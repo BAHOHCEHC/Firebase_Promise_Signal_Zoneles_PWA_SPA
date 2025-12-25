@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); // Dimmed background
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,13 +14,13 @@
 }
 
 .modal-content {
-  background: #2b2b3b; // Dark purple/grey background from images
+  background: $grey-bg;
   border-radius: 12px;
   padding: 24px;
   width: 440px;
   max-width: 90%;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  color: #fff;
+  color: $btn-primary-white;
 }
 
 .modal-header {
@@ -47,16 +47,15 @@
 
 .form-label {
   font-size: 14px;
-  color: #ccc;
-  font-weight: 500;
+  color: $btn-primary-white;
 }
 
 .form-control {
-  background: #3a3a4a;
+  background: $btn-secondary-hover;
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 10px 12px;
-  color: #fff;
+  color: $btn-primary-white;
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s;
@@ -77,12 +76,12 @@
 }
 
 .secondary {
-  background: $btn-secondary-default;
-  color: #ccc;
+  color: $light-grey-color;
+  background: $btn-secondary-hover;
 
   &:hover {
-    background: $btn-secondary-hover;
-    color: #fff;
+    background: $grey-color;
+    color: $btn-primary-white;
   }
 }
 
@@ -129,16 +128,11 @@
   &.active {
     opacity: 1;
     svg {
-      box-shadow: 0 0 15px #fff;
+      box-shadow: 0 0 15px $btn-primary-white;
       width: 27px;
       height: 27px;
     }
   }
-
-
-  &.active {
-  }
-
   img {
     width: 100%;
     height: 100%;
@@ -148,7 +142,7 @@
   .empty-icon {
     width: 24px;
     height: 24px;
-    color: #fff;
+    color: $btn-primary-white;
     opacity: 0.8;
   }
 }
@@ -168,17 +162,17 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #3a3a4a;
+  background: $btn-secondary-hover;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 24px;
-  color: #8367d7;
+  color: $btn-primary-hover;
   overflow: hidden;
 
   &:hover {
-    background: lighten(#3a3a4a, 10%);
+    background: lighten($btn-secondary-hover, 10%);
   }
 
   img {
@@ -191,13 +185,13 @@
 .btn-delete {
   width: 80px;
   height: 38px;
-  background: #e74c3c;
   color: white;
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  background: $delete-hover-color;
 
   &:hover {
-    background: #c0392b;
+    background: $red-color;
   }
 }

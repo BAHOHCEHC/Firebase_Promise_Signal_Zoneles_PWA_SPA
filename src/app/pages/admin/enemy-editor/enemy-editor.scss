@@ -2,7 +2,7 @@
 
 .editor {
   padding: 24px 0;
-  color: #fff;
+  color: $btn-primary-white;
 
   &__header {
     margin-bottom: 20px;
@@ -22,10 +22,9 @@
   gap: 8px;
   border-radius: 8px;
   border: none;
-  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  color: #fff;
+  color: $btn-primary-white;
   background: none;
   &:hover {
     color: $btn-primary-hover;
@@ -33,10 +32,10 @@
 
   &-secondary-disabled {
     background: $btn-secondary-disabled;
-    color: #666; // Greyed out text
+    color: $grey-color; // Greyed out text
     cursor: not-allowed;
     &:hover {
-      color: #666;
+      color: $grey-color;
     }
   }
 }
@@ -64,7 +63,7 @@
       width: 100%;
       background: transparent;
       border: 1px solid $btn-primary-default;
-      color: #aaa;
+      color: $light-grey-color;
       cursor: pointer;
       height: 38px; /* або будь-яка висота, яка потрібна */
       border-radius: 10px;
@@ -81,13 +80,13 @@
 
       &:hover {
         border-color: $btn-primary-hover;
-        color: #fff;
+        color: $btn-primary-white;
       }
 
       &.active {
         background: $btn-primary-default;
         border-color: $btn-primary-default;
-        color: #fff;
+        color: $btn-primary-white;
       }
     }
 
@@ -103,7 +102,7 @@
       &:hover {
         transform: scale(1.2);
         svg {
-          color: #2ecc71;
+          color: $green-color;
         }
       }
     }
@@ -117,10 +116,6 @@
   gap: 24px;
 }
 
-.group-item {
-  // Styles for group container if needed
-}
-
 .group-header {
   display: flex;
   align-items: center;
@@ -130,8 +125,7 @@
 
 .group-title {
   font-size: 16px;
-  font-weight: 600;
-  color: #fff;
+  color: $btn-primary-white;
 }
 
 .btn-icon {
@@ -150,7 +144,7 @@
   }
 
   .color-green {
-    color: #2ecc71; // Or match exact green from requirements/image
+    color: $green-color; // Or match exact green from requirements/image
   }
 }
 
@@ -165,7 +159,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%; // Circular avatars
-  background: #333;
+  background: $grey-color;
   cursor: pointer;
 
   .enemy-avatar {
@@ -195,12 +189,12 @@
     display: none;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: $btn-primary-white;
     z-index: 3;
     transform: scale(1.2);
     span {
       font-size: 24px;
-      color: red;
+      color: $red-color;
       font-weight: 600;
     }
   }
