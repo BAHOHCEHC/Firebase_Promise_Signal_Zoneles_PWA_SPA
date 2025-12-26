@@ -1,1 +1,45 @@
-<p>season-characters-modal works!</p>
+<div class="modal-overlay" (click)="onClose()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">{{ title }}</h2>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            @for (type of elementTypes; track type) {
+            <button class="filter-button" [class.filter-button--active]="activeElementFilters().has(type)"
+                (click)="toggleElementFilter(type)">
+                <img class="element-icon" [src]="getElementIconPath(type)" [alt]="type" />
+            </button>
+            }
+        </div>
+
+        <!-- Character Grid -->
+        <div class="character-grid-container">
+            <div class="character-grid">
+                @for (char of filteredCharacters(); track char.id) {
+                <div class="character-card" [class.character-card--selected]="isCharacterSelected(char.id)"
+                    [class.character-card--disabled]="shouldDimCharacter(char.id)" (click)="toggleCharacter(char.id)">
+                    <div class="character-image-wrapper" [style.background-image]="'url(' + char.rarity.bgUrl + ')'">
+                        <img [src]="char.avatarUrl" [alt]="char.name" class="character-avatar" />
+                        <div class="element-badge" *ngIf="char.element">
+                            <img [src]="getElementIconPath(char.element.name)" [alt]="char.element.name" />
+                        </div>
+                    </div>
+                    <div class="selection-indicator" *ngIf="isCharacterSelected(char.id)">
+                        ✓
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <span class="counter">{{ selectionCount() }} / {{ limit }}</span>
+            <div class="actions">
+                <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+                <button class="btn btn-primary" (click)="onSave()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

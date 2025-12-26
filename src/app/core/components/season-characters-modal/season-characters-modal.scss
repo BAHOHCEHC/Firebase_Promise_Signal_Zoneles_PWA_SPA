@@ -1,1 +1,220 @@
 @import '../../../../styles/_variables';
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: $primary-bg;
+    padding: 24px;
+    border-radius: 16px;
+    width: 800px;
+    max-width: 95%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    flex-shrink: 0;
+    text-align: center;
+
+    .modal-title {
+        color: white;
+        margin: 0;
+        font-size: 1.4rem;
+    }
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.filter-button {
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    padding: 6px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    transition: all 0.2s;
+
+    &--active {
+        opacity: 1;
+        border-color: $btn-primary-default;
+        background: rgba($btn-primary-default, 0.2);
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+
+    .element-icon {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.character-grid-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+
+    // Custom scrollbar
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $grey-color;
+        border-radius: 3px;
+    }
+}
+
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 12px;
+}
+
+.character-card {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+
+    &--disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    &--selected {
+        transform: scale(0.95);
+        opacity: 1;
+
+        .character-image-wrapper {
+            border: 2px solid $btn-primary-default;
+        }
+    }
+
+    &:hover:not(&--disabled) {
+        transform: scale(1.05);
+    }
+
+    .character-image-wrapper {
+        width: 100%;
+        padding-top: 100%; // 1:1 Aspect ratio
+        position: relative;
+        border-radius: 8px;
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+        border: 2px solid transparent;
+    }
+
+    .character-avatar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .element-badge {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+        }
+    }
+
+    .selection-indicator {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: $btn-primary-default;
+        color: white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+
+    .counter {
+        color: $btn-primary-white;
+        font-size: 1.1rem;
+    }
+
+    .actions {
+        display: flex;
+        gap: 12px;
+    }
+}
+
+.btn {
+    padding: 8px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+
+    &-primary {
+        background: $btn-primary-default;
+        color: $btn-primary-white;
+
+        &:hover {
+            background: $btn-primary-hover;
+        }
+    }
+
+    &-secondary {
+        background: $btn-secondary-default;
+        color: white;
+
+        &:hover {
+            background: $btn-secondary-hover;
+        }
+    }
+}

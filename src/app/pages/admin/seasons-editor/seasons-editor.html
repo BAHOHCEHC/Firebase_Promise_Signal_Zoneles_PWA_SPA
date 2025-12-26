@@ -1,1 +1,195 @@
-<p>seasons-editor works!</p>
+<div class="page-container">
+  <div class="header-actions">
+    <div class="actions-right">
+      <button class="btn btn-warning" (click)="onReset()">Reset ↺</button>
+      <button class="btn btn-save" (click)="onSavePage()">Save 💾</button>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <h2>Characters</h2>
+
+    <!-- Element Requirements -->
+    <div class="element-req-section">
+      <div class="label-row">
+        <span>This season Elemental Type Requirements:</span>
+        <button class="btn-icon" *ngIf="activeElements().size === 0" (click)="openElementModal()">?</button>
+
+        <div class="selected-elements" *ngIf="activeElements().size > 0">
+          @for(el of elementTypes; track el) {
+          @if(activeElements().has(el)) {
+          <button class="element-btn-mini" (click)="openElementModal()">
+            <img [src]="getElementIconPath(el)" [alt]="el" />
+          </button>
+          }
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Characters Selection -->
+    <div class="characters-blocks">
+      <div class="char-block">
+        <h3>Opening characters</h3>
+        <div class="char-list">
+          <!-- Render selected first -->
+          @for(char of seasonDetails().opening_characters; track char.id) {
+          <div class="char-mini-card">
+            <img [src]="char.avatarUrl" [alt]="char.name" />
+            <div class="element-mini-badge" *ngIf="char.element">
+              <img [src]="getElementIconPath(char.element.name)" />
+            </div>
+          </div>
+          }
+          <button class="add-char-btn" (click)="openCharacterModal('opening')">+</button>
+        </div>
+      </div>
+
+      <div class="char-block">
+        <h3>Special guests</h3>
+        <div class="char-list">
+          @for(char of seasonDetails().special_guests; track char.id) {
+          <div class="char-mini-card">
+            <img [src]="char.avatarUrl" [alt]="char.name" />
+            <div class="element-mini-badge" *ngIf="char.element">
+              <img [src]="getElementIconPath(char.element.name)" />
+            </div>
+          </div>
+          }
+          <button class="add-char-btn" (click)="openCharacterModal('special')">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <h2>This season Act Battle cards variations</h2>
+
+    <!-- Boss & Arcana -->
+    <div class="subsection">
+      <h3>Boss & Arcana Chambers</h3>
+      <div class="acts-grid">
+        @for(act of bossArcanaActs(); track act.id) {
+        <div class="act-card">
+          <div class="act-header">{{ act.name }}</div>
+          <!-- Note: act.name is number per interface, but here likely displayed as "Act 3" -->
+          <div class="act-label">Act {{ act.name }}</div>
+
+          <!-- Existing enemies -->
+          <div class="enemies-container">
+            @for(enemy of act.enemy_selection; track $index) {
+            <div class="enemy-circle">
+              <img [src]="enemy.avatarUrl" />
+              <span class="badge" *ngIf="enemy.quantity > 1">{{ enemy.quantity }}</span>
+            </div>
+            }
+            <button class="btn-add-circle" (click)="openAddEnemyModal(act)">+</button>
+          </div>
+
+          <!-- Options hint -->
+          <div class="act-options-info" *ngIf="act.enemy_options">
+            <span *ngIf="act.enemy_options.timer">⏱ {{ act.enemy_options.timer }}</span>
+            <!-- other hints -->
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Variation Chambers -->
+    <div class="subsection">
+      <h3>Variation Chambers</h3>
+      <div class="variations-grid">
+        @for(act of variationActs(); track act.id) {
+        <div class="variation-card">
+          <div class="var-header">Act {{ act.name }}</div>
+
+          <div class="var-content">
+            @if(!act.variation_fight_settings) {
+            <button class="btn-cta" (click)="openVariationModal(act)">+ Add variation</button>
+            } @else {
+            <!-- Configured Variation -->
+            <div class="var-settings-display">
+              <div class="var-waves-container">
+                @for (wave of act.variations; track $index) {
+                <div class="wave-column">
+
+                  <!-- Wave title -->
+                  <div class="wave-header">
+                    @if (act.variation_fight_settings?.wave === 'custom') {
+                    {{ act.variation_fight_settings?.name || 'Custom wave' }}
+                    } @else if (act.variation_fight_settings?.wave) {
+                    Wave {{ $index + 1 }}
+                    }
+                  </div>
+
+                  <!-- Timer -->
+                  <div class="wave-timer" *ngIf="
+            act.variation_fight_settings?.timer !== null &&
+            act.variation_fight_settings?.timer !== undefined &&
+            act.variation_fight_settings?.timer !== ''
+          ">
+                    ⏱ {{ act.variation_fight_settings?.timer }}
+                  </div>
+
+                  <!-- Enemies -->
+                  <div class="enemies-vertical-list">
+                    @for (enemy of wave.included_enemy; track $index) {
+                    <div class="enemy-circle">
+                      <img [src]="enemy.avatarUrl" [alt]="enemy.name" />
+                      <span class="badge" *ngIf="enemy.quantity > 1">
+                        {{ enemy.quantity }}
+                      </span>
+                    </div>
+                    }
+
+                    <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, $index)">
+                      +
+                    </button>
+                  </div>
+
+                </div>
+                }
+              </div>
+
+              <button class="btn-edit-settings" (click)="openVariationModal(act)">
+                ⚙
+              </button>
+            </div>
+
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  @if(showElementModal()) {
+  <app-season-element-type-modal [selectedElements]="seasonDetails().elemental_type_limided"
+    (close)="closeElementModal()" (save)="onSaveElements($event)">
+  </app-season-element-type-modal>
+  }
+
+  @if(showCharactersModal()) {
+  <app-season-characters-modal [title]="currentCharacterTitle" [limit]="currentCharacterLimit"
+    [allCharacters]="allCharacters()" [startSelection]="currentCharacterSelection" (close)="closeCharacterModal()"
+    (save)="onSaveCharacters($event)">
+  </app-season-characters-modal>
+  }
+
+  @if(showAddEnemyModal()) {
+  <app-season-add-enemy-modal [actOptions]="currentActOptions" [categories]="enemiesService.categories()"
+    [allEnemies]="enemiesService.enemies()" (close)="closeAddEnemyModal()" (save)="onSaveEnemy($event)">
+  </app-season-add-enemy-modal>
+  }
+
+  @if(showVariationModal()) {
+  <season-add-variation-chamber-modal (close)="closeVariationModal()" (save)="onSaveVariation($event)">
+  </season-add-variation-chamber-modal>
+  <!-- Missing Input for initial values if editing? Prompt implies "Edit" functionality changes view but doesn't explicitly say we re-open same modal with values. But likely we should. -->
+  <!-- For MVP I'll leave it as creating new/overwriting settings since user can just re-enter. -->
+  }
+
+</div>

@@ -1,1 +1,77 @@
 <p>season-add-enemy-modal works!</p>
+<div class="modal-overlay" (click)="onClose()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2 class="modal-title">Select Enemy</h2>
+
+        <form [formGroup]="form" class="modal-form">
+
+            <!-- Category Selection -->
+            <div class="form-group">
+                <label>Category</label>
+                <select formControlName="categoryId">
+                    <option value="" disabled>Select Category</option>
+                    @for(cat of categories; track cat.id) {
+                    <option [value]="cat.id">{{ cat.title }}</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Group Selection -->
+            <div class="form-group" *ngIf="selectedCategoryId()">
+                <label>Group</label>
+                <select formControlName="groupId">
+                    <option value="" disabled>Select Group</option>
+                    @for(group of filteredGroups(); track group.id) {
+                    <option [value]="group.id">{{ group.title }}</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Enemy Selection Grid/List -->
+            <div class="enemies-selection" *ngIf="selectedGroupId()">
+                <label>Enemy</label>
+                <div class="enemies-grid">
+                    @for(enemy of filteredEnemies(); track enemy.id) {
+                    <div class="enemy-card" [class.enemy-card--selected]="selectedEnemy()?.id === enemy.id"
+                        (click)="form.patchValue({enemyId: enemy.id})">
+                        <img [src]="enemy.avatarUrl" class="enemy-avatar">
+                        <img [src]="getElementIconPath(enemy.element.name)" class="enemy-element">
+                        <span class="enemy-name">{{ enemy.name }}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Extra Options based on Act Options -->
+            <div class="options-section">
+                <div class="form-group" *ngIf="actOptions.amount">
+                    <label>Amount</label>
+                    <input type="text" formControlName="amount" placeholder="e.g. 2">
+                </div>
+                <div class="form-group" *ngIf="actOptions.timer">
+                    <label>Timer</label>
+                    <input type="text" formControlName="timer" placeholder="e.g. 05:00">
+                </div>
+                <div class="form-group" *ngIf="actOptions.defeat">
+                    <label>Defeat</label>
+                    <input type="text" formControlName="defeat" placeholder="Conditions">
+                </div>
+            </div>
+
+            <div class="checkbox-group" *ngIf="actOptions.special_type !== undefined">
+                <!-- Note: options.special_type from Input is boolean (shows if available?), field is special_type boolean -->
+                <!-- User said: "Special type(type boolean) affects Enemy parameter specialMark" -->
+                <label>
+                    <input type="checkbox" formControlName="special_type">
+                    Special Type (Mark)
+                </label>
+            </div>
+
+        </form>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+            <button class="btn btn-primary" (click)="onSave()">Save</button>
+        </div>
+    </div>
+</div>
