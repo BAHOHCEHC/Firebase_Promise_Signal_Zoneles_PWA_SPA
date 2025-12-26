@@ -6,68 +6,72 @@
     <form [formGroup]="form" class="modal-form">
 
       <!-- Category Selection -->
-      <div class="form-group">
-        <label>Category</label>
-        <select formControlName="categoryId">
-          <option value="" disabled>Select Category</option>
-          @for(cat of categories; track cat.id) {
-          <option [value]="cat.id">{{ cat.title }}</option>
-          }
-        </select>
-      </div>
 
-      <!-- Group Selection -->
-      <div class="form-group" *ngIf="selectedCategoryId()">
-        <label>Group</label>
-        <select formControlName="groupId">
-          <option value="" disabled>Select Group</option>
-          @for(group of filteredGroups(); track group.id) {
-          <option [value]="group.id">{{ group.title }}</option>
-          }
-        </select>
-      </div>
-
-      <!-- Enemy Selection Grid/List -->
-      <div class="enemies-selection" *ngIf="selectedGroupId()">
-        <label>Enemy</label>
-        <div class="enemies-grid">
-          @for(enemy of filteredEnemies(); track enemy.id) {
-          <div class="enemy-card-wrapp">
-            <div class="enemy-card" [class.enemy-card--selected]="selectedEnemy()?.id === enemy.id"
-              (click)="form.patchValue({enemyId: enemy.id})">
-              <img [src]="enemy.avatarUrl" class="enemy-avatar">
-            </div>
-            @if (enemy.element.name !== "empty") {
-            <img [src]="getElementIconPath(enemy.element.name)" class="enemy-element">
-            }
-          </div>
+      <!-- Category Selection -->
+      <div class="section">
+        <p class="label">Category Selection</p>
+        <div class="category-buttons">
+          @for (cat of categories; track cat.id) {
+          <button type="button" class="btn-category" [class.btn-category-active]="selectedCategoryId() === cat.id"
+            [class.btn-category-empty]="isCategoryEmpty(cat.id)" [disabled]="isCategoryEmpty(cat.id)"
+            (click)="!isCategoryEmpty(cat.id) && onSelectCategory(cat.id)">
+            {{ cat.title }}
+          </button>
           }
         </div>
       </div>
+      <!-- Category Selection -->
+
+      <!-- Group Selection -->
+      @if (selectedCategoryId()) {
+      <div class="groups-grid">
+        @for (group of filteredGroups(); track group.id) {
+        <div class="group-block">
+          <h4 class="group-title">{{ group.title }}</h4>
+
+          <div class="enemies-grid">
+            @for (enemy of enemiesByGroup(group.id); track enemy.id) {
+            <div class="enemy-card-wrapp" [class.enemy-dim]="hasSelectedEnemy() && selectedEnemy()?.id !== enemy.id"
+              (click)="toggleEnemy(enemy)">
+              <div class="enemy-card">
+                <img [src]="enemy.avatarUrl" class="enemy-avatar" />
+              </div>
+
+              @if (enemy.element.name !== 'empty') {
+              <img class="enemy-element" [src]="getElementIconPath(enemy.element.name)" />
+              }
+            </div>
+            }
+          </div>
+
+        </div>
+        }
+      </div>
+      }
+      <!-- Group Selection -->
 
       <!-- Extra Options based on Act Options -->
       <div class="options-section">
-        <div class="form-group" *ngIf="actOptions.amount">
-          <label>Amount</label>
-          <input type="text" formControlName="amount" placeholder="e.g. 2">
-        </div>
-        <div class="form-group" *ngIf="actOptions.timer">
-          <label>Timer</label>
-          <input type="text" formControlName="timer" placeholder="e.g. 05:00">
-        </div>
-        <div class="form-group" *ngIf="actOptions.defeat">
-          <label>Defeat</label>
-          <input type="text" formControlName="defeat" placeholder="Conditions">
-        </div>
-        <div class="checkbox-group" *ngIf="actOptions.special_type !== undefined">
-          <!-- Note: options.special_type from Input is boolean (shows if available?), field is special_type boolean -->
-          <!-- User said: "Special type(type boolean) affects Enemy parameter specialMark" -->
-          <label>
-            <input type="checkbox" formControlName="special_type">
-            Special Type (Mark)
-          </label>
-        </div>
+        @if (actOptions.amount) {
+        <input type="text" formControlName="amount" placeholder="Amount" />
+        }
+
+        @if (actOptions.timer) {
+        <input type="text" formControlName="timer" placeholder="Timer (sec)" />
+        }
+
+        @if (actOptions.defeat) {
+        <input type="text" formControlName="defeat" placeholder="Defeat" />
+        }
+
+        @if (actOptions.special_type !== undefined) {
+        <label class="checkbox-inline">
+          <input type="checkbox" formControlName="special_type" />
+          Special type
+        </label>
+        }
       </div>
+
     </form>
 
     <div class="modal-footer">

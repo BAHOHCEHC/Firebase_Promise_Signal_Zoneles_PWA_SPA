@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName } from '../../../../models/models';
@@ -130,4 +130,59 @@ export class SeasonAddEnemyModal implements OnInit {
   public onClose() {
     this.close.emit();
   }
+
+
+
+
+
+  // Чи категорія порожня (немає груп або всі групи без ворогів)
+  isCategoryEmpty(catId: string): boolean {
+    const cat = this.categories.find(c => c.id === catId);
+    if (!cat || !cat.groups || cat.groups.length === 0) return true;
+
+    return !cat.groups.some(group =>
+      this.allEnemies.some(e => e.groupId === group.id)
+    );
+  }
+
+
+
+  public onSelectCategory(categoryId: string): void {
+    if (this.isCategoryEmpty(categoryId)) return; // дубль захисту
+
+    this.selectedCategoryId.set(categoryId);
+
+    const cat = this.categories.find(c => c.id === categoryId);
+    this.filteredGroups.set(cat ? cat.groups : []);
+
+    this.selectedGroupId.set(null);
+    this.filteredEnemies.set([]);
+    this.selectedEnemy.set(null);
+
+    // Скидаємо форму (опціонально)
+    this.form.patchValue({
+      groupId: '',
+      enemyId: '',
+    });
+  }
+
+
+  public hasSelectedEnemy = computed(() => !!this.selectedEnemy());
+
+  public toggleEnemy(enemy: Enemy) {
+    if (this.selectedEnemy()?.id === enemy.id) {
+      // зняти вибір → всі знову яскраві
+      this.selectedEnemy.set(null);
+      this.form.patchValue({ enemyId: '' });
+    } else {
+      this.selectedEnemy.set(enemy);
+      this.form.patchValue({ enemyId: enemy.id });
+    }
+  }
+
+  public enemiesByGroup(groupId: string): Enemy[] {
+    return this.allEnemies.filter(e => e.groupId === groupId);
+  }
+
+
 }

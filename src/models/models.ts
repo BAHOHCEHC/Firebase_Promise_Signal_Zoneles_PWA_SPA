@@ -13,8 +13,8 @@ export interface Act {
   type: Fight_type;
   options: Act_options;
   enemy_options?: Enemy_options
-  variation_fight_settings?: Variation_fight;
   enemy_selection: Enemy[]
+  variation_fight_settings?: Variation_fight;
   variations: Wave[]
 }
 

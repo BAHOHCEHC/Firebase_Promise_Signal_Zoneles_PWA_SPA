@@ -65,6 +65,11 @@ export class SeasonsEditorComponent implements OnInit {
     return d.elemental_type_limided.length > 0 || d.opening_characters.length > 0 || d.special_guests.length > 0 || d.acts.some(a => a.enemy_selection.length > 0 || a.variations.length > 0);
   });
 
+  public bossArcanaActs = computed(() => {
+    // Filter acts by type
+    return this.seasonDetails().acts.filter(a => a.type === 'Boss_fight' || a.type === 'Arcana_fight');
+  });
+
   public variationActs = computed(() => {
     return this.seasonDetails().acts.filter(a => a.type === 'Variation_fight');
   });
