@@ -11,8 +11,9 @@ export interface Act {
   id: string;
   name: number;
   type: Fight_type;
-  options: Enemy_options;
-  variation_fight_settings: Variation_fight;
+  options: Act_options;
+  enemy_options?: Enemy_options
+  variation_fight_settings?: Variation_fight;
   enemy_selection: Enemy[]
   variations: Wave[]
 }
@@ -70,6 +71,12 @@ export type Fight_type =
 
 // Опції ворогів
 export interface Enemy_options {
+  amount?: string;
+  timer?: string;
+  defeat?: string;
+  special_type?: boolean;
+}
+export interface Act_options {
   amount?: boolean;
   timer?: boolean;
   defeat?: boolean;
@@ -142,16 +149,15 @@ export interface EnemyGroup {
 export interface Season_details {
   elemental_type_limided: ElementType[]; //Разрешенные 3 шт.
   opening_characters: Character[] // 6 из 6 шт.
-  special_quests: Character[] // 4 из 4 шт.
+  special_guests: Character[] // 4 из 4 шт.
   acts: Act[]
-
 }
 
 export interface Variation_fight {
   wave: Wave_type;
   timer: string;
+  name?: string;
   monolit?: boolean;
-
 }
 
 export type Wave_type =

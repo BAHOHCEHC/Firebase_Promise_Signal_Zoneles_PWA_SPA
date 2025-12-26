@@ -7,7 +7,7 @@ import {
   AbstractControl,
   ValidatorFn
 } from '@angular/forms';
-import { Fight_type, Act } from '../../../../../../models/models';
+import { Fight_type, Act, Enemy_options, Variation_fight } from '../../../../../../models/models';
 import { ActModsService } from '../../../../../shared/services/act-mods.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -268,9 +268,10 @@ export class ActModalComponent implements OnInit {
           defeat: value.options.defeat ? true : false,
           special_type: value.options.special_type ? true : false,
         },
-        variation_fight_settings: this.actToEdit?.variation_fight_settings || {} as any,
+        variation_fight_settings: this.actToEdit?.variation_fight_settings || {} as Variation_fight,
         enemy_selection: this.actToEdit?.enemy_selection || [],
         variations: this.actToEdit?.variations || [],
+        enemy_options: {} as Enemy_options,
       };
 
       // Викликаємо відповідний метод сервісу
