@@ -1,162 +1,175 @@
 @import '../../../../styles/_variables';
-@import '../../../../styles/_variables';
 
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .modal-content {
-    background: $primary-bg;
-    padding: 24px;
-    border-radius: 16px;
-    width: 600px;
-    max-width: 95%;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  background: $primary-bg;
+  padding: 24px;
+  border-radius: 16px;
+  width: 60%;
+  max-width: 95%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
 }
 
 .modal-title {
-    color: white;
-    margin: 0;
-    text-align: center;
+  color: white;
+  margin: 0;
+  text-align: center;
 }
 
 .modal-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 
-    label {
-        font-size: 0.9rem;
+  label {
+    font-size: 0.9rem;
+  }
+
+  select,
+  input[type='text'] {
+    background: $grey-bg;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    outline: none;
+
+    &:focus {
+      border-color: $btn-primary-default;
     }
-
-    select,
-    input[type="text"] {
-        background: $grey-bg;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: white;
-        padding: 8px 12px;
-        border-radius: 8px;
-        outline: none;
-
-        &:focus {
-            border-color: $btn-primary-default;
-        }
-    }
+  }
 }
 
 .enemies-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 10px;
-    margin-top: 8px;
-    max-height: 200px;
-    overflow-y: auto;
-    padding: 4px;
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 4px 0;
 }
 
 .enemy-card {
-    background: darken($primary-bg, 5%);
-    border: 1px solid transparent;
-    padding: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
+  background: darken($primary-bg, 5%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
 
-    &:hover {
-        background: lighten($primary-bg, 5%);
-    }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
 
-    &--selected {
-        border-color: $btn-primary-default;
-        background: rgba($btn-primary-default, 0.2);
-    }
+.enemy-card-wrapp {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  z-index: 1;
+  transition: 0.3s;
 
-    .enemy-avatar {
-        width: 60px;
-        height: 60px;
-        object-fit: contain;
-    }
+  &:hover {
+    transform: scale(1.1);
+    transition: 0.3s;
+  }
 
-    .enemy-element {
-        width: 20px;
-        height: 20px;
-    }
+  &--selected {
+    border-color: $btn-primary-default;
+    background: rgba($btn-primary-default, 0.2);
+  }
 
-    .enemy-name {
-        font-size: 0.8rem;
-        text-align: center;
-        color: white;
-    }
+  .enemy-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+  }
+
+  .enemy-element {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: -4px;
+    left: 0;
+    z-index: 5;
+  }
+
+  .enemy-name {
+    font-size: 0.8rem;
+    text-align: center;
+    color: white;
+  }
 }
 
 .options-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+  display: flex;
+  gap: 12px;
 }
 
 .checkbox-group {
-    label {
-        color: white;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-    }
+  label {
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
 }
 
 .modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 .btn {
-    padding: 8px 24px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s;
+  padding: 8px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
 
-    &-primary {
-        background: $btn-primary-default;
-        color: $btn-primary-white;
+  &-primary {
+    background: $btn-primary-default;
+    color: $btn-primary-white;
 
-        &:hover {
-            background: $btn-primary-hover;
-        }
+    &:hover {
+      background: $btn-primary-hover;
     }
+  }
 
-    &-secondary {
-        background: $btn-secondary-default;
-        color: white;
+  &-secondary {
+    background: $btn-secondary-default;
+    color: white;
 
-        &:hover {
-            background: $btn-secondary-hover;
-        }
+    &:hover {
+      background: $btn-secondary-hover;
     }
+  }
 }
