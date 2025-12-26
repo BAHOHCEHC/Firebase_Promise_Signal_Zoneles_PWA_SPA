@@ -41,7 +41,15 @@
             </div>
           </div>
           }
+          @if (seasonDetails().opening_characters.length !== currentCharacterLimit) {
           <button class="add-char-btn" (click)="openCharacterModal('opening')">+</button>
+          }@else {
+          <button class="add-char-btn" (click)="openCharacterModal('opening')">
+            <span class="material-symbols-outlined">
+              refresh
+            </span>
+          </button>
+          }
         </div>
       </div>
 
@@ -56,7 +64,16 @@
             </div>
           </div>
           }
+
+          @if (seasonDetails().opening_characters.length !== currentCharacterLimit) {
           <button class="add-char-btn" (click)="openCharacterModal('special')">+</button>
+          }@else {
+          <button class="add-char-btn" (click)="openCharacterModal('special')">
+            <span class="material-symbols-outlined">
+              refresh
+            </span>
+          </button>
+          }
         </div>
       </div>
     </div>

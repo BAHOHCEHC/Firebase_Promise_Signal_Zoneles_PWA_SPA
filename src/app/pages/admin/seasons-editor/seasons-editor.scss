@@ -1,341 +1,341 @@
 @import '../../../../styles/variables';
 
 .page-container {
-    padding: 24px;
-    min-height: 100vh;
-    color: white;
+  padding: 24px;
+  min-height: 100vh;
+  color: white;
 }
 
 .header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 1.8rem;
+    margin: 0;
+  }
+
+  .actions-right {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-
-    h1 {
-        font-size: 1.8rem;
-        margin: 0;
-    }
-
-    .actions-right {
-        display: flex;
-        gap: 12px;
-    }
+    gap: 12px;
+  }
 }
 
 .content-section {
-    margin-bottom: 32px;
+  margin-bottom: 32px;
 
-    h2 {
-        font-size: 1.4rem;
-        margin-bottom: 16px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 8px;
-    }
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+  }
 }
 
 .element-req-section {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 
-    .label-row {
-        display: flex;
-        min-height: 30px;
-        align-items: center;
-        gap: 12px;
-        font-size: 1.1rem;
+  .label-row {
+    display: flex;
+    min-height: 30px;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+  }
+
+  .btn-icon {
+    background: $dark-bg;
+    border: none;
+    color: $light-grey-color;
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 1rem;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .selected-elements {
+    display: flex;
+    gap: 8px;
+  }
+
+  .element-btn-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    padding: 0;
+    background: transparent;
+
+    img {
+      width: 100%;
+      height: 100%;
     }
 
-    .btn-icon {
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        color: $light-grey-color;
-        border-radius: 4px;
-        padding: 2px 8px;
-        cursor: pointer;
-        font-size: 1rem;
+    cursor: pointer;
 
-        &:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
+    &:hover {
+      transform: scale(1.1);
     }
-
-    .selected-elements {
-        display: flex;
-        gap: 8px;
-    }
-
-    .element-btn-mini {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: 1px solid transparent;
-        padding: 0;
-        background: transparent;
-
-        img {
-            width: 100%;
-            height: 100%;
-        }
-
-        cursor: pointer;
-
-        &:hover {
-            transform: scale(1.1);
-        }
-    }
+  }
 }
 
 .characters-blocks {
+  display: flex;
+  gap: 40px;
+
+  .char-block {
+    h3 {
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+  }
+
+  .char-list {
     display: flex;
-    gap: 40px;
-
-    .char-block {
-        h3 {
-            font-size: 1rem;
-            color: $light-grey-color;
-            margin-bottom: 12px;
-        }
-    }
-
-    .char-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        align-items: flex-start;
-    }
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+  }
 }
 
 .char-mini-card {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    background: darken($primary-bg, 5%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  background: darken($primary-bg, 5%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .element-mini-badge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
 
     img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+      filter: drop-shadow(0 1px 2px black);
     }
-
-    .element-mini-badge {
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 16px;
-        height: 16px;
-
-        img {
-            filter: drop-shadow(0 1px 2px black);
-        }
-    }
+  }
 }
 
 .add-char-btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    border: 1px dashed $light-grey-color;
-    background: transparent;
-    color: $light-grey-color;
-    font-size: 24px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: $btn-primary-default;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $dark-bg;
 
-    &:hover {
-        border-color: white;
-        color: white;
-    }
+  &:hover {
+    background-color: $btn-secondary-hover;
+    border-color: white;
+    color: white;
+  }
 }
 
 // Act Variations
 .subsection {
-    margin-bottom: 24px;
+  margin-bottom: 24px;
 
-    h3 {
-        font-size: 1.1rem;
-        color: $light-grey-color;
-        margin-bottom: 12px;
-    }
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
 }
 
 .acts-grid {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .variations-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); // 2 per row
-    gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 2 per row
+  gap: 16px;
 }
 
 .act-card,
 .variation-card {
-    background: $grey-bg; // Darker card bg
-    padding: 16px;
-    border-radius: 12px;
-    min-width: 150px;
+  background: $grey-bg; // Darker card bg
+  padding: 16px;
+  border-radius: 12px;
+  min-width: 150px;
 }
 
 .variation-card {
-    min-width: 250px;
+  min-width: 250px;
 }
 
 .act-header,
 .var-header {
-    margin-bottom: 8px;
-    color: $light-grey-color; // "Act 1" label
+  margin-bottom: 8px;
+  color: $light-grey-color; // "Act 1" label
 }
 
 .act-label {
-    // maybe duplicate of header? prompt image shows "Act 3" above circle
-    display: none; // hides redundant label if header is used
+  // maybe duplicate of header? prompt image shows "Act 3" above circle
+  display: none; // hides redundant label if header is used
 }
 
 .enemies-container {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    min-height: 50px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 50px;
 }
 
 .enemy-circle {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-    background: black;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  background: black;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-    .badge {
-        position: absolute;
-        top: 0;
-        right: 0;
-        background: $btn-primary-default;
-        color: white;
-        font-size: 10px;
-        padding: 2px 5px;
-        border-radius: 10px;
-    }
+  .badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: $btn-primary-default;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 10px;
+  }
 }
 
 .btn-add-circle {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: lighten($grey-bg, 5%);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: lighten($grey-bg, 5%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
 
-    &:hover {
-        background: lighten($grey-bg, 10%);
-    }
+  &:hover {
+    background: lighten($grey-bg, 10%);
+  }
 
-    &.small {
-        width: 32px;
-        height: 32px;
-        font-size: 18px;
-    }
+  &.small {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
 }
 
 .btn-cta {
-    width: 100%;
-    padding: 10px;
-    background: $btn-primary-default;
-    color: $btn-primary-white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+  width: 100%;
+  padding: 10px;
+  background: $btn-primary-default;
+  color: $btn-primary-white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 
-    &:hover {
-        background: $btn-primary-hover;
-    }
+  &:hover {
+    background: $btn-primary-hover;
+  }
 }
 
 .var-waves-container {
-    display: flex;
-    gap: 16px;
+  display: flex;
+  gap: 16px;
 }
 
 .wave-column {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    padding-right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding-right: 16px;
 
-    &:last-child {
-        border-right: none;
-        padding-right: 0;
-    }
+  &:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
 }
 
 .wave-header {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
 .wave-timer {
-    font-size: 0.8rem;
-    color: $light-grey-color;
+  font-size: 0.8rem;
+  color: $light-grey-color;
 }
 
 .enemies-vertical-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
 }
 
 .btn-edit-settings {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: transparent;
-    color: $light-grey-color;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  color: $light-grey-color;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .btn-save {
-    background: $green-color;
-    color: black;
-    padding: 8px 24px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
+  background: $green-color;
+  color: black;
+  padding: 8px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
 
-    &:hover {
-        filter: brightness(1.1);
-    }
+  &:hover {
+    filter: brightness(1.1);
+  }
 }
 
 .btn-warning {
-    background: transparent;
-    color: $red-color;
-    border: 1px solid $red-color;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
+  background: transparent;
+  color: $red-color;
+  border: 1px solid $red-color;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
 
-    &:hover {
-        background: rgba($red-color, 0.1);
-    }
+  &:hover {
+    background: rgba($red-color, 0.1);
+  }
 }

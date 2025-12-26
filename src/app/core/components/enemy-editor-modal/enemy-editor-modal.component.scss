@@ -29,7 +29,6 @@
 
 .modal-title {
   font-size: 18px;
-  font-weight: 600;
   margin: 0;
 }
 
@@ -69,18 +68,16 @@
   padding: 8px 24px;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
   border: none;
   transition: all 0.2s;
 }
 
 .secondary {
-  color: $light-grey-color;
-  background: $btn-secondary-hover;
+  background: $btn-secondary-default;
 
   &:hover {
-    background: $grey-color;
+    background: $btn-secondary-hover;
     color: $btn-primary-white;
   }
 }

@@ -27,6 +27,20 @@ export class SeasonCharactersModal {
   public activeElementFilters = signal<Set<ElementTypeName>>(new Set());
   public currentSelection = signal<Set<string>>(new Set());
 
+  // Комп'ютед властивість для визначення, чи потрібно затемнювати неактивні фільтри
+  public shouldDimInactiveFilters = computed(() => {
+    const filtersCount = this.activeElementFilters().size;
+    // Затемнюємо тільки якщо є хоча б один активний фільтр
+    return filtersCount > 0;
+  });
+
+  // Комп'ютед властивість для визначення, чи потрібно затемнювати неактивних персонажів
+  public shouldDimInactiveCharacters = computed(() => {
+    const selectionCount = this.currentSelection().size;
+    // Затемнюємо всіх персонажів, якщо є хоча б один обраний
+    return selectionCount > 0;
+  });
+
   public filteredCharacters = computed(() => {
     const filters = this.activeElementFilters();
     if (filters.size === 0) {
@@ -63,21 +77,10 @@ export class SeasonCharactersModal {
     return this.currentSelection().has(charId);
   }
 
-  public shouldDimCharacter(charId: string): boolean {
-    // If limit reached and not selected, dim it
-    // Or if filtered out? (filtered out are not shown)
-    // "they behave like... as soon as first selected all darken and only active highlight" ->
-    // Wait, prompt says: "as soon as first char selected all darken and only active highlight" (See image 4_2.png)
-    // Actually, usually "dim inactive" means if limit reached, others are disabled.
-    // The prompt says: "characters can be clicked as soon as first character selected all darken and only active highlight".
-    // This sounds like a specific visual style where unselected items are dimmed if there is ANY selection? Or maybe just selected ones are bright.
-    // I'll stick to standard: highlight selected, dim if limit reached and not selected.
-    return !this.isCharacterSelected(charId) && this.selectionCount() >= this.limit;
+  public getElementIconPath(type: ElementTypeName): string {
+    return `assets/images/ElementType_${type}.png`;
   }
 
-  public getElementIconPath(type: ElementTypeName): string {
-    return `assets/images/ElementType_${type}.png`; // Assuming path
-  }
   public onSave(): void {
     const selectedIds = this.currentSelection();
     const selectedChars = this.allCharacters.filter(c => selectedIds.has(c.id));

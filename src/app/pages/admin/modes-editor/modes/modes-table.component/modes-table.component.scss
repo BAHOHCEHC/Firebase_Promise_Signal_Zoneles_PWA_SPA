@@ -43,7 +43,6 @@
   color: $light-grey-color;
   strong {
     color: #fff;
-    font-weight: 600;
   }
 }
 .act-actions-header {
@@ -55,7 +54,6 @@
 }
 .grid-cell {
   text-align: center;
-  font-weight: normal;
   display: flex;
   align-items: center;
 }
@@ -149,6 +147,5 @@
 }
 
 .act-name-text {
-  font-weight: 500;
   font-size: 15px;
 }

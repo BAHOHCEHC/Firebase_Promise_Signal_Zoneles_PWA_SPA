@@ -14,7 +14,7 @@
 }
 
 .modal-content {
-  background: $grey-bg;
+  background: $primary-bg;
   padding: 20px;
   border-radius: 10px;
   width: 440px;
@@ -28,7 +28,6 @@
   margin: 0;
   font-size: 1.2rem;
   text-align: center;
-  font-weight: 400;
 }
 
 .elements {
@@ -116,7 +115,6 @@
 
   .counter {
     color: $btn-primary-white;
-    font-weight: 400;
     font-size: 0.9rem;
   }
 
@@ -131,7 +129,6 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  font-weight: 400;
   transition: background 0.2s ease;
   font-size: 0.9rem;
 
@@ -150,11 +147,11 @@
   }
 
   &-secondary {
-    background: $btn-secondary-hover;
+    background: $btn-secondary-default;
     color: white;
 
     &:hover:not(:disabled) {
-      background: $grey-color;
+      background: $btn-secondary-hover;
     }
 
     &:disabled {
@@ -162,17 +159,4 @@
       cursor: not-allowed;
     }
   }
-}
-
-// Додаємо стилі для тексту
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.modal-title,
-.counter,
-.btn {
-  font-weight: 400;
 }

@@ -43,7 +43,6 @@
     gap: 4px;
 
     label {
-        color: $light-grey-color;
         font-size: 0.9rem;
     }
 
@@ -83,7 +82,6 @@
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-weight: 600;
     transition: background 0.2s;
 
     &-primary {

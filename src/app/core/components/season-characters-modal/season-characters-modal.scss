@@ -15,15 +15,12 @@
 
 .modal-content {
     background: $primary-bg;
-    padding: 24px;
-    border-radius: 16px;
-    width: 800px;
-    max-width: 95%;
-    height: 80vh;
+    padding: 20px;
+    border-radius: 10px;
+    width: 60%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    gap: 12px;
 }
 
 .modal-header {
@@ -34,6 +31,7 @@
         color: white;
         margin: 0;
         font-size: 1.4rem;
+        font-weight: 400;
     }
 }
 
@@ -41,9 +39,59 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
+
+    // Стан коли нічого не обрано - всі кнопки світлі
+    &:not(.filters--dim-inactive) {
+        .filter-button {
+            opacity: 1;
+
+            &:hover {
+                opacity: 0.9;
+                transform: scale(1.05);
+            }
+        }
+    }
+
+    // Стан коли щось обрано - неактивні темнішають
+    &--dim-inactive {
+        .filter-button {
+            opacity: 0.4;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+
+            // Активні фільтри залишаються світлими
+            &--active {
+                opacity: 1 !important;
+                transform: scale(1.05);
+                border-color: $btn-primary-default;
+                background: rgba($btn-primary-default, 0.15);
+            }
+
+            // Неактивні фільтри (коли всі елементи вже вибрані як фільтри)
+            &:disabled {
+                opacity: 0.25;
+                filter: grayscale(80%);
+                cursor: not-allowed;
+
+                &:hover {
+                    opacity: 0.25;
+                    transform: none;
+                    background: transparent;
+                }
+            }
+
+            // Неактивні фільтри (коли ще можна вибирати)
+            &:not(.filter-button--active):not(:disabled) {
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 0.7;
+                    transform: scale(1.05);
+                    background: rgba(255, 255, 255, 0.1);
+                }
+            }
+        }
+    }
 }
 
 .filter-button {
@@ -52,23 +100,12 @@
     border-radius: 50%;
     padding: 6px;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.5;
     transition: all 0.2s;
-
-    &--active {
-        opacity: 1;
-        border-color: $btn-primary-default;
-        background: rgba($btn-primary-default, 0.2);
-    }
-
-    &:hover {
-        opacity: 1;
-    }
 
     .element-icon {
         width: 100%;
@@ -95,42 +132,59 @@
 
 .character-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
     gap: 12px;
+
+    // Стан коли є обраний персонаж - всі необрані затемнюються
+    &--dim-inactive {
+        .character-card {
+            opacity: 0.5;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+
+            // Обрані персонажі залишаються світлими
+            &--selected {
+                opacity: 1 !important;
+                transform: scale(0.95);
+            }
+
+            // Додатковий клас для затемнених карток
+            &--dimmed {
+                opacity: 0.4;
+
+                &:hover {
+                    opacity: 0.6;
+                }
+            }
+        }
+    }
 }
 
 .character-card {
     position: relative;
     cursor: pointer;
-    transition: transform 0.2s, opacity 0.2s;
-
-    &--disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-    }
+    transition: all 0.2s ease;
+    opacity: 1;
+    border-radius: 10px;
 
     &--selected {
+        background: rgba($btn-primary-default, 0.1);
         transform: scale(0.95);
-        opacity: 1;
-
-        .character-image-wrapper {
-            border: 2px solid $btn-primary-default;
-        }
+        opacity: 1 !important;
     }
 
-    &:hover:not(&--disabled) {
+    &:hover:not(&--dimmed) {
         transform: scale(1.05);
+        background: rgba(255, 255, 255, 0.05);
     }
 
     .character-image-wrapper {
         width: 100%;
         padding-top: 100%; // 1:1 Aspect ratio
         position: relative;
-        border-radius: 8px;
+        border-radius: 10px;
         background-size: cover;
         background-position: center;
         overflow: hidden;
-        border: 2px solid transparent;
     }
 
     .character-avatar {
@@ -155,22 +209,6 @@
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
         }
     }
-
-    .selection-indicator {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        background: $btn-primary-default;
-        color: white;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
 }
 
 .modal-footer {
@@ -178,12 +216,12 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
 
     .counter {
         color: $btn-primary-white;
         font-size: 1.1rem;
+        font-weight: 400;
     }
 
     .actions {
@@ -197,24 +235,34 @@
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-weight: 600;
     transition: background 0.2s;
+    font-weight: 400;
 
     &-primary {
         background: $btn-primary-default;
         color: $btn-primary-white;
 
-        &:hover {
+        &:hover:not(:disabled) {
             background: $btn-primary-hover;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     }
 
     &-secondary {
-        background: $btn-secondary-default;
-        color: white;
+      background: $btn-secondary-default;
+      color: white;
 
-        &:hover {
-            background: $btn-secondary-hover;
+      &:hover:not(:disabled) {
+          background: $btn-secondary-hover;
         }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
 }
