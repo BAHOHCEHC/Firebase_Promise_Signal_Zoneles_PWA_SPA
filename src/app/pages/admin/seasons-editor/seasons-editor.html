@@ -134,14 +134,20 @@
             }
 
             <div class="enemies-container">
-              @for (wave of act.variations; track $index) {
+              <!-- Boss usually has 1 variation, 1 wave -->
+              @if (act.variations && act.variations[0]?.waves) {
+              @for (wave of act.variations[0].waves; track $index) {
               <div class="enemy-inner">
                 @for (enemy of wave.included_enemy; track $index) {
                 <div class="enemy-circle">
                   <img [src]="enemy.avatarUrl" />
+                  @if (enemy.quantity > 1) {
+                  <span class="badge">{{ enemy.quantity }}</span>
+                  }
                 </div>
                 }
               </div>
+              }
               }
 
               @if (!act.enemy_selection.length) {
@@ -156,7 +162,6 @@
               </button>
               }
             </div>
-
           </div>
         </div>
         }
@@ -176,7 +181,6 @@
             Arcana {{ act.name }}
           </div>
 
-
           <div class="enemies-container-wrapper">
             @if (act.enemy_options?.timer) {
             <div class="act-options-info">
@@ -184,12 +188,17 @@
             </div>
             }
             <div class="enemies-container">
-              @for (wave of act.variations; track $index) {
-              @for (enemy of wave.included_enemy; track $index) {
-              <div class="enemy-circle">
-                <img [src]="enemy.avatarUrl" />
-                @if (enemy.quantity > 1) {
-                <span class="badge">{{ enemy.quantity }}</span>
+              <!-- Arcana usually has 1 variation, 1 wave -->
+              @if (act.variations && act.variations[0]?.waves) {
+              @for (wave of act.variations[0].waves; track $index) {
+              <div class="enemy-inner">
+                @for (enemy of wave.included_enemy; track $index) {
+                <div class="enemy-circle">
+                  <img [src]="enemy.avatarUrl" />
+                  @if (enemy.quantity > 1) {
+                  <span class="badge">{{ enemy.quantity }}</span>
+                  }
+                </div>
                 }
               </div>
               }
@@ -228,54 +237,53 @@
 
           <div class="var-content">
             @if (act.type == "Variation_fight") {
-            <button class="btn-cta" (click)="openVariationModal(act)">
-              + Add variation
-            </button>
-
             <div class="var-settings-display">
               <div class="var-waves-container">
-                @for (wave of act?.variations; track $index) {
-                <div class="wave-column">
-
-                  <!-- Wave title -->
-                  <div class="wave-header">
-                    @if (act?.variation_fight_settings?.wave === 'custom') {
-                    {{ act?.variation_fight_settings?.name || 'Custom wave' }}
-                    } @else {
-                    Wave {{ $index + 1 }}
-                    }
-                  </div>
-
+                @for (variation of act.variations; track $index; let vIdx = $index) {
+                <div class="variation-row">
+                  <div class="variation-number"><div class="span fs_16">
+                    {{$index + 1 + '.'}}
+                  </div></div>
                   <!-- Timer -->
-                  @if (
-                  act?.variation_fight_settings?.timer !== null &&
-                  act?.variation_fight_settings?.timer !== undefined &&
-                  act?.variation_fight_settings?.timer !== ''
-                  ) {
+                  @if (variation.timer) {
                   <div class="wave-timer">
-                    {{ act.variation_fight_settings?.timer }} sec
+                    {{ variation.timer }} sec
                   </div>
                   }
 
-                  <!-- Enemies -->
-                  <div class="enemies-vertical-list">
-                    @for (enemy of wave.included_enemy; track $index) {
-                    <div class="enemy-circle">
-                      <img [src]="enemy.avatarUrl" [alt]="enemy.name" />
+                  <div class="wave-column-wrapper">
+                    @for (wave of variation.waves; track $index; let wIdx = $index) {
+                    <div class="wave-column">
+                      <!-- Wave title -->
+                      <div class="wave-header">
+                        @if (variation.wave === 'custom') {
+                        {{ variation.name || 'Custom wave' }}
+                        } @else {
+                        Wave {{ wIdx + 1 }}
+                        }
+                      </div>
 
-                      @if (enemy.quantity > 1) {
-                      <span class="badge">
-                        {{ enemy.quantity }}
-                      </span>
-                      }
+                      <!-- Enemies -->
+                      <div class="enemies-vertical-list">
+                        @for (enemy of wave.included_enemy; track $index) {
+                        <div class="enemy-circle">
+                          <img [src]="enemy.avatarUrl" [alt]="enemy.name" />
+
+                          @if (enemy.quantity > 1) {
+                          <span class="badge">
+                            {{ enemy.quantity }}
+                          </span>
+                          }
+                        </div>
+                        }
+
+                        <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
+                          +
+                        </button>
+                      </div>
                     </div>
                     }
-
-                    <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, $index)">
-                      +
-                    </button>
                   </div>
-
                 </div>
                 }
               </div>
@@ -284,8 +292,10 @@
                 ⚙
               </button>
             </div>
-
             }
+            <button class="btn-cta" (click)="openVariationModal(act)">
+              + Add variation
+            </button>
           </div>
         </div>
         }

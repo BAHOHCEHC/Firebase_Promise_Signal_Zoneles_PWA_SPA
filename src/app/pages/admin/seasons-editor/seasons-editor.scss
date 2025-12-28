@@ -304,21 +304,20 @@
 
 .var-waves-container {
   display: flex;
-  gap: 16px;
+  flex-direction: column; // КОЖЕН variation-row — новий рядок
+  gap: 12px;
 }
 
 .wave-column {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
   align-items: center;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
-  padding-right: 16px;
-
-  &:last-child {
-    border-right: none;
-    padding-right: 0;
-  }
+  padding-right: 10px;
+}
+.variation-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
 }
 
 .wave-header {
@@ -326,13 +325,27 @@
 }
 
 .wave-timer {
+  min-width: 80px;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  white-space: nowrap;
   font-size: 16px;
   color: $golden;
+}
+.wave-column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wave-column-wrapper {
+  display: flex;
+  gap: 12px;
+  flex-wrap: nowrap; // ❗ хвилі НЕ переносяться
 }
 
 .enemies-vertical-list {
   display: flex;
-  flex-direction: column;
   gap: 8px;
   align-items: center;
 }

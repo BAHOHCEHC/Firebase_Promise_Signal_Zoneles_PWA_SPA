@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Season_details, Character, Act, Wave, ElementTypeName, ElementType, Act_options, Enemy, Wave_type } from '../../../../models/models';
+import { Season_details, Character, Act, Variation, Wave, ElementTypeName, ElementType, Act_options, Enemy, Wave_type, Enemy_options } from '../../../../models/models';
 import { SeasonAddEnemyModal } from '../../../core/components/season-add-enemy-modal/season-add-enemy-modal';
 import { SeasonAddVariationChamberModal } from '../../../core/components/season-add-variation-chamber-modal/season-add-variation-chamber-modal';
 import { SeasonCharactersModal } from '../../../core/components/season-characters-modal/season-characters-modal';
@@ -57,19 +57,29 @@ export class SeasonsEditorComponent implements OnInit {
   // Modal Context
   public characterModalMode = signal<'opening' | 'special'>('opening');
   public currentActForEnemy = signal<Act | null>(null);
-  public currentWaveForEnemy = signal<Wave | null>(null); // If adding to a specific wave in variation
+  public currentWaveForEnemy = signal<Wave | null>(null);
+  public currentVariationForEnemy = signal<Variation | null>(null);
   public currentInitialEnemies = computed(() => {
     const wave = this.currentWaveForEnemy();
     if (wave) return wave.included_enemy;
-    const act = this.currentActForEnemy();
-    if (act) return act.enemy_selection || [];
     return [];
   });
   public currentInitialOptions = computed(() => {
     const act = this.currentActForEnemy();
-    return act?.enemy_options || {};
+    if (act?.type !== 'Variation_fight') {
+      return act?.enemy_options || {};
+    }
+    const variation = this.currentVariationForEnemy();
+    if (variation) {
+      return {
+        timer: variation.timer,
+        // For variations, amount/defeat/special_type are usually set per wave/enemy in processedEnemies
+        // but if we want to pre-fill the modal with variation-level timer:
+      };
+    }
+    return {};
   });
-  public currentVariationIndex = signal<number>(-1); // To track which variation we are editing
+  public currentVariationIndex = signal<number>(-1);
   public currentActForVariation = signal<Act | null>(null);
 
   // Computed
@@ -222,7 +232,22 @@ export class SeasonsEditorComponent implements OnInit {
   // --- Enemy Modal (Boss/Arcana) ---
   public openAddEnemyModal(act: Act) {
     this.currentActForEnemy.set(act);
-    this.currentWaveForEnemy.set(null); // Not a variation wave
+    this.currentVariationForEnemy.set(null);
+    this.currentWaveForEnemy.set(null);
+
+    // For Boss/Arcana, we automatically target variation[0].wave[0] for initialization
+    if (act.type !== 'Variation_fight') {
+      if (!act.variations || act.variations.length === 0) {
+        act.variations = [{
+          timer: act.enemy_options?.timer || '',
+          wave: '1',
+          waves: [{ waveCount: 0, included_enemy: [] }]
+        }];
+      }
+      this.currentVariationForEnemy.set(act.variations[0]);
+      this.currentWaveForEnemy.set(act.variations[0].waves[0]);
+    }
+
     this.showAddEnemyModal.set(true);
   }
 
@@ -245,47 +270,41 @@ export class SeasonsEditorComponent implements OnInit {
     const act = this.currentActForEnemy();
     if (!act) return;
 
-    // Prepare enemies with their specific options
     const processedEnemies = data.enemies.map((e: any) => ({
       ...e,
       quantity: data.options.amount ? parseInt(data.options.amount) : 1,
       specialMark: !!data.options.special_type
     }));
 
-    if (this.currentWaveForEnemy()) {
-      // Adding/Editing a variation wave
-      const targetWave = this.currentWaveForEnemy()!;
-      let waveInAct = act.variations.find(w => w.waveCount === targetWave.waveCount);
-
-      if (!waveInAct) {
-        waveInAct = { waveCount: targetWave.waveCount, included_enemy: [] };
-        act.variations.push(waveInAct);
+    if (act.type === 'Variation_fight') {
+      const variation = this.currentVariationForEnemy();
+      const wave = this.currentWaveForEnemy();
+      if (variation && wave) {
+        wave.included_enemy = [...processedEnemies];
+      }
+    } else {
+      // Boss/Arcana: Ensure internal structure exists
+      if (!act.variations || act.variations.length === 0) {
+        act.variations = [{
+          timer: data.options.timer || '',
+          wave: '1',
+          waves: [{ waveCount: 0, included_enemy: [] }]
+        }];
       }
 
-      // Replace enemies in the wave
-      waveInAct.included_enemy = [...processedEnemies];
+      const variation = act.variations[0];
+      if (!variation.waves) variation.waves = [{ waveCount: 0, included_enemy: [] }];
 
-    } else {
-      // Boss/Arcana: Replace the entire selection/first wave
-      if (!act.variations) act.variations = [];
+      variation.waves[0].included_enemy = [...processedEnemies];
+      variation.timer = data.options.timer || '';
 
-      const mainWave: Wave = {
-        waveCount: 0,
-        included_enemy: [...processedEnemies]
-      };
-
-      // For Boss/Arcana we usually have 1 wave in this context
-      act.variations = [mainWave];
-
-      // Sync legacy property
+      // Legacy sync
       act.enemy_selection = [...processedEnemies];
-      act.enemy_options = { ...act.enemy_options, ...data.options };
+      act.enemy_options = { ...data.options };
     }
 
-    // Trigger update
     this.seasonDetails.update(d => ({ ...d }));
     this.closeAddEnemyModal();
-
   }
 
   // --- Variation Modal ---
@@ -303,78 +322,36 @@ export class SeasonsEditorComponent implements OnInit {
     const act = this.currentActForVariation();
     if (!act) return;
 
-    // Update act.variation_fight_settings
-    // "save - saves value in collection acts. variation_fight_settings, variations"
-    // Wait, "buttons ... add setup wave act.variations: Wave[]"
-    // "Variation Chambers ... button +Add variation calls ... modal"
-    // It seems we configure the LAYOUT of the variation?
-    // And also add a "variation" to the list?
-    // "After settings made ... adds monsters via opening season-add-enemy-modal" - this is separate step "column section with button +"
-
-    // Act has `variations: Wave[]`.
-    // Also `variation_fight_settings`.
-    // The modal sets `variation_fight_settings`.
-    // Does it also create a wave?
-    // "Button +Add variation ... save ... block changes view ... appears section ... with button +"
-    // It seems `variation_fight_settings` is PER ACT.
-    // But prompt says "Act 1 ... + Add variation".
-    // If we add variation, do we imply multiple variations?
-    // `acts` collection is `Act[]`.
-    // `Act` has `variation_fight_settings` (singular).
-    // `Act` has `variations: Wave[]` (plural).
-
-    // Interpretation:
-    // The "Add variation" button creates/configures the settings for the variation fight.
-    // Once configured, it shows the waves.
-    // Maybe `variations` is actually where we add waves?
-    // "Add variation chamber ... field dropdown '1' | '2' | '3' | 'custom' Variation_fight.wave"
-    // This implies we are setting up HOW MANY waves or WHAT TYPE of waves.
-    // If I select "2", maybe I create 2 waves?
-    // Or maybe "Wave" means "Wave 1", "Wave 2"?
-
-    // "Button +Add variation" implies adding ONE variation?
-    // But `Variation_fight` seems to be the SETTINGS for the fight.
-    // I will assume for now:
-    // 1. User clicks "+ Add variation" -> configures settings (timer, wave type, monolit).
-    // 2. This Initializes `act.variation_fight_settings`.
-    // 3. Based on `wave` type ("1", "2", "3"), we generate 1, 2, or 3 `Wave` objects in `act.variations`.
-    // 4. Then user can add enemies to each wave provided by the "column section".
-
     if (!act.variations) act.variations = [];
 
-    act.variation_fight_settings = {
-      wave: data.wave,
+    const waveCount = data.wave === 'custom' ? 1 : parseInt(data.wave);
+    const waves: Wave[] = [];
+    for (let i = 0; i < waveCount; i++) {
+      waves.push({ waveCount: i, included_enemy: [] });
+    }
+
+    const newVariation: Variation = {
       timer: data.timer,
+      wave: data.wave,
+      waves: waves,
       name: data.name,
       monolit: data.monolit
     };
 
-    // Generate waves if empty?
-    // If type is "1", ensure 1 wave. "2" -> 2 waves. "3" -> 3 waves.
-    // "custom" -> 1 wave? or user adds them?
-    // Prompt doesn't specify logic explicitly but says: "if simply 1-2-3 then 'Wave' + value... section with button +".
-
-    const count = data.wave === 'custom' ? 1 : parseInt(data.wave);
-    // Resize variations array
-    if (act.variations.length < count) {
-      for (let i = act.variations.length; i < count; i++) {
-        act.variations.push({ included_enemy: [], waveCount: i });
-      }
-    } else if (act.variations.length > count) {
-      // Should we shrink? Maybe warn? For now, slice.
-      act.variations = act.variations.slice(0, count);
-    } else {
-      // Existing waves preserved (enemies kept)
-    }
+    act.variations.push(newVariation);
 
     this.seasonDetails.update(d => ({ ...d }));
     this.closeVariationModal();
   }
 
-  public openAddEnemyToWave(act: Act, waveIndex: number) {
-    if (!act.variations || !act.variations[waveIndex]) return;
+  public openAddEnemyToWave(act: Act, variationIndex: number, waveIndex: number) {
+    if (!act.variations || !act.variations[variationIndex]) return;
+    const variation = act.variations[variationIndex];
+    if (!variation.waves || !variation.waves[waveIndex]) return;
+
     this.currentActForEnemy.set(act);
-    this.currentWaveForEnemy.set(act.variations[waveIndex]);
+    this.currentVariationForEnemy.set(variation);
+    this.currentWaveForEnemy.set(variation.waves[waveIndex]);
     this.showAddEnemyModal.set(true);
   }
 
