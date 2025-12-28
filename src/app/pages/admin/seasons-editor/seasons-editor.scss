@@ -1,0 +1,360 @@
+@import '../../../../styles/variables';
+
+.page-container {
+  padding: 24px;
+  min-height: 100vh;
+  color: white;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 1.8rem;
+    margin: 0;
+  }
+
+  .actions-right {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.content-section {
+  margin-bottom: 32px;
+
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+  }
+}
+
+.element-req-section {
+  margin-bottom: 10px;
+
+  .label-row {
+    display: flex;
+    min-height: 30px;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+  }
+
+  .btn-icon {
+    background: $dark-bg;
+    border: none;
+    color: $light-grey-color;
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 1rem;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .selected-elements {
+    display: flex;
+    gap: 8px;
+  }
+
+  .element-btn-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    padding: 0;
+    background: transparent;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.characters-blocks {
+  display: flex;
+  gap: 40px;
+
+  .char-block {
+    h3 {
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+  }
+
+  .char-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}
+
+.char-mini-card {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .element-mini-badge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+
+    img {
+      filter: drop-shadow(0 1px 2px black);
+    }
+  }
+}
+
+.add-char-btn {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  border: none;
+  color: $btn-primary-default;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $dark-bg;
+
+  &:hover {
+    background-color: $btn-secondary-hover;
+    border-color: white;
+    color: white;
+  }
+}
+
+// Act Variations
+.subsection {
+  margin-bottom: 24px;
+
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+}
+
+.acts-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.variations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 2 per row
+  gap: 16px;
+}
+
+.act-card,
+.variation-card {
+  min-width: 80px;
+}
+
+.variation-card {
+  min-width: 250px;
+}
+
+.act-header,
+.var-header {
+  margin-bottom: 8px;
+}
+
+.act-label {
+  // maybe duplicate of header? prompt image shows "Act 3" above circle
+  display: none; // hides redundant label if header is used
+}
+
+.enemies-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 50px;
+  position: relative;
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+.enemy-inner {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 50px;
+  position: relative;
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+.act-options-info {
+  color: $golden;
+}
+.enemy-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  background: black;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.badge {
+  position: absolute;
+  color: $primary-white;
+  top: -5px;
+  right: 0;
+  opacity: 0.5;
+  background: black;
+  font-size: 12px;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  padding: 3px;
+}
+
+.btn-add-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: $dark-bg;
+  color: $btn-primary-default;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+
+  &:hover {
+    background-color: $btn-secondary-hover;
+    border-color: white;
+    color: white;
+  }
+
+  &.small {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+}
+
+.btn-cta {
+  width: 100%;
+  padding: 10px;
+  background: $btn-primary-default;
+  color: $primary-white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: $btn-primary-hover;
+  }
+}
+
+.var-waves-container {
+  display: flex;
+  gap: 16px;
+}
+
+.wave-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding-right: 16px;
+
+  &:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+}
+
+.wave-header {
+  font-size: 0.9rem;
+}
+
+.wave-timer {
+  font-size: 0.8rem;
+  color: $light-grey-color;
+}
+
+.enemies-vertical-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-edit-settings {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  color: $light-grey-color;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-save {
+  background: $green-color;
+  color: black;
+  padding: 8px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+}
+
+.btn-warning {
+  background: transparent;
+  color: $red-color;
+  border: 1px solid $red-color;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba($red-color, 0.1);
+  }
+}

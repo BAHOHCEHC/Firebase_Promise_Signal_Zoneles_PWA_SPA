@@ -18,6 +18,7 @@ export interface Act {
 }
 
 export interface Wave {
+  waveCount: number;
   included_enemy: Enemy[]
 }
 
