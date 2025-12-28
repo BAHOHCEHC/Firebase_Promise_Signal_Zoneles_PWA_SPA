@@ -61,7 +61,7 @@
           </div>
           }
 
-          @if (seasonDetails().opening_characters.length !== currentCharacterLimit) {
+          @if (seasonDetails().opening_characters.length !== OPENING_CHARACTER_LIMIT) {
           <button class="add-char-btn" (click)="openCharacterModal('opening')">
             +
           </button>
@@ -92,7 +92,7 @@
           </div>
           }
 
-          @if (seasonDetails().special_guests.length !== currentCharacterLimit) {
+          @if (seasonDetails().special_guests.length !== SPECIAL_GUEST_LIMIT) {
           <button class="add-char-btn" (click)="openCharacterModal('special')">
             +
           </button>
@@ -126,27 +126,32 @@
             Act {{ act.name }}
           </div>
 
-          <div class="enemies-container">
-            @for (enemy of act.enemy_selection; track $index) {
-            <div class="enemy-circle">
-              <img [src]="enemy.avatarUrl" />
-
-              @if (enemy.quantity > 1) {
-              <span class="badge">{{ enemy.quantity }}</span>
-              }
+          <div class="enemies-container-wrapper">
+            @if (act.enemy_options?.timer) {
+            <div class="act-options-info">
+              {{ act.enemy_options?.timer }} sec
             </div>
             }
 
-            <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
-              +
-            </button>
-          </div>
+            <div class="enemies-container">
+              @for (wave of act.variations; track $index) {
+              <div class="enemy-inner">
+                @for (enemy of wave.included_enemy; track $index) {
+                <div class="enemy-circle">
+                  <img [src]="enemy.avatarUrl" />
+                </div>
+                @if (enemy.quantity > 1 ) {
+                <span class="badge">{{ enemy.quantity }}</span>
+                }
+                }
+              </div>
+              }
+              <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
+                +
+              </button>
+            </div>
 
-          @if (act.enemy_options?.timer) {
-          <div class="act-options-info">
-            ⏱ {{ act.enemy_options?.timer }}
           </div>
-          }
         </div>
         }
       </div>
@@ -166,14 +171,15 @@
           </div>
 
           <div class="enemies-container">
-            @for (enemy of act.enemy_selection; track $index) {
+            @for (wave of act.variations; track $index) {
+            @for (enemy of wave.included_enemy; track $index) {
             <div class="enemy-circle">
               <img [src]="enemy.avatarUrl" />
-
               @if (enemy.quantity > 1) {
               <span class="badge">{{ enemy.quantity }}</span>
               }
             </div>
+            }
             }
 
             <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
@@ -205,21 +211,20 @@
           </div>
 
           <div class="var-content">
-            @if (!act.variation_fight_settings) {
+            @if (act.type == "Variation_fight") {
             <button class="btn-cta" (click)="openVariationModal(act)">
               + Add variation
             </button>
-            } @else {
 
             <div class="var-settings-display">
               <div class="var-waves-container">
-                @for (wave of act.variations; track $index) {
+                @for (wave of act?.variations; track $index) {
                 <div class="wave-column">
 
                   <!-- Wave title -->
                   <div class="wave-header">
-                    @if (act.variation_fight_settings.wave === 'custom') {
-                    {{ act.variation_fight_settings.name || 'Custom wave' }}
+                    @if (act?.variation_fight_settings?.wave === 'custom') {
+                    {{ act?.variation_fight_settings?.name || 'Custom wave' }}
                     } @else {
                     Wave {{ $index + 1 }}
                     }
@@ -227,12 +232,12 @@
 
                   <!-- Timer -->
                   @if (
-                  act.variation_fight_settings.timer !== null &&
-                  act.variation_fight_settings.timer !== undefined &&
-                  act.variation_fight_settings.timer !== ''
+                  act?.variation_fight_settings?.timer !== null &&
+                  act?.variation_fight_settings?.timer !== undefined &&
+                  act?.variation_fight_settings?.timer !== ''
                   ) {
                   <div class="wave-timer">
-                    ⏱ {{ act.variation_fight_settings.timer }}
+                    ⏱ {{ act.variation_fight_settings?.timer }}
                   </div>
                   }
 

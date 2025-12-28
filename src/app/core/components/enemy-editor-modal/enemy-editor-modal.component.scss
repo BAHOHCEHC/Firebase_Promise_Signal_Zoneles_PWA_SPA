@@ -20,7 +20,7 @@
   width: 440px;
   max-width: 90%;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  color: $btn-primary-white;
+  color: $primary-white;
 }
 
 .modal-header {
@@ -46,7 +46,7 @@
 
 .form-label {
   font-size: 14px;
-  color: $btn-primary-white;
+  color: $primary-white;
 }
 
 .form-control {
@@ -54,7 +54,7 @@
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 10px 12px;
-  color: $btn-primary-white;
+  color: $primary-white;
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s;
@@ -78,13 +78,13 @@
 
   &:hover {
     background: $btn-secondary-hover;
-    color: $btn-primary-white;
+    color: $primary-white;
   }
 }
 
 .btn-primary {
   background: $btn-primary-default;
-  color: $btn-primary-white;
+  color: $primary-white;
 
   &:hover {
     background: $btn-primary-hover;
@@ -125,7 +125,7 @@
   &.active {
     opacity: 1;
     svg {
-      box-shadow: 0 0 15px $btn-primary-white;
+      box-shadow: 0 0 15px $primary-white;
       width: 27px;
       height: 27px;
     }
@@ -139,7 +139,7 @@
   .empty-icon {
     width: 24px;
     height: 24px;
-    color: $btn-primary-white;
+    color: $primary-white;
     opacity: 0.8;
   }
 }

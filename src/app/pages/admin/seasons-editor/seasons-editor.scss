@@ -104,12 +104,11 @@
 }
 
 .char-mini-card {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
-  background: darken($primary-bg, 5%);
   border: 1px solid rgba(255, 255, 255, 0.1);
 
   img {
@@ -198,8 +197,29 @@
   flex-wrap: wrap;
   align-items: center;
   min-height: 50px;
+  position: relative;
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
-
+.enemy-inner {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 50px;
+  position: relative;
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+.act-options-info {
+  color: $golden;
+}
 .enemy-circle {
   width: 48px;
   height: 48px;
@@ -214,17 +234,20 @@
     height: 100%;
     object-fit: cover;
   }
-
-  .badge {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: $btn-primary-default;
-    color: white;
-    font-size: 10px;
-    padding: 2px 5px;
-    border-radius: 10px;
-  }
+}
+.badge {
+  position: absolute;
+  color: $primary-white;
+  top: -5px;
+  right: 0;
+  opacity: 0.5;
+  background: black;
+  font-size: 12px;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  padding: 3px;
 }
 
 .btn-add-circle {
@@ -238,7 +261,6 @@
   font-size: 24px;
 
   &:hover {
-    background: lighten($grey-bg, 10%);
     background-color: $btn-secondary-hover;
     border-color: white;
     color: white;
@@ -255,7 +277,7 @@
   width: 100%;
   padding: 10px;
   background: $btn-primary-default;
-  color: $btn-primary-white;
+  color: $primary-white;
   border: none;
   border-radius: 8px;
   cursor: pointer;

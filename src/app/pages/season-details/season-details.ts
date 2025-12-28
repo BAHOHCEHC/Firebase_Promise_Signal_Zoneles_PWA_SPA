@@ -342,7 +342,7 @@ export class SeasonsDetails implements OnInit {
     // Resize variations array
     if (act.variations.length < count) {
       for (let i = act.variations.length; i < count; i++) {
-        act.variations.push({ included_enemy: [] });
+        act.variations.push({ included_enemy: [], waveCount: i });
       }
     } else if (act.variations.length > count) {
       // Should we shrink? Maybe warn? For now, slice.

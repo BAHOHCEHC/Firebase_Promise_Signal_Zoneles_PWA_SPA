@@ -219,7 +219,7 @@
     flex-shrink: 0;
 
     .counter {
-        color: $btn-primary-white;
+        color: $primary-white;
         font-size: 1.1rem;
         font-weight: 400;
     }
@@ -240,7 +240,7 @@
 
     &-primary {
         background: $btn-primary-default;
-        color: $btn-primary-white;
+        color: $primary-white;
 
         &:hover:not(:disabled) {
             background: $btn-primary-hover;

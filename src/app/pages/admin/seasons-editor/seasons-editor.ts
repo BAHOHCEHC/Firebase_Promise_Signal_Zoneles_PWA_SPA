@@ -28,6 +28,9 @@ export class SeasonsEditorComponent implements OnInit {
   private characterService = inject(CharacterService);
   public enemiesService = inject(EnemiesService); // Public to access signals in template if needed, or mapped
 
+  public readonly OPENING_CHARACTER_LIMIT = 6;
+  public readonly SPECIAL_GUEST_LIMIT = 4;
+
   // State
   public seasonDetails = signal<Season_details>({
     elemental_type_limided: [],
@@ -181,7 +184,9 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   public get currentCharacterLimit(): number {
-    return this.characterModalMode() === 'opening' ? 6 : 4;
+    return this.characterModalMode() === 'opening'
+      ? this.OPENING_CHARACTER_LIMIT
+      : this.SPECIAL_GUEST_LIMIT;
   }
 
   public get currentCharacterTitle(): string {
@@ -224,55 +229,46 @@ export class SeasonsEditorComponent implements OnInit {
     this.currentActForEnemy.set(null);
   }
 
-  public onSaveEnemy(data: { enemy: Enemy, options: any }) {
+  // public onSaveEnemy(data: { enemy: Enemy, options: any }) {
+  public onSaveEnemy(data: any) {
     const act = this.currentActForEnemy();
     if (!act) return;
 
+    // Prepare enemies with their specific options
+    const processedEnemies = data.enemies.map((e: any) => ({
+      ...e,
+      quantity: data.options.amount ? parseInt(data.options.amount) : 1,
+      specialMark: !!data.options.special_type
+    }));
+
     if (this.currentWaveForEnemy()) {
       // Adding to a variation wave
-      // Logic for variation wave enemy add
-      // We need to update the specific wave in the specific variation
-      // This logic is complex because accessing the specific wave object by reference in deep structure
-      // Better to track indices?
-      // For now, simple push if we have reference.
-      // But `currentWaveForEnemy` is a copy? No, objects are ref.
-      // But we need to trigger signal update.
-      const wave = this.currentWaveForEnemy()!;
-      if (!wave.included_enemy) wave.included_enemy = [];
+      const targetWave = this.currentWaveForEnemy()!;
 
-      // Update enemy with options (amount displayed as badge?)
-      // "Amount appears as icon badge... on avatar"
-      // We need to store options on the Enemy object in the list?
-      // Enemy interface has `quantity`, `specialMark`.
-      // We can update those.
-      const enemyToAdd = {
-        ...data.enemy,
-        quantity: data.options.amount ? parseInt(data.options.amount) : 1, // Store as number if model says number
-        specialMark: data.options.special_type || false
-      };
+      // Ensure the wave exists in the variations array (find by waveCount)
+      let waveInAct = act.variations.find(w => w.waveCount === targetWave.waveCount);
 
-      wave.included_enemy.push(enemyToAdd);
+      if (!waveInAct) {
+        // Fallback: if not found by waveCount, add it
+        waveInAct = { waveCount: targetWave.waveCount, included_enemy: [] };
+        act.variations.push(waveInAct);
+      }
+
+      waveInAct.included_enemy = [...waveInAct.included_enemy, ...processedEnemies];
 
     } else {
-      // Boss/Arcana: update act.enemy_selection and act.enemy_options
-      // "In Act.enemy_selection are added those units we selected in modal"
-      // "Data saves in collection acts(enemy_selection), acts.enemy_options"
+      // Boss/Arcana: always add a NEW wave/set of enemies
+      if (!act.variations) act.variations = [];
 
-      const enemyToAdd = {
-        ...data.enemy,
-        specialMark: data.options.special_type || false,
-        quantity: data.options.amount ? parseInt(data.options.amount) : 1
+      const newWave: Wave = {
+        waveCount: act.variations.length,
+        included_enemy: [...processedEnemies]
       };
 
-      // Logic: Can we have multiple enemies? Yes.
-      act.enemy_selection = [...act.enemy_selection, enemyToAdd];
+      act.variations.push(newWave);
 
-      // Act.enemy_options - seems to be global for the act? Or per enemy?
-      // "Amount,Defeat,Timer(type string) affects acts.enemy_options"
-      // If multiple enemies, does it overwrite?
-      // Usually Boss acts have 1 boss.
-      // If we add multiple, maybe we just merge options?
-      // I will merge.
+      // Maintain legacy properties for display in other parts if needed
+      act.enemy_selection = [...(act.enemy_selection || []), ...processedEnemies];
       act.enemy_options = { ...act.enemy_options, ...data.options };
     }
 
@@ -351,7 +347,7 @@ export class SeasonsEditorComponent implements OnInit {
     // Resize variations array
     if (act.variations.length < count) {
       for (let i = act.variations.length; i < count; i++) {
-        act.variations.push({ included_enemy: [] });
+        act.variations.push({ included_enemy: [], waveCount: i });
       }
     } else if (act.variations.length > count) {
       // Should we shrink? Maybe warn? For now, slice.

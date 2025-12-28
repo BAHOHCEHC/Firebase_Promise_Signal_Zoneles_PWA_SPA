@@ -2,7 +2,7 @@
 
 .editor {
   padding: 24px 0;
-  color: $btn-primary-white;
+  color: $primary-white;
 
   &__header {
     margin-bottom: 20px;
@@ -24,7 +24,7 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s;
-  color: $btn-primary-white;
+  color: $primary-white;
   background: none;
   &:hover {
     color: $btn-primary-hover;
@@ -79,13 +79,13 @@
 
       &:hover {
         border-color: $btn-primary-hover;
-        color: $btn-primary-white;
+        color: $primary-white;
       }
 
       &.active {
         background: $btn-primary-default;
         border-color: $btn-primary-default;
-        color: $btn-primary-white;
+        color: $primary-white;
       }
     }
 
@@ -124,7 +124,7 @@
 
 .group-title {
   font-size: 16px;
-  color: $btn-primary-white;
+  color: $primary-white;
 }
 
 .btn-icon {
@@ -188,7 +188,7 @@
     display: none;
     align-items: center;
     justify-content: center;
-    color: $btn-primary-white;
+    color: $primary-white;
     z-index: 3;
     transform: scale(1.2);
     span {

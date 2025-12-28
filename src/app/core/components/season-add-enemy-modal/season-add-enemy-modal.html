@@ -1,82 +1,72 @@
-<p>season-add-enemy-modal works!</p>
 <div class="modal-overlay" (click)="onClose()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h2 class="modal-title">Add Enemy</h2>
 
-    <form [formGroup]="form" class="modal-form">
+    <!-- Category Selection -->
+    <div class="section">
+      <p class="label">Category Selection</p>
+      <div class="category-buttons">
+        @for (cat of categories; track cat.id) {
+        <button type="button" class="btn-category" [class.btn-category-active]="selectedCategoryId() === cat.id"
+          [class.btn-category-empty]="isCategoryEmpty(cat.id)" [disabled]="isCategoryEmpty(cat.id)"
+          (click)="!isCategoryEmpty(cat.id) && onSelectCategory(cat.id)">
+          {{ cat.title }}
+        </button>
+        }
+      </div>
+    </div>
 
-      <!-- Category Selection -->
-
-      <!-- Category Selection -->
-      <div class="section">
-        <p class="label">Category Selection</p>
-        <div class="category-buttons">
-          @for (cat of categories; track cat.id) {
-          <button type="button" class="btn-category" [class.btn-category-active]="selectedCategoryId() === cat.id"
-            [class.btn-category-empty]="isCategoryEmpty(cat.id)" [disabled]="isCategoryEmpty(cat.id)"
-            (click)="!isCategoryEmpty(cat.id) && onSelectCategory(cat.id)">
-            {{ cat.title }}
-          </button>
+    <!-- Group & Enemy Selection -->
+    @if (selectedCategoryId()) {
+    <div class="groups-grid">
+      @for (group of filteredGroups(); track group.id) {
+      <div class="group-block">
+        <h4 class="group-title">{{ group.title }}</h4>
+        <div class="enemies-grid">
+          @for (enemy of enemiesByGroup(group.id); track enemy.id) {
+          <div class="enemy-card-wrapp" [class.enemy-dim]="hasSelectedEnemies() && !isEnemySelected(enemy)"
+            [class.enemy-selected]="isEnemySelected(enemy)" (click)="toggleEnemy(enemy)">
+            <div class="enemy-card">
+              <img [src]="enemy.avatarUrl" class="enemy-avatar" [alt]="enemy.name" />
+            </div>
+            @if (enemy.element.name !== 'empty') {
+            <img class="enemy-element" [src]="getElementIconPath(enemy.element.name)" [alt]="enemy.element.name" />
+            }
+          </div>
           }
         </div>
       </div>
-      <!-- Category Selection -->
-
-      <!-- Group Selection -->
-      @if (selectedCategoryId()) {
-      <div class="groups-grid">
-        @for (group of filteredGroups(); track group.id) {
-        <div class="group-block">
-          <h4 class="group-title">{{ group.title }}</h4>
-
-          <div class="enemies-grid">
-            @for (enemy of enemiesByGroup(group.id); track enemy.id) {
-            <div class="enemy-card-wrapp" [class.enemy-dim]="hasSelectedEnemy() && selectedEnemy()?.id !== enemy.id"
-              (click)="toggleEnemy(enemy)">
-              <div class="enemy-card">
-                <img [src]="enemy.avatarUrl" class="enemy-avatar" />
-              </div>
-
-              @if (enemy.element.name !== 'empty') {
-              <img class="enemy-element" [src]="getElementIconPath(enemy.element.name)" />
-              }
-            </div>
-            }
-          </div>
-
-        </div>
-        }
-      </div>
       }
-      <!-- Group Selection -->
+    </div>
+    }
 
-      <!-- Extra Options based on Act Options -->
-      <div class="options-section">
+    <!-- Extra Options -->
+    <div class="options-section">
+      <form [formGroup]="form" class="modal-form">
         @if (actOptions.amount) {
-        <input type="text" formControlName="amount" placeholder="Amount" />
+        <input type="text" formControlName="amount" placeholder="Amount" class="input" />
         }
-
         @if (actOptions.timer) {
-        <input type="text" formControlName="timer" placeholder="Timer (sec)" />
+        <input type="text" formControlName="timer" placeholder="Timer (sec)" class="input" />
         }
-
         @if (actOptions.defeat) {
-        <input type="text" formControlName="defeat" placeholder="Defeat" />
+        <input type="text" formControlName="defeat" placeholder="Defeat" class="input" />
         }
-
         @if (actOptions.special_type !== undefined) {
         <label class="checkbox-inline">
           <input type="checkbox" formControlName="special_type" />
           Special type
         </label>
         }
-      </div>
+      </form>
+    </div>
 
-    </form>
-
+    <!-- Footer -->
     <div class="modal-footer">
-      <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
-      <button class="btn btn-primary" (click)="onSave()">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="onClose()">Cancel</button>
+      <button type="button" class="btn btn-primary" [disabled]="!hasSelectedEnemies()" (click)="onSave()">
+        Save
+      </button>
     </div>
   </div>
 </div>

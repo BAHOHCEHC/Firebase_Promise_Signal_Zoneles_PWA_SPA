@@ -114,7 +114,7 @@
   margin-top: 10px;
 
   .counter {
-    color: $btn-primary-white;
+    color: $primary-white;
     font-size: 0.9rem;
   }
 
@@ -134,7 +134,7 @@
 
   &-primary {
     background: $btn-primary-default;
-    color: $btn-primary-white;
+    color: $primary-white;
 
     &:hover:not(:disabled) {
       background: $btn-primary-hover;
