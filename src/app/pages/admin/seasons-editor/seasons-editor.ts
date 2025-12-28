@@ -58,6 +58,17 @@ export class SeasonsEditorComponent implements OnInit {
   public characterModalMode = signal<'opening' | 'special'>('opening');
   public currentActForEnemy = signal<Act | null>(null);
   public currentWaveForEnemy = signal<Wave | null>(null); // If adding to a specific wave in variation
+  public currentInitialEnemies = computed(() => {
+    const wave = this.currentWaveForEnemy();
+    if (wave) return wave.included_enemy;
+    const act = this.currentActForEnemy();
+    if (act) return act.enemy_selection || [];
+    return [];
+  });
+  public currentInitialOptions = computed(() => {
+    const act = this.currentActForEnemy();
+    return act?.enemy_options || {};
+  });
   public currentVariationIndex = signal<number>(-1); // To track which variation we are editing
   public currentActForVariation = signal<Act | null>(null);
 
@@ -242,39 +253,39 @@ export class SeasonsEditorComponent implements OnInit {
     }));
 
     if (this.currentWaveForEnemy()) {
-      // Adding to a variation wave
+      // Adding/Editing a variation wave
       const targetWave = this.currentWaveForEnemy()!;
-
-      // Ensure the wave exists in the variations array (find by waveCount)
       let waveInAct = act.variations.find(w => w.waveCount === targetWave.waveCount);
 
       if (!waveInAct) {
-        // Fallback: if not found by waveCount, add it
         waveInAct = { waveCount: targetWave.waveCount, included_enemy: [] };
         act.variations.push(waveInAct);
       }
 
-      waveInAct.included_enemy = [...waveInAct.included_enemy, ...processedEnemies];
+      // Replace enemies in the wave
+      waveInAct.included_enemy = [...processedEnemies];
 
     } else {
-      // Boss/Arcana: always add a NEW wave/set of enemies
+      // Boss/Arcana: Replace the entire selection/first wave
       if (!act.variations) act.variations = [];
 
-      const newWave: Wave = {
-        waveCount: act.variations.length,
+      const mainWave: Wave = {
+        waveCount: 0,
         included_enemy: [...processedEnemies]
       };
 
-      act.variations.push(newWave);
+      // For Boss/Arcana we usually have 1 wave in this context
+      act.variations = [mainWave];
 
-      // Maintain legacy properties for display in other parts if needed
-      act.enemy_selection = [...(act.enemy_selection || []), ...processedEnemies];
+      // Sync legacy property
+      act.enemy_selection = [...processedEnemies];
       act.enemy_options = { ...act.enemy_options, ...data.options };
     }
 
     // Trigger update
     this.seasonDetails.update(d => ({ ...d }));
     this.closeAddEnemyModal();
+
   }
 
   // --- Variation Modal ---

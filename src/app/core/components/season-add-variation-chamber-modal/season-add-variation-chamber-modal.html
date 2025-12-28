@@ -1,40 +1,54 @@
 <div class="modal-overlay" (click)="onClose()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-        <h2 class="modal-title">Add variation chamber</h2>
+  <div class="modal-content" (click)="$event.stopPropagation()">
 
-        <form [formGroup]="form" class="modal-form">
-            <div class="form-group">
-                <label>Wave Type</label>
-                <select formControlName="wave">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="custom">Custom</option>
-                </select>
-            </div>
+    <h2 class="modal-title">Add variation chamber</h2>
 
-            <div class="form-group" *ngIf="form.get('wave')?.value === 'custom'">
-                <label>Custom wave name</label>
-                <input type="text" formControlName="customName">
-            </div>
+    <form [formGroup]="form" class="modal-form">
 
-            <div class="form-group">
-                <label>Timer</label>
-                <input type="text" formControlName="timer">
-            </div>
-
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox" formControlName="monolit">
-                    Monolit
-                </label>
-            </div>
-
-        </form>
-
-        <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
-            <button class="btn btn-primary" (click)="onSave()">Save</button>
+      <div class="form-row">
+        <div class="form-group small">
+          <label>Amount of waves</label>
+          <select formControlName="wave">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="custom">Custom</option>
+          </select>
         </div>
+
+        <div class="form-group grow" [class.is-disabled]="form.get('wave')?.value !== 'custom'">
+
+          <label>Custom wave name</label>
+
+          <input type="text" placeholder="Add custom name" formControlName="customName"
+            [disabled]="form.get('wave')?.value !== 'custom'" />
+        </div>
+      </div>
+
+      <div class="form-row align-center">
+        <div class="form-group inline">
+          <div class="timer-input">
+            <label>Timer</label>
+            <input type="text" formControlName="timer" placeholder="000">
+            <span>sec</span>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <label class="checkbox">
+            <input type="checkbox" formControlName="monolit">
+            <span></span>
+            Monolit
+          </label>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+      <button class="btn btn-primary" (click)="onSave()">Save</button>
     </div>
+
+  </div>
 </div>

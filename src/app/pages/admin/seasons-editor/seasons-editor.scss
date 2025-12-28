@@ -164,6 +164,12 @@
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  justify-content: space-between;
+  &-arcana {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px; // від
+  }
 }
 
 .variations-grid {
@@ -175,6 +181,10 @@
 .act-card,
 .variation-card {
   min-width: 80px;
+}
+.acts-grid-arcana .act-card {
+  flex: 0 0 calc(50% - 8px); // 2 в ряд
+  box-sizing: border-box;
 }
 
 .variation-card {
@@ -219,6 +229,7 @@
 }
 .act-options-info {
   color: $golden;
+  font-size: 16px;
 }
 .enemy-circle {
   width: 48px;
@@ -239,7 +250,7 @@
   position: absolute;
   color: $primary-white;
   top: -5px;
-  right: 0;
+  left: 0;
   opacity: 0.5;
   background: black;
   font-size: 12px;
@@ -248,17 +259,21 @@
   height: 16px;
   text-align: center;
   padding: 3px;
+  z-index: 5;
 }
 
 .btn-add-circle {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: $dark-bg;
-  color: $btn-primary-default;
+  background-color: #151515;
+  color: #5233af;
   border: none;
   cursor: pointer;
   font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: $btn-secondary-hover;
@@ -311,8 +326,8 @@
 }
 
 .wave-timer {
-  font-size: 0.8rem;
-  color: $light-grey-color;
+  font-size: 16px;
+  color: $golden;
 }
 
 .enemies-vertical-list {

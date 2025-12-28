@@ -140,15 +140,21 @@
                 <div class="enemy-circle">
                   <img [src]="enemy.avatarUrl" />
                 </div>
-                @if (enemy.quantity > 1 ) {
-                <span class="badge">{{ enemy.quantity }}</span>
-                }
                 }
               </div>
               }
+
+              @if (!act.enemy_selection.length) {
               <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
                 +
               </button>
+              } @else {
+              <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
+                <span class="material-symbols-outlined">
+                  refresh
+                </span>
+              </button>
+              }
             </div>
 
           </div>
@@ -163,35 +169,45 @@
     <div class="subsection">
       <h3>Arcana Chambers</h3>
 
-      <div class="acts-grid">
+      <div class="acts-grid acts-grid-arcana">
         @for (act of arcanaActs(); track act.id) {
         <div class="act-card arcana">
           <div class="act-header">
             Arcana {{ act.name }}
           </div>
 
-          <div class="enemies-container">
-            @for (wave of act.variations; track $index) {
-            @for (enemy of wave.included_enemy; track $index) {
-            <div class="enemy-circle">
-              <img [src]="enemy.avatarUrl" />
-              @if (enemy.quantity > 1) {
-              <span class="badge">{{ enemy.quantity }}</span>
-              }
+
+          <div class="enemies-container-wrapper">
+            @if (act.enemy_options?.timer) {
+            <div class="act-options-info">
+              {{ act.enemy_options?.timer }} sec
             </div>
             }
-            }
+            <div class="enemies-container">
+              @for (wave of act.variations; track $index) {
+              @for (enemy of wave.included_enemy; track $index) {
+              <div class="enemy-circle">
+                <img [src]="enemy.avatarUrl" />
+                @if (enemy.quantity > 1) {
+                <span class="badge">{{ enemy.quantity }}</span>
+                }
+              </div>
+              }
+              }
 
-            <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
-              +
-            </button>
+              @if (!act.enemy_selection.length) {
+              <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
+                +
+              </button>
+              } @else {
+              <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
+                <span class="material-symbols-outlined">
+                  refresh
+                </span>
+              </button>
+              }
+            </div>
           </div>
-
-          @if (act.enemy_options?.timer) {
-          <div class="act-options-info">
-            ⏱ {{ act.enemy_options?.timer }}
-          </div>
-          }
         </div>
         }
       </div>
@@ -237,7 +253,7 @@
                   act?.variation_fight_settings?.timer !== ''
                   ) {
                   <div class="wave-timer">
-                    ⏱ {{ act.variation_fight_settings?.timer }}
+                    {{ act.variation_fight_settings?.timer }} sec
                   </div>
                   }
 
@@ -292,7 +308,8 @@
 
   @if (showAddEnemyModal()) {
   <app-season-add-enemy-modal [actOptions]="currentActOptions" [categories]="enemiesService.categories()"
-    [allEnemies]="enemiesService.enemies()" (close)="closeAddEnemyModal()" (save)="onSaveEnemy($event)" />
+    [allEnemies]="enemiesService.enemies()" [initialEnemies]="currentInitialEnemies()"
+    [initialOptions]="currentInitialOptions()" (close)="closeAddEnemyModal()" (save)="onSaveEnemy($event)" />
   }
 
   @if (showVariationModal()) {

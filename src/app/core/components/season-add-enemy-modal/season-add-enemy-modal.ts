@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, signal, inject, computed, effect  } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName } from '../../../../models/models';
+import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_options } from '../../../../models/models';
 
 @Component({
   selector: 'app-season-add-enemy-modal',
@@ -14,6 +14,8 @@ export class SeasonAddEnemyModal {
   @Input() public actOptions: Act_options = {};
   @Input() public categories: EnemyCategory[] = [];
   @Input() public allEnemies: Enemy[] = [];
+  @Input() public initialEnemies: Enemy[] = [];
+  @Input() public initialOptions: Enemy_options = {};
 
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<{
@@ -43,8 +45,30 @@ export class SeasonAddEnemyModal {
 
   constructor() {
     effect(() => {
-      // якщо вже ініціалізували — нічого не робимо
-      if (this.initialized()) return;
+      // Initialize from inputs
+      if (this.initialEnemies.length > 0) {
+        this.selectedEnemies.set([...this.initialEnemies]);
+
+        // Select the category of the first initial enemy if not already set
+        const firstEnemy = this.initialEnemies[0];
+        if (firstEnemy && !this.selectedCategoryId()) {
+          this.onSelectCategory(firstEnemy.categoryId);
+        }
+      }
+
+      if (this.initialOptions) {
+        this.form.patchValue({
+          amount: this.initialOptions.amount || '',
+          timer: this.initialOptions.timer || '',
+          defeat: this.initialOptions.defeat || '',
+          special_type: !!this.initialOptions.special_type,
+        });
+      }
+    });
+
+    effect(() => {
+      // якщо вже ініціалізували або вже є вибрані вороги (з ініціалізації) — нічого не робимо
+      if (this.initialized() || this.selectedEnemies().length > 0) return;
 
       const cats = this.categories;
       if (!cats || cats.length === 0) return;
