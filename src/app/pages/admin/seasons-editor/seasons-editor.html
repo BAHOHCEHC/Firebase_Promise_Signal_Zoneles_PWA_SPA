@@ -333,7 +333,8 @@
   <app-season-add-enemy-modal [actOptions]="currentActOptions" [categories]="enemiesService.categories()"
     [allEnemies]="enemiesService.enemies()" [initialEnemies]="currentInitialEnemies()"
     [initialOptions]="currentInitialOptions()" [currentAct]="currentActForEnemy()"
-    [currentVariation]="currentVariationForEnemy()" (close)="closeAddEnemyModal()" (save)="onSaveEnemy($event)" />
+    [currentVariation]="currentVariationForEnemy()" [currentWave]="currentWaveForEnemy()" (close)="closeAddEnemyModal()"
+    (save)="onSaveEnemy($event)" />
   }
 
   @if (showVariationModal()) {

@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, signal, inject, computed, effect } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, inject, computed, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_options } from '../../../../models/models';
+import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_options, Wave } from '../../../../models/models';
 
 @Component({
   selector: 'app-season-add-enemy-modal',
@@ -10,7 +10,7 @@ import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_o
   templateUrl: './season-add-enemy-modal.html',
   styleUrl: './season-add-enemy-modal.scss',
 })
-export class SeasonAddEnemyModal {
+export class SeasonAddEnemyModal implements OnInit {
   @Input() public actOptions: Act_options = {};
   @Input() public categories: EnemyCategory[] = [];
   @Input() public allEnemies: Enemy[] = [];
@@ -18,6 +18,7 @@ export class SeasonAddEnemyModal {
   @Input() public initialOptions: Enemy_options = {};
   @Input() public currentAct: any | null = null;
   @Input() public currentVariation: any | null = null;
+  @Input() public currentWave: Wave | null = null;
 
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<{
@@ -45,51 +46,47 @@ export class SeasonAddEnemyModal {
 
 
 
-  constructor() {
-    effect(() => {
-      console.log('--- SeasonAddEnemyModal Opened ---');
-      console.log('currentAct:', this.currentAct);
-      console.log('currentVariation:', this.currentVariation);
-      console.log('initialEnemies:', this.initialEnemies);
-      console.log('initialOptions:', this.initialOptions);
-      console.log('Categories:', this.categories);
-      console.log('---------------------------------');
+  public ngOnInit(): void {
+    console.log('--- SeasonAddEnemyModal Opened ---');
+    console.log('currentAct:', this.currentAct);
+    console.log('currentVariation:', this.currentVariation);
+    console.log('currentWave:', this.currentWave);
+    console.log('initialEnemies:', this.initialEnemies);
+    console.log('initialOptions:', this.initialOptions);
+    console.log('Categories:', this.categories);
+    console.log('---------------------------------');
 
-      // Initialize from inputs
-      if (this.initialEnemies.length > 0) {
-        this.selectedEnemies.set([...this.initialEnemies]);
-
-        // Select the category of the first initial enemy if not already set
-        const firstEnemy = this.initialEnemies[0];
-        if (firstEnemy && !this.selectedCategoryId()) {
-          this.onSelectCategory(firstEnemy.categoryId);
+    // Initialize state from inputs
+    if (this.currentWave?.included_enemy.length) {
+      this.selectedEnemies.set([...this.currentWave?.included_enemy]);
+      const firstEnemy = this.currentWave?.included_enemy[0];
+      if (firstEnemy && !this.selectedCategoryId()) {
+        this.onSelectCategory(firstEnemy.categoryId);
+      }
+    } else {
+      // If categories exist, select the first one
+      if (this.categories && this.categories.length > 0) {
+        const firstValid = this.categories.find(cat => !this.isCategoryEmpty(cat.id));
+        if (firstValid) {
+          this.onSelectCategory(firstValid.id);
+          this.initialized.set(true);
         }
       }
+    }
 
-      if (this.initialOptions) {
-        this.form.patchValue({
-          amount: this.initialOptions.amount || '',
-          timer: this.initialOptions.timer || '',
-          defeat: this.initialOptions.defeat || '',
-          special_type: !!this.initialOptions.special_type,
-        });
-      }
-    });
+    if (this.initialOptions) {
+      this.form.patchValue({
+        amount: this.initialOptions.amount || '',
+        timer: this.initialOptions.timer || '',
+        defeat: this.initialOptions.defeat || '',
+        special_type: !!this.initialOptions.special_type,
+      });
+    }
+  }
 
-    effect(() => {
-      // якщо вже ініціалізували або вже є вибрані вороги (з ініціалізації) — нічого не робимо
-      if (this.initialized() || this.selectedEnemies().length > 0) return;
-
-      const cats = this.categories;
-      if (!cats || cats.length === 0) return;
-
-      // знайти першу НЕпорожню категорію
-      const firstValid = cats.find(cat => !this.isCategoryEmpty(cat.id));
-      if (!firstValid) return;
-
-      this.onSelectCategory(firstValid.id);
-      this.initialized.set(true);
-    });
+  constructor() {
+    // We can keep these effects if they depend on internal signals,
+    // but input initialization is better in ngOnInit or setters for @Input.
   }
 
 
