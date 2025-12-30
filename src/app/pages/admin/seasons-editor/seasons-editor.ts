@@ -82,6 +82,15 @@ export class SeasonsEditorComponent implements OnInit {
   public currentVariationIndex = signal<number>(-1);
   public currentActForVariation = signal<Act | null>(null);
 
+  public currentInitialVariation = computed(() => {
+    const act = this.currentActForVariation();
+    const idx = this.currentVariationIndex();
+    if (act && idx !== -1 && act.variations) {
+      return act.variations[idx];
+    }
+    return null;
+  });
+
   // Computed
   public hasData = computed(() => {
     // Check if we have meaningful data
@@ -308,14 +317,16 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   // --- Variation Modal ---
-  public openVariationModal(act: Act) {
+  public openVariationModal(act: Act, vIdx: number = -1) {
     this.currentActForVariation.set(act);
+    this.currentVariationIndex.set(vIdx);
     this.showVariationModal.set(true);
   }
 
   public closeVariationModal() {
     this.showVariationModal.set(false);
     this.currentActForVariation.set(null);
+    this.currentVariationIndex.set(-1);
   }
 
   public onSaveVariation(data: { wave: Wave_type, timer: string, name?: string, monolit?: boolean }) {
@@ -324,21 +335,44 @@ export class SeasonsEditorComponent implements OnInit {
 
     if (!act.variations) act.variations = [];
 
-    const waveCount = data.wave === 'custom' ? 1 : parseInt(data.wave);
-    const waves: Wave[] = [];
-    for (let i = 0; i < waveCount; i++) {
-      waves.push({ waveCount: i, included_enemy: [] });
+    const vIdx = this.currentVariationIndex();
+
+    if (vIdx !== -1) {
+      // Update existing
+      const variation = act.variations[vIdx];
+      variation.timer = data.timer;
+      variation.wave = data.wave;
+      variation.name = data.name;
+      variation.monolit = data.monolit;
+
+      // Re-generate waves if wave count changed?
+      // For now, let's keep existing enemies if possible or reset if count differs
+      const newWaveCount = data.wave === 'custom' ? 1 : parseInt(data.wave);
+      if (variation.waves.length !== newWaveCount) {
+        const newWaves: Wave[] = [];
+        for (let i = 0; i < newWaveCount; i++) {
+          newWaves.push({ waveCount: i, included_enemy: [] });
+        }
+        variation.waves = newWaves;
+      }
+    } else {
+      // Add new
+      const waveCount = data.wave === 'custom' ? 1 : parseInt(data.wave);
+      const waves: Wave[] = [];
+      for (let i = 0; i < waveCount; i++) {
+        waves.push({ waveCount: i, included_enemy: [] });
+      }
+
+      const newVariation: Variation = {
+        timer: data.timer,
+        wave: data.wave,
+        waves: waves,
+        name: data.name,
+        monolit: data.monolit
+      };
+
+      act.variations.push(newVariation);
     }
-
-    const newVariation: Variation = {
-      timer: data.timer,
-      wave: data.wave,
-      waves: waves,
-      name: data.name,
-      monolit: data.monolit
-    };
-
-    act.variations.push(newVariation);
 
     this.seasonDetails.update(d => ({ ...d }));
     this.closeVariationModal();

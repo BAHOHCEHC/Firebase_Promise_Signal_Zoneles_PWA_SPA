@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Wave_type } from '../../../../models/models';
+import { Wave_type, Variation } from '../../../../models/models';
 
 @Component({
     selector: 'season-add-variation-chamber-modal',
@@ -11,6 +11,8 @@ import { Wave_type } from '../../../../models/models';
     styleUrl: './season-add-variation-chamber-modal.scss'
 })
 export class SeasonAddVariationChamberModal {
+    @Input() public initialData: Partial<Variation> | null = null;
+
     @Output() public close = new EventEmitter<void>();
     @Output() public save = new EventEmitter<{
         wave: Wave_type,
@@ -27,6 +29,26 @@ export class SeasonAddVariationChamberModal {
         timer: [''],
         monolit: [false]
     });
+
+    constructor() {
+        effect(() => {
+            if (this.initialData) {
+                this.form.patchValue({
+                    wave: this.initialData.wave || '1',
+                    customName: this.initialData.name || '',
+                    timer: this.initialData.timer || '',
+                    monolit: !!this.initialData.monolit
+                });
+            } else {
+                this.form.reset({
+                    wave: '1',
+                    customName: '',
+                    timer: '',
+                    monolit: false
+                });
+            }
+        });
+    }
 
     public onClose(): void {
         this.close.emit();

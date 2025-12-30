@@ -165,6 +165,7 @@
   gap: 16px;
   flex-wrap: wrap;
   justify-content: space-between;
+
   &-arcana {
     display: flex;
     flex-wrap: wrap;
@@ -173,15 +174,26 @@
 }
 
 .variations-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); // 2 per row
-  gap: 16px;
+  display: flex;
+  flex-wrap: wrap;           /* Дозволяє переносити на новий ряд */
+  gap: 16px;                 /* Відстань між елементами (горизонтальна і вертикальна) */
+  margin: -8px;              /* Опціонально: компенсуємо gap для вирівнювання по краях (якщо контейнер має padding) */
+  padding: 8px;              /* Опціонально: внутрішній відступ */
+
+  /* Кожен елемент займає приблизно 1/3 ширини */
+  > * {
+    flex: 1 1 calc(50% - 16px); /* 3 в ряд (з урахуванням gap) */
+    min-width: 280px;                /* Мінімальна ширина елемента (для адаптивності) */
+    max-width: 100%;                 /* Не вилазити за межі */
+    box-sizing: border-box;
+  }
 }
 
 .act-card,
 .variation-card {
   min-width: 80px;
 }
+
 .acts-grid-arcana .act-card {
   flex: 0 0 calc(50% - 8px); // 2 в ряд
   box-sizing: border-box;
@@ -208,12 +220,14 @@
   align-items: center;
   min-height: 50px;
   position: relative;
+
   &-wrapper {
     display: flex;
     align-items: center;
     gap: 10px;
   }
 }
+
 .enemy-inner {
   display: flex;
   gap: 8px;
@@ -221,16 +235,19 @@
   align-items: center;
   min-height: 50px;
   position: relative;
+
   &-wrapper {
     display: flex;
     align-items: center;
     gap: 10px;
   }
 }
+
 .act-options-info {
   color: $golden;
   font-size: 16px;
 }
+
 .enemy-circle {
   width: 48px;
   height: 48px;
@@ -246,6 +263,7 @@
     object-fit: cover;
   }
 }
+
 .badge {
   position: absolute;
   color: $primary-white;
@@ -289,12 +307,13 @@
 }
 
 .btn-cta {
-  width: 100%;
-  padding: 10px;
   background: $btn-primary-default;
   color: $primary-white;
+  width: 150px;
+  padding: 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-size: 14px;
   cursor: pointer;
 
   &:hover {
@@ -311,31 +330,36 @@
 .wave-column {
   align-items: center;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
-  padding-right: 10px;
+  padding-right: 5px;
 }
+
 .variation-row {
   display: flex;
+  margin: 15px 0;
   gap: 10px;
   width: 100%;
   align-items: center;
+  position: relative;
 }
 
 .wave-header {
-  font-size: 0.9rem;
+  font-size: 12px;
+  position: absolute;
+  top: -20px;
+  left: 0;
 }
 
 .wave-timer {
-  min-width: 80px;
-  font-size: 0.85rem;
-  opacity: 0.7;
+  font-size: 16px;
   white-space: nowrap;
   font-size: 16px;
   color: $golden;
 }
+
 .wave-column {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  min-width: 40px;
+  position: relative;
 }
 
 .wave-column-wrapper {
@@ -351,9 +375,6 @@
 }
 
 .btn-edit-settings {
-  position: absolute;
-  top: 8px;
-  right: 8px;
   background: transparent;
   color: $light-grey-color;
   border: none;
@@ -384,5 +405,78 @@
 
   &:hover {
     background: rgba($red-color, 0.1);
+  }
+}
+
+
+
+.page-container {
+  padding: 20px;
+  background: $primary-bg;
+  min-height: 100vh;
+}
+
+.acts-container {
+  display: flex;
+  gap: 16px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  align-items: stretch;
+}
+
+.variation-card {
+  flex: 1;
+  min-width: 200px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateY(-4px);
+  }
+
+  .card-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #e0e0ff;
+    text-align: center;
+    border-bottom: 2px solid $btn-primary-default;
+    padding-bottom: 8px;
+  }
+
+  .content-placeholder {
+    height: 100px;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+  }
+
+  /* Border logic as requested */
+  // Option 1: middle block (Act 3) has borders on both sides
+  // Since Act 3 is :nth-child(3)
+  &:nth-child(3) {
+    border-left: 2px solid rgba($btn-primary-default, 0.5);
+    border-right: 2px solid rgba($btn-primary-default, 0.5);
+    padding-left: 18px;
+    padding-right: 18px;
+    // To make it look "middle", we can also add some margin or different background
+  }
+
+  // Option 2 (Complementary): 1-2 and 4-5 blocks have borders on the right
+  // If the user wants 1-2 and 4-5 to have borders on the right:
+  &:nth-child(1),
+  &:nth-child(2),
+  &:nth-child(4),
+  &:nth-child(5) {
+    border-right: 2px solid rgba($btn-primary-default, 0.3);
   }
 }

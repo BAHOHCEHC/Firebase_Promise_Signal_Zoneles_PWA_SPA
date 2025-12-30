@@ -241,9 +241,11 @@
               <div class="var-waves-container">
                 @for (variation of act.variations; track $index; let vIdx = $index) {
                 <div class="variation-row">
-                  <div class="variation-number"><div class="span fs_16">
-                    {{$index + 1 + '.'}}
-                  </div></div>
+                  <div class="variation-number">
+                    <div class="span fs_16">
+                      {{$index + 1 + '.'}}
+                    </div>
+                  </div>
                   <!-- Timer -->
                   @if (variation.timer) {
                   <div class="wave-timer">
@@ -277,20 +279,31 @@
                         </div>
                         }
 
+                        @if (wave.included_enemy.length === 0) {
                         <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
                           +
                         </button>
+                        } @else {
+                        <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
+                          <span class="material-symbols-outlined">
+                            refresh
+                          </span>
+                        </button>
+                        }
                       </div>
                     </div>
                     }
                   </div>
+
+                  <button class="btn-edit-settings" (click)="openVariationModal(act, vIdx)">
+                    <span class="material-symbols-outlined">
+                      settings_b_roll
+                    </span>
+                  </button>
                 </div>
                 }
               </div>
 
-              <button class="btn-edit-settings" (click)="openVariationModal(act)">
-                ⚙
-              </button>
             </div>
             }
             <button class="btn-cta" (click)="openVariationModal(act)">
@@ -319,11 +332,13 @@
   @if (showAddEnemyModal()) {
   <app-season-add-enemy-modal [actOptions]="currentActOptions" [categories]="enemiesService.categories()"
     [allEnemies]="enemiesService.enemies()" [initialEnemies]="currentInitialEnemies()"
-    [initialOptions]="currentInitialOptions()" (close)="closeAddEnemyModal()" (save)="onSaveEnemy($event)" />
+    [initialOptions]="currentInitialOptions()" [currentAct]="currentActForEnemy()"
+    [currentVariation]="currentVariationForEnemy()" (close)="closeAddEnemyModal()" (save)="onSaveEnemy($event)" />
   }
 
   @if (showVariationModal()) {
-  <season-add-variation-chamber-modal (close)="closeVariationModal()" (save)="onSaveVariation($event)" />
+  <season-add-variation-chamber-modal [initialData]="currentInitialVariation()" (close)="closeVariationModal()"
+    (save)="onSaveVariation($event)" />
   }
 
 </div>

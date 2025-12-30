@@ -16,6 +16,8 @@ export class SeasonAddEnemyModal {
   @Input() public allEnemies: Enemy[] = [];
   @Input() public initialEnemies: Enemy[] = [];
   @Input() public initialOptions: Enemy_options = {};
+  @Input() public currentAct: any | null = null;
+  @Input() public currentVariation: any | null = null;
 
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<{
@@ -45,6 +47,14 @@ export class SeasonAddEnemyModal {
 
   constructor() {
     effect(() => {
+      console.log('--- SeasonAddEnemyModal Opened ---');
+      console.log('currentAct:', this.currentAct);
+      console.log('currentVariation:', this.currentVariation);
+      console.log('initialEnemies:', this.initialEnemies);
+      console.log('initialOptions:', this.initialOptions);
+      console.log('Categories:', this.categories);
+      console.log('---------------------------------');
+
       // Initialize from inputs
       if (this.initialEnemies.length > 0) {
         this.selectedEnemies.set([...this.initialEnemies]);
