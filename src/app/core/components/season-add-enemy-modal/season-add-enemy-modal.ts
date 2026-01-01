@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal, inject, computed, effect, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, signal, inject, computed, effect, OnInit, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_options, Wave } from '../../../../models/models';
@@ -11,14 +11,14 @@ import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_o
   styleUrl: './season-add-enemy-modal.scss',
 })
 export class SeasonAddEnemyModal implements OnInit {
-  @Input() public actOptions: Act_options = {};
-  @Input() public categories: EnemyCategory[] = [];
-  @Input() public allEnemies: Enemy[] = [];
-  @Input() public initialEnemies: Enemy[] = [];
-  @Input() public initialOptions: Enemy_options = {};
-  @Input() public currentAct: any | null = null;
-  @Input() public currentVariation: any | null = null;
-  @Input() public currentWave: Wave | null = null;
+  public actOptions = input<Act_options>({});
+  public categories = input<EnemyCategory[]>([]);
+  public allEnemies = input<Enemy[]>([]);
+  public initialEnemies = input<Enemy[]>([]);
+  public initialOptions = input<Enemy_options>({});
+  public currentAct = input<any | null>(null);
+  public currentVariation = input<any | null>(null);
+  public currentWave = input<Wave | null>(null);
 
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<{
@@ -36,58 +36,66 @@ export class SeasonAddEnemyModal implements OnInit {
 
   // Стан вибору
   public selectedCategoryId = signal<string | null>(null);
-  public filteredGroups = signal<EnemyGroup[]>([]);
+
+  public filteredGroups = computed(() => {
+    const catId = this.selectedCategoryId();
+    if (!catId) return [];
+    const cat = this.categories().find(c => c.id === catId);
+    return cat?.groups ?? [];
+  });
 
   // Множинний вибір ворогів
   public selectedEnemies = signal<Enemy[]>([]);
-
-  // Чи є хоча б один вибраний ворог
   public hasSelectedEnemies = computed(() => this.selectedEnemies().length > 0);
-
-
 
   public ngOnInit(): void {
     console.log('--- SeasonAddEnemyModal Opened ---');
-    console.log('currentAct:', this.currentAct);
-    console.log('currentVariation:', this.currentVariation);
-    console.log('currentWave:', this.currentWave);
-    console.log('initialEnemies:', this.initialEnemies);
-    console.log('initialOptions:', this.initialOptions);
-    console.log('Categories:', this.categories);
+    console.log('currentAct:', this.currentAct());
+    console.log('currentVariation:', this.currentVariation());
+    console.log('currentWave:', this.currentWave());
+    console.log('initialEnemies:', this.initialEnemies());
+    console.log('initialOptions:', this.initialOptions());
+    console.log('Categories:', this.categories());
     console.log('---------------------------------');
 
     // Initialize state from inputs
-    if (this.currentWave?.included_enemy.length) {
-      this.selectedEnemies.set([...this.currentWave?.included_enemy]);
-      const firstEnemy = this.currentWave?.included_enemy[0];
+    const currentWaveValue = this.currentWave();
+    if (currentWaveValue?.included_enemy?.length) {
+      this.selectedEnemies.set([...currentWaveValue.included_enemy]);
+      const firstEnemy = currentWaveValue.included_enemy[0];
       if (firstEnemy && !this.selectedCategoryId()) {
-        this.onSelectCategory(firstEnemy.categoryId);
+        this.selectedCategoryId.set(firstEnemy.categoryId);
+      }
+    } else if (this.initialEnemies()?.length) {
+      const initialEnemiesValue = this.initialEnemies();
+      this.selectedEnemies.set([...initialEnemiesValue]);
+      const firstEnemy = initialEnemiesValue[0];
+      if (firstEnemy && !this.selectedCategoryId()) {
+        this.selectedCategoryId.set(firstEnemy.categoryId);
       }
     } else {
       // If categories exist, select the first one
-      if (this.categories && this.categories.length > 0) {
-        const firstValid = this.categories.find(cat => !this.isCategoryEmpty(cat.id));
+      if (this.categories()?.length > 0) {
+        const firstValid = this.categories().find(cat => !this.isCategoryEmpty(cat.id));
         if (firstValid) {
-          this.onSelectCategory(firstValid.id);
+          this.selectedCategoryId.set(firstValid.id);
           this.initialized.set(true);
         }
       }
     }
 
-    if (this.initialOptions) {
+    const initialOpts = this.initialOptions();
+    if (initialOpts) {
       this.form.patchValue({
-        amount: this.initialOptions.amount || '',
-        timer: this.initialOptions.timer || '',
-        defeat: this.initialOptions.defeat || '',
-        special_type: !!this.initialOptions.special_type,
+        amount: initialOpts.amount || '',
+        timer: initialOpts.timer || '',
+        defeat: initialOpts.defeat || '',
+        special_type: !!initialOpts.special_type,
       });
     }
   }
 
-  constructor() {
-    // We can keep these effects if they depend on internal signals,
-    // but input initialization is better in ngOnInit or setters for @Input.
-  }
+  constructor() { }
 
 
   // Форма для опцій (amount, timer тощо)
@@ -100,35 +108,25 @@ export class SeasonAddEnemyModal implements OnInit {
 
   // Чи категорія порожня
   public isCategoryEmpty(catId: string): boolean {
-    const cat = this.categories.find(c => c.id === catId);
+    const cat = this.categories().find(c => c.id === catId);
     if (!cat || !cat.groups || cat.groups.length === 0) return true;
 
     return !cat.groups.some(group =>
-      this.allEnemies.some(e => e.groupId === group.id)
+      this.allEnemies().some(e => e.groupId === group.id)
     );
   }
 
   public onSelectCategory(categoryId: string): void {
     if (this.isCategoryEmpty(categoryId)) return;
-
     this.selectedCategoryId.set(categoryId);
-
-    const cat = this.categories.find(c => c.id === categoryId);
-    this.filteredGroups.set(cat?.groups ?? []);
   }
 
   // Множинний вибір ворога
   public toggleEnemy(enemy: Enemy): void {
-    const current = this.selectedEnemies();
-    const exists = current.some(e => e.id === enemy.id);
-
-    if (exists) {
-      // Знімаємо вибір
-      this.selectedEnemies.set(current.filter(e => e.id !== enemy.id));
-    } else {
-      // Додаємо
-      this.selectedEnemies.set([...current, enemy]);
-    }
+    this.selectedEnemies.update(current => {
+      const exists = current.some(e => e.id === enemy.id);
+      return exists ? current.filter(e => e.id !== enemy.id) : [...current, enemy];
+    });
   }
 
   // Чи вибраний конкретний ворог
@@ -138,7 +136,7 @@ export class SeasonAddEnemyModal implements OnInit {
 
   // Вороги в групі
   public enemiesByGroup(groupId: string): Enemy[] {
-    return this.allEnemies.filter(e => e.groupId === groupId);
+    return this.allEnemies().filter(e => e.groupId === groupId);
   }
 
   public getElementIconPath(type: ElementTypeName): string {
@@ -151,12 +149,13 @@ export class SeasonAddEnemyModal implements OnInit {
 
     const formValue = this.form.getRawValue();
 
+    const opts = this.actOptions();
     const options = {
-      amount: this.actOptions.amount ? formValue.amount || undefined : undefined,
-      timer: this.actOptions.timer ? formValue.timer || undefined : undefined,
-      defeat: this.actOptions.defeat ? formValue.defeat || undefined : undefined,
-      special_type: this.actOptions.special_type !== undefined
-        ? !!formValue.special_type  // ← примусово boolean
+      amount: opts.amount ? formValue.amount || undefined : undefined,
+      timer: opts.timer ? formValue.timer || undefined : undefined,
+      defeat: opts.defeat ? formValue.defeat || undefined : undefined,
+      special_type: opts.special_type !== undefined
+        ? !!formValue.special_type
         : undefined,
     };
 

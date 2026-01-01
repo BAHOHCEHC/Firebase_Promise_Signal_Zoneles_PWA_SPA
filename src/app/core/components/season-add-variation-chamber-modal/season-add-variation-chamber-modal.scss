@@ -23,7 +23,7 @@
 }
 
 .modal-title {
-  color: white;
+  color: $primary-white;
   margin: 0;
   font-size: 1.1rem;
 }
@@ -48,7 +48,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  color: rgba(255, 255, 255, 0.7);
+  color: $primary-white;
 
   &.small {
     width: 140px;
@@ -70,7 +70,7 @@
   input {
     background: #1f1f2b;
     border: none;
-    color: white;
+    color: $primary-white;
     padding: 8px 10px;
     border-radius: 8px;
     outline: none;
@@ -106,7 +106,7 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  color: white;
+  color: $primary-white;
   font-size: 0.9rem;
 
   input {
@@ -124,9 +124,14 @@
   input:checked + span::after {
     content: '';
     position: absolute;
-    inset: 4px;
+    inset: 3px;
     background: $btn-primary-default;
     border-radius: 2px;
+  }
+}
+.is-disabled {
+  .checkbox {
+    color: $grey-color;
   }
 }
 
@@ -149,7 +154,7 @@
 
   &-primary {
     background: $btn-primary-default;
-    color: white;
+    color: $primary-white;
     &:hover {
       background: $btn-primary-hover;
     }
@@ -157,7 +162,7 @@
 
   &-secondary {
     background: $btn-secondary-default;
-    color: white;
+    color: $primary-white;
     &:hover {
       background: $btn-secondary-hover;
     }
@@ -170,9 +175,8 @@
   transition: opacity 0.2s ease;
 
   &.is-disabled {
-    opacity: 0.35;
     pointer-events: none;
-
+    color: $grey-color;
     input {
       background: darken($grey-bg, 4%);
       border-color: transparent;
@@ -183,7 +187,7 @@
   input {
     background: $grey-bg;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    color: white;
+    color: $primary-white;
     padding: 10px 12px;
     border-radius: 10px;
     transition: border 0.2s, background 0.2s;

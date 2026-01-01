@@ -18,15 +18,14 @@
 
         <div class="form-group grow" [class.is-disabled]="form.get('wave')?.value !== 'custom'">
 
-          <label>Custom wave name</label>
+          <label for="customName">Custom wave name</label>
 
-          <input type="text" placeholder="Add custom name" formControlName="customName"
-            [disabled]="form.get('wave')?.value !== 'custom'" />
+          <input id="customName" type="text" placeholder="Add custom name" formControlName="customName" />
         </div>
       </div>
 
       <div class="form-row align-center">
-        <div class="form-group inline">
+        <div class="form-group inline" [class.is-disabled]="form.get('timer')?.disabled">
           <div class="timer-input">
             <label>Timer</label>
             <input type="text" formControlName="timer" placeholder="000">
@@ -34,7 +33,7 @@
           </div>
         </div>
 
-        <div class="checkbox-group">
+        <div class="checkbox-group" [class.is-disabled]="form.get('monolit')?.disabled">
           <label class="checkbox">
             <input type="checkbox" formControlName="monolit">
             <span></span>

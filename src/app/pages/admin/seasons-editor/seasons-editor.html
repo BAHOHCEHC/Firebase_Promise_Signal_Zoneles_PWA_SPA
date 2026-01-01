@@ -252,6 +252,12 @@
                     {{ variation.timer }} sec
                   </div>
                   }
+                  <!-- Monolit -->
+                  @if (variation.monolit) {
+                  <div class="wave-timer">
+                    Monolit
+                  </div>
+                  }
 
                   <div class="wave-column-wrapper">
                     @for (wave of variation.waves; track $index; let wIdx = $index) {
@@ -324,13 +330,13 @@
   }
 
   @if (showCharactersModal()) {
-  <app-season-characters-modal [title]="currentCharacterTitle" [limit]="currentCharacterLimit"
-    [allCharacters]="allCharacters()" [startSelection]="currentCharacterSelection" (close)="closeCharacterModal()"
+  <app-season-characters-modal [title]="currentCharacterTitle()" [limit]="currentCharacterLimit()"
+    [allCharacters]="allCharacters()" [startSelection]="currentCharacterSelection()" (close)="closeCharacterModal()"
     (save)="onSaveCharacters($event)" />
   }
 
   @if (showAddEnemyModal()) {
-  <app-season-add-enemy-modal [actOptions]="currentActOptions" [categories]="enemiesService.categories()"
+  <app-season-add-enemy-modal [actOptions]="currentActOptions()" [categories]="enemiesService.categories()"
     [allEnemies]="enemiesService.enemies()" [initialEnemies]="currentInitialEnemies()"
     [initialOptions]="currentInitialOptions()" [currentAct]="currentActForEnemy()"
     [currentVariation]="currentVariationForEnemy()" [currentWave]="currentWaveForEnemy()" (close)="closeAddEnemyModal()"

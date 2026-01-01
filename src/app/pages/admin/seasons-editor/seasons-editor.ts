@@ -31,7 +31,7 @@ export class SeasonsEditorComponent implements OnInit {
   public readonly OPENING_CHARACTER_LIMIT = 6;
   public readonly SPECIAL_GUEST_LIMIT = 4;
 
-  // State
+  // --- State Signals ---
   public seasonDetails = signal<Season_details>({
     elemental_type_limided: [],
     opening_characters: [],
@@ -40,78 +40,86 @@ export class SeasonsEditorComponent implements OnInit {
   });
 
   public allCharacters = signal<Character[]>([]);
-  public isEditMode = signal(false); // "Reset" button clears data, maybe logic differs? Prompt says "Update Edit button to Reset - erasing all data"
-  // Actually, prompt: "button 'Edit' changes to 'Reset' - erasing all data...". This implies if data exists, it says Reset. If empty, maybe Edit? No, "Edit" usually means "Enable Editing".
-  // But here prompt says: "button 'Edit' changes to 'Reset' - erasing all data from collection season_details".
-  // This likely means there is a button that toggles or performs action.
-  // I will assume if data exists (loaded), show "Reset". If not, maybe nothing or "Load"?
-  // But data is loaded on init.
-  // Let's implement "Reset" button logic.
+  public isEditMode = signal(false);
 
-  // Modals state
+  // --- Modals State ---
   public showElementModal = signal(false);
   public showCharactersModal = signal(false);
   public showAddEnemyModal = signal(false);
   public showVariationModal = signal(false);
 
-  // Modal Context
+  // --- Modal Context Signals ---
   public characterModalMode = signal<'opening' | 'special'>('opening');
   public currentActForEnemy = signal<Act | null>(null);
   public currentWaveForEnemy = signal<Wave | null>(null);
   public currentVariationForEnemy = signal<Variation | null>(null);
-  public currentInitialEnemies = computed(() => {
-    const wave = this.currentWaveForEnemy();
-    if (wave) return wave.included_enemy;
-    return [];
-  });
-  public currentInitialOptions = computed(() => {
-    const act = this.currentActForEnemy();
-    if (act?.type !== 'Variation_fight') {
-      return act?.enemy_options || {};
-    }
-    const variation = this.currentVariationForEnemy();
-    if (variation) {
-      return {
-        timer: variation.timer,
-        // For variations, amount/defeat/special_type are usually set per wave/enemy in processedEnemies
-        // but if we want to pre-fill the modal with variation-level timer:
-      };
-    }
-    return {};
-  });
   public currentVariationIndex = signal<number>(-1);
   public currentActForVariation = signal<Act | null>(null);
+
+  // --- Computed Selections ---
+  public currentInitialEnemies = computed(() => this.currentWaveForEnemy()?.included_enemy ?? []);
+
+  public currentInitialOptions = computed(() => {
+    const act = this.currentActForEnemy();
+    if (act?.type !== 'Variation_fight') return act?.enemy_options || {};
+
+    const variation = this.currentVariationForEnemy();
+    return variation ? { timer: variation.timer } : {};
+  });
 
   public currentInitialVariation = computed(() => {
     const act = this.currentActForVariation();
     const idx = this.currentVariationIndex();
-    if (act && idx !== -1 && act.variations) {
-      return act.variations[idx];
-    }
-    return null;
+    return (act && idx !== -1) ? act.variations?.[idx] ?? null : null;
   });
 
-  // Computed
+  public currentCharacterSelection = computed(() =>
+    this.characterModalMode() === 'opening'
+      ? this.seasonDetails().opening_characters
+      : this.seasonDetails().special_guests
+  );
+
+  public currentCharacterLimit = computed(() =>
+    this.characterModalMode() === 'opening' ? this.OPENING_CHARACTER_LIMIT : this.SPECIAL_GUEST_LIMIT
+  );
+
+  public currentCharacterTitle = computed(() =>
+    this.characterModalMode() === 'opening'
+      ? 'Select this season Opening characters'
+      : 'Select this season Special guests'
+  );
+
+  public currentActOptions = computed(() =>
+    (this.currentActForEnemy()?.options as any) || {}
+  );
+
+  // --- Filtered Acts ---
   public hasData = computed(() => {
-    // Check if we have meaningful data
     const d = this.seasonDetails();
-    return d.elemental_type_limided.length > 0 || d.opening_characters.length > 0 || d.special_guests.length > 0 || d.acts.some(a => a.enemy_selection.length > 0 || a.variations.length > 0);
+    return d.elemental_type_limided.length > 0 ||
+      d.opening_characters.length > 0 ||
+      d.special_guests.length > 0 ||
+      d.acts.some(a => a.enemy_selection.length > 0 || a.variations.length > 0);
   });
 
-  public bossArcanaActs = computed(() => {
-    // Filter acts by type
-    return this.seasonDetails().acts.filter(a => a.type === 'Boss_fight' || a.type === 'Arcana_fight');
-  });
+  public bossActs = computed(() =>
+    this.seasonDetails().acts.filter(a => a.type === 'Boss_fight')
+  );
 
-  public variationActs = computed(() => {
-    return this.seasonDetails().acts.filter(a => a.type === 'Variation_fight');
-  });
+  public arcanaActs = computed(() =>
+    this.seasonDetails().acts.filter(a => a.type === 'Arcana_fight')
+  );
+
+  public variationActs = computed(() =>
+    this.seasonDetails().acts.filter(a => a.type === 'Variation_fight')
+  );
+
+  public activeElements = computed(() =>
+    new Set(this.seasonDetails().elemental_type_limided.map(e => e.name))
+  );
 
   // Element helpers
   public elementTypes: ElementTypeName[] = ["pyro", "hydro", "electro", "cryo", "dendro", "anemo", "geo"];
-  public activeElements = computed(() => {
-    return new Set(this.seasonDetails().elemental_type_limided.map(e => e.name));
-  });
 
   async ngOnInit() {
     // Init services
@@ -192,44 +200,25 @@ export class SeasonsEditorComponent implements OnInit {
     this.showElementModal.set(true);
   }
 
-  public closeElementModal() {
+  public closeElementModal(): void {
     this.showElementModal.set(false);
   }
 
-  public onSaveElements(elements: ElementType[]) {
+  public onSaveElements(elements: ElementType[]): void {
     this.seasonDetails.update(prev => ({ ...prev, elemental_type_limided: elements }));
     this.closeElementModal();
   }
 
-  // --- Character Modal ---
-  public openCharacterModal(mode: 'opening' | 'special') {
+  public openCharacterModal(mode: 'opening' | 'special'): void {
     this.characterModalMode.set(mode);
     this.showCharactersModal.set(true);
   }
 
-  public get currentCharacterSelection(): Character[] {
-    return this.characterModalMode() === 'opening'
-      ? this.seasonDetails().opening_characters
-      : this.seasonDetails().special_guests;
-  }
-
-  public get currentCharacterLimit(): number {
-    return this.characterModalMode() === 'opening'
-      ? this.OPENING_CHARACTER_LIMIT
-      : this.SPECIAL_GUEST_LIMIT;
-  }
-
-  public get currentCharacterTitle(): string {
-    return this.characterModalMode() === 'opening'
-      ? 'Select this season Opening characters'
-      : 'Select this season Special guests';
-  }
-
-  public closeCharacterModal() {
+  public closeCharacterModal(): void {
     this.showCharactersModal.set(false);
   }
 
-  public onSaveCharacters(chars: Character[]) {
+  public onSaveCharacters(chars: Character[]): void {
     const mode = this.characterModalMode();
     this.seasonDetails.update(prev => ({
       ...prev,
@@ -239,14 +228,14 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   // --- Enemy Modal (Boss/Arcana) ---
-  public openAddEnemyModal(act: Act) {
+  public openAddEnemyModal(act: Act): void {
     this.currentActForEnemy.set(act);
     this.currentVariationForEnemy.set(null);
     this.currentWaveForEnemy.set(null);
 
     // For Boss/Arcana, we automatically target variation[0].wave[0] for initialization
     if (act.type !== 'Variation_fight') {
-      if (!act.variations || act.variations.length === 0) {
+      if (!act.variations?.length) {
         act.variations = [{
           timer: act.enemy_options?.timer || '',
           wave: '1',
@@ -260,40 +249,29 @@ export class SeasonsEditorComponent implements OnInit {
     this.showAddEnemyModal.set(true);
   }
 
-  public get currentActOptions(): Act_options {
-    // Based on prompt "act.options boolean ... Amount,Defeat,Timer(type string) affects acts.enemy_options"
-    // Wait, Act.options is boolean flags (amount?: boolean).
-    // Act.enemy_options is the values (amount?: string).
-    // The modal needs the boolean flags to know what to show.
-    // Act interface has `options: Act_options`.
-    return this.currentActForEnemy()?.options as any || {}; // Act_options matches roughly
-  }
-
-  public closeAddEnemyModal() {
+  public closeAddEnemyModal(): void {
     this.showAddEnemyModal.set(false);
     this.currentActForEnemy.set(null);
+    this.currentWaveForEnemy.set(null);
+    this.currentVariationForEnemy.set(null);
   }
 
   // public onSaveEnemy(data: { enemy: Enemy, options: any }) {
-  public onSaveEnemy(data: any) {
+  public onSaveEnemy(data: { enemies: Enemy[], options: Enemy_options }): void {
     const act = this.currentActForEnemy();
     if (!act) return;
 
-    const processedEnemies = data.enemies.map((e: any) => ({
+    const processedEnemies = data.enemies.map(e => ({
       ...e,
       quantity: data.options.amount ? parseInt(data.options.amount) : 1,
       specialMark: !!data.options.special_type
     }));
 
     if (act.type === 'Variation_fight') {
-      const variation = this.currentVariationForEnemy();
       const wave = this.currentWaveForEnemy();
-      if (variation && wave) {
-        wave.included_enemy = [...processedEnemies];
-      }
+      if (wave) wave.included_enemy = [...processedEnemies];
     } else {
-      // Boss/Arcana: Ensure internal structure exists
-      if (!act.variations || act.variations.length === 0) {
+      if (!act.variations?.length) {
         act.variations = [{
           timer: data.options.timer || '',
           wave: '1',
@@ -306,86 +284,68 @@ export class SeasonsEditorComponent implements OnInit {
 
       variation.waves[0].included_enemy = [...processedEnemies];
       variation.timer = data.options.timer || '';
-
-      // Legacy sync
-      act.enemy_selection = [...processedEnemies];
+      act.enemy_selection = [...processedEnemies]; // Sync for legacy
       act.enemy_options = { ...data.options };
     }
 
-    this.seasonDetails.update(d => ({ ...d }));
+    this.seasonDetails.set({ ...this.seasonDetails() });
     this.closeAddEnemyModal();
   }
 
   // --- Variation Modal ---
-  public openVariationModal(act: Act, vIdx: number = -1) {
+  public openVariationModal(act: Act, vIdx: number = -1): void {
     this.currentActForVariation.set(act);
     this.currentVariationIndex.set(vIdx);
     this.showVariationModal.set(true);
   }
 
-  public closeVariationModal() {
+  public closeVariationModal(): void {
     this.showVariationModal.set(false);
     this.currentActForVariation.set(null);
     this.currentVariationIndex.set(-1);
   }
 
-  public onSaveVariation(data: { wave: Wave_type, timer: string, name?: string, monolit?: boolean }) {
+  public onSaveVariation(data: { wave: Wave_type, timer: string, name?: string, monolit?: boolean }): void {
     const act = this.currentActForVariation();
     if (!act) return;
 
     if (!act.variations) act.variations = [];
-
     const vIdx = this.currentVariationIndex();
 
     if (vIdx !== -1) {
-      // Update existing
       const variation = act.variations[vIdx];
       variation.timer = data.timer;
       variation.wave = data.wave;
       variation.name = data.name;
       variation.monolit = data.monolit;
 
-      // Re-generate waves if wave count changed?
-      // For now, let's keep existing enemies if possible or reset if count differs
       const newWaveCount = data.wave === 'custom' ? 1 : parseInt(data.wave);
       if (variation.waves.length !== newWaveCount) {
-        const newWaves: Wave[] = [];
-        for (let i = 0; i < newWaveCount; i++) {
-          newWaves.push({ waveCount: i, included_enemy: [] });
-        }
-        variation.waves = newWaves;
+        variation.waves = Array.from({ length: newWaveCount }, (_, i) => ({ waveCount: i, included_enemy: [] }));
       }
     } else {
-      // Add new
       const waveCount = data.wave === 'custom' ? 1 : parseInt(data.wave);
-      const waves: Wave[] = [];
-      for (let i = 0; i < waveCount; i++) {
-        waves.push({ waveCount: i, included_enemy: [] });
-      }
-
-      const newVariation: Variation = {
+      act.variations.push({
         timer: data.timer,
         wave: data.wave,
-        waves: waves,
+        waves: Array.from({ length: waveCount }, (_, i) => ({ waveCount: i, included_enemy: [] })),
         name: data.name,
         monolit: data.monolit
-      };
-
-      act.variations.push(newVariation);
+      });
     }
 
-    this.seasonDetails.update(d => ({ ...d }));
+    this.seasonDetails.set({ ...this.seasonDetails() });
     this.closeVariationModal();
   }
 
-  public openAddEnemyToWave(act: Act, variationIndex: number, waveIndex: number) {
-    if (!act.variations || !act.variations[variationIndex]) return;
-    const variation = act.variations[variationIndex];
-    if (!variation.waves || !variation.waves[waveIndex]) return;
+  public openAddEnemyToWave(act: Act, variationIndex: number, waveIndex: number): void {
+    const variation = act.variations?.[variationIndex];
+    const wave = variation?.waves?.[waveIndex];
+    if (!variation || !wave) return;
 
     this.currentActForEnemy.set(act);
     this.currentVariationForEnemy.set(variation);
-    this.currentWaveForEnemy.set(variation.waves[waveIndex]);
+    this.currentWaveForEnemy.set(wave);
     this.showAddEnemyModal.set(true);
   }
 
@@ -397,14 +357,5 @@ export class SeasonsEditorComponent implements OnInit {
     return `Wave ${s.wave}`; // Or just "Wave 1 - 2 - 3"? Prompt says: "Wave" + variation_fight_settings.wave
   }
 
-  // --- COMPUTED ---
-
-  public bossActs = computed(() =>
-    this.seasonDetails().acts.filter(a => a.type === 'Boss_fight')
-  );
-
-  public arcanaActs = computed(() =>
-    this.seasonDetails().acts.filter(a => a.type === 'Arcana_fight')
-  );
 
 }

@@ -182,7 +182,7 @@
 
   /* Кожен елемент займає приблизно 1/3 ширини */
   > * {
-    flex: 1 1 calc(50% - 16px); /* 3 в ряд (з урахуванням gap) */
+    flex: 1 1 calc(33% - 16px); /* 3 в ряд (з урахуванням gap) */
     min-width: 280px;                /* Мінімальна ширина елемента (для адаптивності) */
     max-width: 100%;                 /* Не вилазити за межі */
     box-sizing: border-box;
@@ -464,8 +464,6 @@
   // Option 1: middle block (Act 3) has borders on both sides
   // Since Act 3 is :nth-child(3)
   &:nth-child(3) {
-    border-left: 2px solid rgba($btn-primary-default, 0.5);
-    border-right: 2px solid rgba($btn-primary-default, 0.5);
     padding-left: 18px;
     padding-right: 18px;
     // To make it look "middle", we can also add some margin or different background
