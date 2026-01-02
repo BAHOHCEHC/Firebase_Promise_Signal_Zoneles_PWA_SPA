@@ -21,12 +21,30 @@ export class SeasonAddVariationChamberModal {
 
     private fb = inject(FormBuilder);
 
+    @Input() public initialData: {
+        wave: Wave_type;
+        timer: string;
+        name?: string;
+        monolit?: boolean;
+    } | null = null;
+
     public form = this.fb.group({
         wave: ['1', Validators.required],
         customName: [''],
         timer: [''],
         monolit: [false]
     });
+
+    ngOnInit() {
+        if (this.initialData) {
+            this.form.patchValue({
+                wave: this.initialData.wave as string,
+                customName: this.initialData.name || '',
+                timer: this.initialData.timer || '',
+                monolit: this.initialData.monolit || false
+            });
+        }
+    }
 
     public onClose(): void {
         this.close.emit();

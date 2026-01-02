@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, signal, inject, computed, effect  } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName } from '../../../../models/models';
+import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Act, Variation, Wave } from '../../../../models/models';
 
 @Component({
   selector: 'app-season-add-enemy-modal',
@@ -14,6 +14,12 @@ export class SeasonAddEnemyModal {
   @Input() public actOptions: Act_options = {};
   @Input() public categories: EnemyCategory[] = [];
   @Input() public allEnemies: Enemy[] = [];
+
+  @Input() public initialEnemies: Enemy[] = [];
+  @Input() public initialOptions: any = {};
+  @Input() public currentAct: Act | null = null;
+  @Input() public currentVariation: Variation | null = null;
+  @Input() public currentWave: Wave | null = null;
 
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<{
@@ -56,6 +62,21 @@ export class SeasonAddEnemyModal {
       this.onSelectCategory(firstValid.id);
       this.initialized.set(true);
     });
+  }
+
+  ngOnInit(): void {
+    if (this.initialEnemies.length > 0) {
+      this.selectedEnemies.set([...this.initialEnemies]);
+    }
+
+    if (this.initialOptions) {
+      this.form.patchValue({
+        amount: this.initialOptions.amount || '',
+        timer: this.initialOptions.timer || '',
+        defeat: this.initialOptions.defeat || '',
+        special_type: this.initialOptions.special_type || false
+      });
+    }
   }
 
 
