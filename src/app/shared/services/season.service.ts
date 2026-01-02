@@ -39,42 +39,47 @@ export class SeasonService {
   }
 
   async saveSeasonDetails(details: Season_details): Promise<void> {
+    // Firestore-safe копія без undefined
+    const payload = firestoreSafe(details);
+
+    // 1. Отримуємо існуючі season_details
     const querySnapshot = await getDocs(this.seasonCollection);
 
-    // Save to season_details collection
+    // 2. Перезапис або створення
     if (!querySnapshot.empty) {
       const docRef = querySnapshot.docs[0].ref;
-      await setDoc(docRef, details);
+      await setDoc(docRef, payload, { merge: false }); // 🔥 повний overwrite
     } else {
-      await addDoc(this.seasonCollection, details);
+      await addDoc(this.seasonCollection, payload);
     }
-    this.seasonDetails.set(details);
 
-    // Also update specific acts in the acts collection if necessary
-    // Use writeBatch for atomic updates
+    // 3. Оновлюємо локальний state
+    this.seasonDetails.set(payload);
+
+    // 4. Синхронізація acts (окрема колекція)
     const batch = writeBatch(this.firestore);
-    details.acts.forEach(act => {
-      if (act.id) {
-        const actRef = doc(this.firestore, 'acts', act.id);
-        // We only update fields that are editable in the Season Editor to avoid overwriting other Act data if it exists elsewhere
-        // Based on requirements: enemy_selection, enemy_options, variations, variation_fight_settings
-        batch.update(actRef, {
-          enemy_selection: act.enemy_selection || [],
-          enemy_options: act.enemy_options || {},
-          variations: act.variations || [],
-          variation_fight_settings: act.variation_fight_settings || null
-        });
-      }
+
+    payload.acts.forEach(act => {
+      if (!act.id) return;
+
+      const actRef = doc(this.firestore, 'acts', act.id);
+
+      batch.update(actRef, firestoreSafe({
+        enemy_selection: act.enemy_selection ?? [],
+        enemy_options: act.enemy_options ?? {},
+        variations: act.variations ?? [],
+        variation_fight_settings: act.variation_fight_settings ?? null
+      }));
     });
 
     try {
       await batch.commit();
     } catch (e) {
-      console.error("Error updating acts batch:", e);
-      // Continue even if batch fails? Or throw? 
-      // For now, we log. The primary storage for this view is season_details.
+      console.error('Error updating acts batch:', e);
+      // season_details вже збережений — це другорядна синхронізація
     }
   }
+
 
   async resetSeasonDetails(): Promise<void> {
     const querySnapshot = await getDocs(this.seasonCollection);
@@ -94,4 +99,9 @@ export class SeasonService {
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Act));
   }
+}
+
+
+function firestoreSafe<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
 }

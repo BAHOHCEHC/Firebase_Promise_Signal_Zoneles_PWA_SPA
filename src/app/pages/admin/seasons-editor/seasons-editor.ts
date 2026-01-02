@@ -8,6 +8,7 @@ import { SeasonElementTypeModal } from '../../../core/components/season-element-
 import { CharacterService } from '../../../shared/services/charater.service';
 import { EnemiesService } from '../../../shared/services/enemies.service';
 import { SeasonService } from '../../../shared/services/season.service';
+import { sanitizeChars } from '../../../../utils/sanitizeChars';
 
 
 @Component({
@@ -191,7 +192,10 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   public onSavePage() {
-    this.seasonService.saveSeasonDetails(this.seasonDetails());
+    const sanitizedData = sanitizeChars(this.seasonDetails()) as Season_details;
+    console.log(sanitizedData);
+
+    this.seasonService.saveSeasonDetails(sanitizedData);
     alert('Saved!');
   }
 
@@ -287,7 +291,6 @@ export class SeasonsEditorComponent implements OnInit {
       act.enemy_selection = [...processedEnemies]; // Sync for legacy
       act.enemy_options = { ...data.options };
     }
-
     this.seasonDetails.set({ ...this.seasonDetails() });
     this.closeAddEnemyModal();
   }
@@ -306,6 +309,7 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   public onSaveVariation(data: { wave: Wave_type, timer: string, name?: string, monolit?: boolean }): void {
+
     const act = this.currentActForVariation();
     if (!act) return;
 
@@ -355,6 +359,27 @@ export class SeasonsEditorComponent implements OnInit {
     if (!s) return '';
     if (s.wave === 'custom') return s.name || 'Custom';
     return `Wave ${s.wave}`; // Or just "Wave 1 - 2 - 3"? Prompt says: "Wave" + variation_fight_settings.wave
+  }
+
+  private charactersMap = computed(() =>
+  new Map(this.allCharacters().map(c => [c.id, c.avatarUrl]))
+);
+
+private enemiesMap = computed(() =>
+  new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
+);
+  public resolveAvatarUrl(
+    item: string | Character | Enemy | null | undefined
+  ): string {
+    if (!item) return 'assets/images/avatar_placeholder.png';
+
+    const id = typeof item === 'string' ? item : item.id;
+
+    return (
+      this.charactersMap().get(id) ||
+      this.enemiesMap().get(id) ||
+      'assets/images/avatar_placeholder.png'
+    );
   }
 
 

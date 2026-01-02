@@ -51,7 +51,7 @@
         <div class="char-list">
           @for (char of seasonDetails().opening_characters; track char.id) {
           <div class="char-mini-card">
-            <img [src]="char.avatarUrl" [alt]="char.name" />
+            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name" />
 
             @if (char.element) {
             <div class="element-mini-badge">
@@ -61,7 +61,7 @@
           </div>
           }
 
-          @if (seasonDetails().opening_characters.length !== OPENING_CHARACTER_LIMIT) {
+          @if (seasonDetails().opening_characters.length === 0) {
           <button class="add-char-btn" (click)="openCharacterModal('opening')">
             +
           </button>
@@ -82,8 +82,7 @@
         <div class="char-list">
           @for (char of seasonDetails().special_guests; track char.id) {
           <div class="char-mini-card">
-            <img [src]="char.avatarUrl" [alt]="char.name" />
-
+            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name" />
             @if (char.element) {
             <div class="element-mini-badge">
               <img [src]="getElementIconPath(char.element.name)" />
@@ -92,7 +91,7 @@
           </div>
           }
 
-          @if (seasonDetails().special_guests.length !== SPECIAL_GUEST_LIMIT) {
+          @if (seasonDetails().special_guests.length === 0) {
           <button class="add-char-btn" (click)="openCharacterModal('special')">
             +
           </button>
@@ -138,12 +137,15 @@
               @if (act.variations && act.variations[0]?.waves) {
               @for (wave of act.variations[0].waves; track $index) {
               <div class="enemy-inner">
-                @for (enemy of wave.included_enemy; track $index) {
+                @for (enemy of wave.included_enemy; track enemy.id) {
+                @if (enemy.quantity > 1) {
+                <span class="badge badge-amount">{{ enemy.quantity }}</span>
+                }
+                @if (enemy.specialMark) {
+                <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
+                }
                 <div class="enemy-circle">
-                  <img [src]="enemy.avatarUrl" />
-                  @if (enemy.quantity > 1) {
-                  <span class="badge">{{ enemy.quantity }}</span>
-                  }
+                  <img [src]="resolveAvatarUrl(enemy.id)" />
                 </div>
                 }
               </div>
@@ -192,12 +194,15 @@
               @if (act.variations && act.variations[0]?.waves) {
               @for (wave of act.variations[0].waves; track $index) {
               <div class="enemy-inner">
-                @for (enemy of wave.included_enemy; track $index) {
+                @for (enemy of wave.included_enemy; track enemy.id) {
+                @if (enemy.quantity > 1) {
+                <span class="badge badge-amount">{{ enemy.quantity }}</span>
+                }
+                @if (enemy.specialMark) {
+                <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
+                }
                 <div class="enemy-circle">
-                  <img [src]="enemy.avatarUrl" />
-                  @if (enemy.quantity > 1) {
-                  <span class="badge">{{ enemy.quantity }}</span>
-                  }
+                  <img [src]="resolveAvatarUrl(enemy.id)" />
                 </div>
                 }
               </div>
@@ -273,18 +278,22 @@
 
                       <!-- Enemies -->
                       <div class="enemies-vertical-list">
-                        @for (enemy of wave.included_enemy; track $index) {
-                        <div class="enemy-circle">
-                          <img [src]="enemy.avatarUrl" [alt]="enemy.name" />
-
+                        <div class="enemy-inner">
+                          @for (enemy of wave.included_enemy; track enemy.id) {
                           @if (enemy.quantity > 1) {
-                          <span class="badge">
+                          <span class="badge badge-amount">
                             {{ enemy.quantity }}
                           </span>
                           }
-                        </div>
-                        }
+                          @if (enemy.specialMark) {
+                          <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
+                          }
+                          <div class="enemy-circle">
+                            <img [src]="resolveAvatarUrl(enemy.id)" [alt]="enemy.name" />
+                          </div>
+                          }
 
+                        </div>
                         @if (wave.included_enemy.length === 0) {
                         <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
                           +
