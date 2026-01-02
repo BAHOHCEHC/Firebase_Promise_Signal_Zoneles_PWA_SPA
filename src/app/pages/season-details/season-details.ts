@@ -14,10 +14,7 @@ import { Season_details, Act, Character, ElementType, ElementTypeName, Enemy, Va
   templateUrl: './season-details.html',
   styleUrl: './season-details.scss'
 })
-export class SeasonsDetails implements OnInit {
-  private seasonService = inject(SeasonService);
-  private characterService = inject(CharacterService);
-  public enemiesService = inject(EnemiesService); // Public to access signals in template if needed, or mapped
+export class SeasonsDetails {
 
   // State
   public seasonDetails = signal<Season_details>({

@@ -1,0 +1,26 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2 class="modal-title">Select this season Elemental Type</h2>
+
+    <div class="elements" [class.elements--dim-inactive]="shouldDimInactive()">
+      @for (type of elementTypes; track type) {
+        <button
+          class="element-button"
+          [class.element-button--active]="currentSelection().has(type)"
+          [disabled]="!currentSelection().has(type) && isLimitReached()"
+          (click)="toggleElement(type)"
+        >
+          <img class="element-icon" [src]="getElementIconPath(type)" [alt]="type" />
+        </button>
+      }
+    </div>
+
+    <div class="modal-footer">
+      <span class="counter">{{ activeCount() }} / {{ limit }}</span>
+      <div class="actions">
+        <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+        <button class="btn btn-primary" (click)="onSave()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

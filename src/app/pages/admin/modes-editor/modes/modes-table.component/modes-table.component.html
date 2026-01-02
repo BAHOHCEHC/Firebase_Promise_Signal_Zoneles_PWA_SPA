@@ -1,10 +1,10 @@
 <div class="modes-list">
   @if (modes.length > 0) {
   <div class="mods-grid-header">
-    <div class="grid-cell act-name-header">Mode Name</div>
-    <div class="grid-cell act-type-header">Acts amount</div>
-    <div class="grid-cell act-options-header">Characters amount</div>
-    <div class="grid-cell act-actions-header">Actions</div>
+    <div class="grid-cell act-name-header fs_12">Mode Name</div>
+    <div class="grid-cell act-type-header fs_12">Acts amount</div>
+    <div class="grid-cell act-options-header fs_12">Characters amount</div>
+    <div class="grid-cell act-actions-header fs_12">Actions</div>
   </div>
   }
   @if (loading) {
@@ -28,7 +28,7 @@
       <span class="mode-name">{{mode.name}}</span>
     </div>
 
-    <div class="mode-details grid-cell">
+    <div class="mode-details grid-cell mod-acts-amount">
       <span class="detail-part">
         <strong>{{mode.chambers.length}}</strong> acts
       </span>
@@ -43,7 +43,7 @@
       </span>
     </div>
 
-    <div class="mode-details grid-cell">
+    <div class="mode-details grid-cell mode-actions-cell">
       <button class="btn-icon edit-btn" (click)="onEdit(mode)">
         <!-- Simple edit icon (pencil) -->
         <svg class="color-green" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"

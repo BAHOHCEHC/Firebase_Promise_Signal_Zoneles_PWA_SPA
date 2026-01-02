@@ -1,11 +1,5 @@
 <section class="acts-section">
-  <div class="section-header">
-    <h2 class="section-title">Acts</h2>
 
-    <button class="btn-icon" (click)="onRefresh()" title="Refresh">
-      <span class="material-symbols-outlined refresh">refresh</span>
-    </button>
-  </div>
 
   <!-- Стан завантаження -->
   @if (loading) {
@@ -51,10 +45,10 @@
     <div class="acts-grid">
       <!-- Заголовки колонок -->
       <div class="acts-grid-header">
-        <div class="grid-cell act-name-header">Act Name</div>
-        <div class="grid-cell act-type-header">Type</div>
-        <div class="grid-cell act-options-header">Options</div>
-        <div class="grid-cell act-actions-header">Actions</div>
+        <div class="grid-cell act-name-header fs_12">Act Name</div>
+        <div class="grid-cell act-type-header fs_12">Type</div>
+        <div class="grid-cell act-options-header fs_12">Options</div>
+        <div class="grid-cell act-actions-header fs_12">Actions</div>
       </div>
 
       <!-- Рядки з актами -->
@@ -79,7 +73,7 @@
           @if (getActiveOptions(act).length > 0) {
           <div class="options-list">
             @for (option of getActiveOptions(act); track option) {
-            <span class="option-badge">{{ option }}</span>
+            <span class="option-badge {{option.toLowerCase().replace(' ', '')}}">{{ option }}</span>
             }
           </div>
           } @else {

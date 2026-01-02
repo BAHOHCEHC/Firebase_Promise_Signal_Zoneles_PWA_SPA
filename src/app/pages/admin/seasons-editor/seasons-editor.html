@@ -51,7 +51,7 @@
         <div class="char-list">
           @for (char of seasonDetails().opening_characters; track char.id) {
           <div class="char-mini-card">
-            <img [src]="char.avatarUrl" [alt]="char.name" />
+            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name" />
 
             @if (char.element) {
             <div class="element-mini-badge">
@@ -61,7 +61,7 @@
           </div>
           }
 
-          @if (seasonDetails().opening_characters.length !== OPENING_CHARACTER_LIMIT) {
+          @if (seasonDetails().opening_characters.length === 0) {
           <button class="add-char-btn" (click)="openCharacterModal('opening')">
             +
           </button>
@@ -82,8 +82,7 @@
         <div class="char-list">
           @for (char of seasonDetails().special_guests; track char.id) {
           <div class="char-mini-card">
-            <img [src]="char.avatarUrl" [alt]="char.name" />
-
+            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name" />
             @if (char.element) {
             <div class="element-mini-badge">
               <img [src]="getElementIconPath(char.element.name)" />
@@ -92,7 +91,7 @@
           </div>
           }
 
-          @if (seasonDetails().special_guests.length !== SPECIAL_GUEST_LIMIT) {
+          @if (seasonDetails().special_guests.length === 0) {
           <button class="add-char-btn" (click)="openCharacterModal('special')">
             +
           </button>
@@ -134,23 +133,37 @@
             }
 
             <div class="enemies-container">
-              @for (wave of act.variations; track $index) {
+              <!-- Boss usually has 1 variation, 1 wave -->
+              @if (act.variations && act.variations[0]?.waves) {
+              @for (wave of act.variations[0].waves; track $index) {
               <div class="enemy-inner">
-                @for (enemy of wave.included_enemy; track $index) {
-                <div class="enemy-circle">
-                  <img [src]="enemy.avatarUrl" />
-                </div>
-                @if (enemy.quantity > 1 ) {
+                @for (enemy of wave.included_enemy; track enemy.id) {
+                @if (enemy.quantity > 1) {
                 <span class="badge">{{ enemy.quantity }}</span>
                 }
+                @if (enemy.specialMark) {
+                <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
+                }
+                <div class="enemy-circle">
+                  <img [src]="resolveAvatarUrl(enemy.id)" />
+                </div>
                 }
               </div>
               }
+              }
+
+              @if (!act.enemy_selection.length) {
               <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
                 +
               </button>
+              } @else {
+              <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
+                <span class="material-symbols-outlined">
+                  refresh
+                </span>
+              </button>
+              }
             </div>
-
           </div>
         </div>
         }
@@ -163,35 +176,52 @@
     <div class="subsection">
       <h3>Arcana Chambers</h3>
 
-      <div class="acts-grid">
+      <div class="acts-grid acts-grid-arcana">
         @for (act of arcanaActs(); track act.id) {
         <div class="act-card arcana">
           <div class="act-header">
             Arcana {{ act.name }}
           </div>
 
-          <div class="enemies-container">
-            @for (wave of act.variations; track $index) {
-            @for (enemy of wave.included_enemy; track $index) {
-            <div class="enemy-circle">
-              <img [src]="enemy.avatarUrl" />
-              @if (enemy.quantity > 1) {
-              <span class="badge">{{ enemy.quantity }}</span>
-              }
+          <div class="enemies-container-wrapper">
+            @if (act.enemy_options?.timer) {
+            <div class="act-options-info">
+              {{ act.enemy_options?.timer }} sec
             </div>
             }
-            }
+            <div class="enemies-container">
+              <!-- Arcana usually has 1 variation, 1 wave -->
+              @if (act.variations && act.variations[0]?.waves) {
+              @for (wave of act.variations[0].waves; track $index) {
+              <div class="enemy-inner">
+                @for (enemy of wave.included_enemy; track enemy.id) {
+                @if (enemy.quantity > 1) {
+                <span class="badge">{{ enemy.quantity }}</span>
+                }
+                @if (enemy.specialMark) {
+                <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
+                }
+                <div class="enemy-circle">
+                  <img [src]="resolveAvatarUrl(enemy.id)" />
+                </div>
+                }
+              </div>
+              }
+              }
 
-            <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
-              +
-            </button>
+              @if (!act.enemy_selection.length) {
+              <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
+                +
+              </button>
+              } @else {
+              <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
+                <span class="material-symbols-outlined">
+                  refresh
+                </span>
+              </button>
+              }
+            </div>
           </div>
-
-          @if (act.enemy_options?.timer) {
-          <div class="act-options-info">
-            ⏱ {{ act.enemy_options?.timer }}
-          </div>
-          }
         </div>
         }
       </div>
@@ -212,64 +242,88 @@
 
           <div class="var-content">
             @if (act.type == "Variation_fight") {
-            <button class="btn-cta" (click)="openVariationModal(act)">
-              + Add variation
-            </button>
-
             <div class="var-settings-display">
               <div class="var-waves-container">
-                @for (wave of act?.variations; track $index) {
-                <div class="wave-column">
-
-                  <!-- Wave title -->
-                  <div class="wave-header">
-                    @if (act?.variation_fight_settings?.wave === 'custom') {
-                    {{ act?.variation_fight_settings?.name || 'Custom wave' }}
-                    } @else {
-                    Wave {{ $index + 1 }}
-                    }
+                @for (variation of act.variations; track $index; let vIdx = $index) {
+                <div class="variation-row">
+                  <div class="variation-number">
+                    <div class="span fs_16">
+                      {{$index + 1 + '.'}}
+                    </div>
                   </div>
-
                   <!-- Timer -->
-                  @if (
-                  act?.variation_fight_settings?.timer !== null &&
-                  act?.variation_fight_settings?.timer !== undefined &&
-                  act?.variation_fight_settings?.timer !== ''
-                  ) {
+                  @if (variation.timer) {
                   <div class="wave-timer">
-                    ⏱ {{ act.variation_fight_settings?.timer }}
+                    {{ variation.timer }} sec
+                  </div>
+                  }
+                  <!-- Monolit -->
+                  @if (variation.monolit) {
+                  <div class="wave-timer">
+                    Monolit
                   </div>
                   }
 
-                  <!-- Enemies -->
-                  <div class="enemies-vertical-list">
-                    @for (enemy of wave.included_enemy; track $index) {
-                    <div class="enemy-circle">
-                      <img [src]="enemy.avatarUrl" [alt]="enemy.name" />
+                  <div class="wave-column-wrapper">
+                    @for (wave of variation.waves; track $index; let wIdx = $index) {
+                    <div class="wave-column">
+                      <!-- Wave title -->
+                      <div class="wave-header">
+                        @if (variation.wave === 'custom') {
+                        {{ variation.name || 'Custom wave' }}
+                        } @else {
+                        Wave {{ wIdx + 1 }}
+                        }
+                      </div>
 
-                      @if (enemy.quantity > 1) {
-                      <span class="badge">
-                        {{ enemy.quantity }}
-                      </span>
-                      }
+                      <!-- Enemies -->
+                      <div class="enemies-vertical-list">
+                        <div class="enemy-inner">
+                          @for (enemy of wave.included_enemy; track enemy.id) {
+                          @if (enemy.quantity > 1) {
+                          <span class="badge">
+                            {{ enemy.quantity }}
+                          </span>
+                          }
+                          @if (enemy.specialMark) {
+                          <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
+                          }
+                          <div class="enemy-circle">
+                            <img [src]="resolveAvatarUrl(enemy.id)" [alt]="enemy.name" />
+                          </div>
+                          }
+
+                          @if (wave.included_enemy.length === 0) {
+                          <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
+                            +
+                          </button>
+                          } @else {
+                          <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
+                            <span class="material-symbols-outlined">
+                              refresh
+                            </span>
+                          </button>
+                          }
+                        </div>
+                      </div>
                     </div>
                     }
-
-                    <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, $index)">
-                      +
-                    </button>
                   </div>
 
+                  <button class="btn-edit-settings" (click)="openVariationModal(act, vIdx)">
+                    <span class="material-symbols-outlined">
+                      settings_b_roll
+                    </span>
+                  </button>
                 </div>
                 }
               </div>
 
-              <button class="btn-edit-settings" (click)="openVariationModal(act)">
-                ⚙
-              </button>
             </div>
-
             }
+            <button class="btn-cta" (click)="openVariationModal(act)">
+              + Add variation
+            </button>
           </div>
         </div>
         }
@@ -285,18 +339,22 @@
   }
 
   @if (showCharactersModal()) {
-  <app-season-characters-modal [title]="currentCharacterTitle" [limit]="currentCharacterLimit"
-    [allCharacters]="allCharacters()" [startSelection]="currentCharacterSelection" (close)="closeCharacterModal()"
+  <app-season-characters-modal [title]="currentCharacterTitle()" [limit]="currentCharacterLimit()"
+    [allCharacters]="allCharacters()" [startSelection]="currentCharacterSelection()" (close)="closeCharacterModal()"
     (save)="onSaveCharacters($event)" />
   }
 
   @if (showAddEnemyModal()) {
-  <app-season-add-enemy-modal [actOptions]="currentActOptions" [categories]="enemiesService.categories()"
-    [allEnemies]="enemiesService.enemies()" (close)="closeAddEnemyModal()" (save)="onSaveEnemy($event)" />
+  <app-season-add-enemy-modal [actOptions]="currentActOptions()" [categories]="enemiesService.categories()"
+    [allEnemies]="enemiesService.enemies()" [initialEnemies]="currentInitialEnemies()"
+    [initialOptions]="currentInitialOptions()" [currentAct]="currentActForEnemy()"
+    [currentVariation]="currentVariationForEnemy()" [currentWave]="currentWaveForEnemy()" (close)="closeAddEnemyModal()"
+    (save)="onSaveEnemy($event)" />
   }
 
   @if (showVariationModal()) {
-  <season-add-variation-chamber-modal (close)="closeVariationModal()" (save)="onSaveVariation($event)" />
+  <season-add-variation-chamber-modal [initialData]="currentInitialVariation()" (close)="closeVariationModal()"
+    (save)="onSaveVariation($event)" />
   }
 
 </div>

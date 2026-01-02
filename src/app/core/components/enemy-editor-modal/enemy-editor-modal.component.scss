@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); // Dimmed background
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,7 @@
 }
 
 .modal-content {
-  background: #2b2b3b; // Dark purple/grey background from images
+  background: $grey-bg;
   border-radius: 12px;
   padding: 24px;
   width: 440px;
@@ -29,7 +29,6 @@
 
 .modal-title {
   font-size: 18px;
-  font-weight: 600;
   margin: 0;
 }
 
@@ -51,7 +50,7 @@
 }
 
 .form-control {
-  background: #3a3a4a;
+  background: $btn-secondary-hover;
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 10px 12px;
@@ -69,7 +68,6 @@
   padding: 8px 24px;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
   border: none;
   transition: all 0.2s;
@@ -77,7 +75,6 @@
 
 .secondary {
   background: $btn-secondary-default;
-  color: #ccc;
 
   &:hover {
     background: $btn-secondary-hover;
@@ -133,11 +130,6 @@
       height: 27px;
     }
   }
-
-
-  &.active {
-  }
-
   img {
     width: 100%;
     height: 100%;
@@ -167,17 +159,17 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #3a3a4a;
+  background: $btn-secondary-hover;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 24px;
-  color: red;
+  color: $btn-primary-hover;
   overflow: hidden;
 
   &:hover {
-    background: lighten(#3a3a4a, 10%);
+    background: lighten($btn-secondary-hover, 10%);
   }
 
   img {
@@ -190,13 +182,13 @@
 .btn-delete {
   width: 80px;
   height: 38px;
-  background: #e74c3c;
   color: white;
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  background: $delete-hover-color;
 
   &:hover {
-    background: #c0392b;
+    background: $red-color;
   }
 }

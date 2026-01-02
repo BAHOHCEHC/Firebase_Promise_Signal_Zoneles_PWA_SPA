@@ -1,29 +1,28 @@
+@import '../../../../../../styles/_variables';
 .modes-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
   width: 100%;
 }
-.empty-state{
+.empty-state {
   text-align: center;
 }
 .mode-item {
-  background: #2a2a35;
+  background: $grey-bg;
   border-radius: 8px;
-  padding: 5px 20px;
+  padding: 5px 0px 5px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: #fff;
-  font-family: sans-serif;
 }
 
 .mods-grid-header {
   display: flex;
-  font-weight: 600;
   font-size: 14px;
   justify-content: space-between;
-  padding: 0 20px;
+  padding-left: 20px;
 }
 
 .mode-info {
@@ -32,7 +31,6 @@
 }
 
 .mode-name {
-  font-weight: 600;
   font-size: 16px;
   color: #fff;
 }
@@ -42,23 +40,22 @@
   align-items: center;
   gap: 20px;
   font-size: 14px;
-  color: #ccc;
+  color: $light-grey-color;
   strong {
     color: #fff;
-    font-weight: 600;
   }
 }
 .act-actions-header {
-  width: 98px;
   text-align: center;
 }
 .detail-part {
   display: flex;
   gap: 6px;
 }
-.grid-cell{
-  min-width: 100px;
+.grid-cell {
   text-align: center;
+  display: flex;
+  align-items: center;
 }
 
 .btn-icon {
@@ -73,7 +70,7 @@
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #71767b;
+    background-color: $grey-color;
   }
 
   .material-symbols-outlined,
@@ -85,7 +82,7 @@
 
   .material-symbols-outlined.red,
   svg.red {
-    color: red;
+    color: $red-color;
   }
 
   .material-symbols-outlined.color-green,
@@ -99,4 +96,56 @@
     width: 34px;
     height: 34px;
   }
+}
+
+// Загальні стилі для клітинок
+.grid-cell {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 20px;
+}
+
+// Розподіл ширини колонок
+.act-name-header,
+.mode-info {
+  flex: 0 0 25%; // 25% ширини
+  min-width: 150px;
+}
+
+.act-type-header,
+.mod-acts-amount {
+  flex: 0 0 15%; // 15% ширини
+  min-width: 100px;
+  justify-content: center;
+}
+.characters-amount,
+.act-options-header {
+  flex: 0 0 35%; // 35% ширини
+  min-width: 200px;
+  justify-content: flex-end;
+}
+
+.act-actions-header {
+  flex: 0 0 10%; // 10% ширини
+  min-width: 80px;
+  justify-content: center;
+}
+
+.act-actions-cell {
+  gap: 20px;
+}
+.mode-actions-cell {
+  flex: 0 0 10%;
+  min-width: 80px;
+  justify-content: center;
+}
+// Стилі для вмісту клітинок
+.act-name-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.act-name-text {
+  font-size: 15px;
 }
