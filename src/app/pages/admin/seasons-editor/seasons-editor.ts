@@ -1,14 +1,14 @@
 import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CharacterService } from '../../../shared/services/charater.service';
-import { EnemiesService } from '../../../shared/services/enemies.service';
-import { SeasonService } from '../../../shared/services/season.service';
-import { sanitizeChars } from '../../../../utils/sanitizeChars';
-import { Season_details, Character, Act, Wave, ElementTypeName, ElementType, Enemy, Enemy_options, Wave_type } from '../../../../models/models';
+import { Season_details, Character, Act, Variation, Wave, ElementTypeName, ElementType, Act_options, Enemy, Wave_type, Enemy_options } from '../../../../models/models';
 import { SeasonAddEnemyModal } from '../../../core/components/season-add-enemy-modal/season-add-enemy-modal';
 import { SeasonAddVariationChamberModal } from '../../../core/components/season-add-variation-chamber-modal/season-add-variation-chamber-modal';
 import { SeasonCharactersModal } from '../../../core/components/season-characters-modal/season-characters-modal';
 import { SeasonElementTypeModal } from '../../../core/components/season-element-type-modal/season-element-type-modal';
+import { CharacterService } from '../../../shared/services/charater.service';
+import { EnemiesService } from '../../../shared/services/enemies.service';
+import { SeasonService } from '../../../shared/services/season.service';
+import { sanitizeSeasonDetails } from '../../../../utils/sanitizeChars';
 
 
 @Component({
@@ -192,7 +192,7 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   public onSavePage() {
-    const sanitizedData = sanitizeChars(this.seasonDetails()) as Season_details;
+    const sanitizedData = sanitizeSeasonDetails(this.seasonDetails());
     console.log(sanitizedData);
 
     this.seasonService.saveSeasonDetails(sanitizedData);

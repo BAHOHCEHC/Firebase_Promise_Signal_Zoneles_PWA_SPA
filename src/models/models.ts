@@ -15,7 +15,15 @@ export interface Act {
   enemy_options?: Enemy_options
   enemy_selection: Enemy[]
   variation_fight_settings?: Variation_fight;
-  variations: Wave[]
+  variations: Variation[]
+}
+
+export interface Variation {
+  wave: Wave_type; // e.g. "1", "2", "3", "custom"
+  waves: Wave[];   // Array of waves containing enemies
+  timer: string;
+  name?: string;
+  monolit?: boolean;
 }
 
 export interface Wave {
