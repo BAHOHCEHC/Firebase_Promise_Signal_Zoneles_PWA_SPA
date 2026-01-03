@@ -19,10 +19,10 @@ export interface Act {
 }
 
 export interface Variation {
-  wave: Wave_type; // e.g. "1", "2", "3", "custom"
-  waves: Wave[];   // Array of waves containing enemies
   timer: string;
-  name?: string;
+  waves: Wave[];
+  wave: Wave_type;
+  name?: any;
   monolit?: boolean;
 }
 

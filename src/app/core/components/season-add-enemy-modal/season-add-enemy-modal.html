@@ -6,7 +6,7 @@
     <div class="section">
       <p class="label">Category Selection</p>
       <div class="category-buttons">
-        @for (cat of categories; track cat.id) {
+        @for (cat of categories(); track cat.id) {
         <button type="button" class="btn-category" [class.btn-category-active]="selectedCategoryId() === cat.id"
           [class.btn-category-empty]="isCategoryEmpty(cat.id)" [disabled]="isCategoryEmpty(cat.id)"
           (click)="!isCategoryEmpty(cat.id) && onSelectCategory(cat.id)">
@@ -43,23 +43,42 @@
     <!-- Extra Options -->
     <div class="options-section">
       <form [formGroup]="form" class="modal-form">
-        @if (actOptions.amount) {
-        <input type="text" formControlName="amount" placeholder="Amount" class="input" />
+
+        @if (actOptions().amount) {
+        <div class="form-control">
+          <label for="amount" class="label_control">Amount</label>
+          <input id="amount" type="number" formControlName="amount" placeholder="00" class="input" />
+        </div>
         }
-        @if (actOptions.timer) {
-        <input type="text" formControlName="timer" placeholder="Timer (sec)" class="input" />
+
+        @if (actOptions().timer) {
+        <div class="form-control">
+          <label for="timer" class="label_control">Timer</label>
+          <input id="timer" type="number" formControlName="timer" placeholder="000" class="input" />
+        </div>
         }
-        @if (actOptions.defeat) {
-        <input type="text" formControlName="defeat" placeholder="Defeat" class="input" />
+
+        @if (actOptions().defeat) {
+        <div class="form-control">
+          <label for="defeat" class="label_control">Defeat</label>
+          <input id="defeat" type="number" formControlName="defeat" placeholder="00" class="input" />
+        </div>
         }
-        @if (actOptions.special_type !== undefined) {
-        <label class="checkbox-inline">
-          <input type="checkbox" formControlName="special_type" />
-          Special type
-        </label>
+
+        @if (actOptions().special_type !== undefined) {
+        <div class="form-control checkbox-control">
+          <label class="checkbox-inline">
+            <span>Special type</span>
+            <input type="checkbox" formControlName="special_type" />
+            <i class="checkbox-ui"></i>
+          </label>
+        </div>
+
         }
+
       </form>
     </div>
+
 
     <!-- Footer -->
     <div class="modal-footer">

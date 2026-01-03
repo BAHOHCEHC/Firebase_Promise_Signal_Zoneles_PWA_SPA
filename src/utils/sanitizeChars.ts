@@ -1,62 +1,32 @@
-import { Season_details, Character, Enemy } from '../models/models';
+export function sanitizeChars(data: any): any {
+  if (!data) return data;
 
-export function sanitizeChars<T extends { avatarUrl?: string }>(chars: T[]): T[] {
-  return chars.map((char) => {
-    const { avatarUrl, ...rest } = char;
-    // base64 → ВИДАЛЯЄМО
-    if (avatarUrl?.startsWith('data:image')) {
-      return {
-        ...rest
-        // avatar відсутній — Firestore-safe
-      } as T;
+  // Deep clone to avoid mutating the original state (which would break the UI)
+  const clone = structuredClone(data);
+
+  const removeAvatar = (obj: any) => {
+    if (!obj || typeof obj !== 'object') return;
+
+    if (Array.isArray(obj)) {
+      obj.forEach(item => removeAvatar(item));
+      return;
     }
 
-    // URL → зберігаємо
-    if (avatarUrl?.startsWith('http') || avatarUrl?.startsWith('assets')) {
-      // Keep as is for now, or if strict object matching is needed:
-      return char;
+    if ('avatarUrl' in obj) {
+      delete obj['avatarUrl'];
     }
 
-    // нічого
-    return char;
-  });
-}
+    Object.keys(obj).forEach(key => {
+      // Avoid infinite recursion if circular (though data shouldn't be)
+      // and recurse into children
+      removeAvatar(obj[key]);
+    });
+  };
 
-export function sanitizeSeasonDetails(details: Season_details): Season_details {
-  const d = { ...details };
+  // Specific properties to check as per requirement
+  if (clone.opening_characters) removeAvatar(clone.opening_characters);
+  if (clone.special_guests) removeAvatar(clone.special_guests);
+  if (clone.acts) removeAvatar(clone.acts);
 
-  // 1. Sanitize top-level characters
-  d.opening_characters = sanitizeChars(d.opening_characters);
-  d.special_guests = sanitizeChars(d.special_guests);
-
-  // 2. Sanitize acts
-  d.acts = d.acts.map(act => {
-    const newAct = { ...act };
-
-    // Sanitize enemy_selection
-    if (newAct.enemy_selection) {
-      newAct.enemy_selection = sanitizeChars(newAct.enemy_selection);
-    }
-
-    // Sanitize variations -> waves -> included_enemy
-    if (newAct.variations) {
-      newAct.variations = newAct.variations.map(variation => {
-        const newVariation = { ...variation };
-        if (newVariation.waves) {
-          newVariation.waves = newVariation.waves.map(wave => {
-            const newWave = { ...wave };
-            if (newWave.included_enemy) {
-              newWave.included_enemy = sanitizeChars(newWave.included_enemy);
-            }
-            return newWave;
-          });
-        }
-        return newVariation;
-      });
-    }
-
-    return newAct;
-  });
-
-  return d;
+  return clone;
 }

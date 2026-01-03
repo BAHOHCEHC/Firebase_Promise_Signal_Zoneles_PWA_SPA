@@ -139,7 +139,7 @@
               <div class="enemy-inner">
                 @for (enemy of wave.included_enemy; track enemy.id) {
                 @if (enemy.quantity > 1) {
-                <span class="badge">{{ enemy.quantity }}</span>
+                <span class="badge badge-amount">{{ enemy.quantity }}</span>
                 }
                 @if (enemy.specialMark) {
                 <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
@@ -196,7 +196,7 @@
               <div class="enemy-inner">
                 @for (enemy of wave.included_enemy; track enemy.id) {
                 @if (enemy.quantity > 1) {
-                <span class="badge">{{ enemy.quantity }}</span>
+                <span class="badge badge-amount">{{ enemy.quantity }}</span>
                 }
                 @if (enemy.specialMark) {
                 <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
@@ -281,7 +281,7 @@
                         <div class="enemy-inner">
                           @for (enemy of wave.included_enemy; track enemy.id) {
                           @if (enemy.quantity > 1) {
-                          <span class="badge">
+                          <span class="badge badge-amount">
                             {{ enemy.quantity }}
                           </span>
                           }
@@ -293,18 +293,18 @@
                           </div>
                           }
 
-                          @if (wave.included_enemy.length === 0) {
-                          <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
-                            +
-                          </button>
-                          } @else {
-                          <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
-                            <span class="material-symbols-outlined">
-                              refresh
-                            </span>
-                          </button>
-                          }
                         </div>
+                        @if (wave.included_enemy.length === 0) {
+                        <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
+                          +
+                        </button>
+                        } @else {
+                        <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
+                          <span class="material-symbols-outlined">
+                            refresh
+                          </span>
+                        </button>
+                        }
                       </div>
                     </div>
                     }

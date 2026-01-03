@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Wave_type } from '../../../../models/models';
+import { Wave_type, Variation } from '../../../../models/models';
 
 @Component({
     selector: 'season-add-variation-chamber-modal',
@@ -11,6 +11,8 @@ import { Wave_type } from '../../../../models/models';
     styleUrl: './season-add-variation-chamber-modal.scss'
 })
 export class SeasonAddVariationChamberModal {
+    @Input() public initialData: Partial<Variation> | null = null;
+
     @Output() public close = new EventEmitter<void>();
     @Output() public save = new EventEmitter<{
         wave: Wave_type,
@@ -30,20 +32,81 @@ export class SeasonAddVariationChamberModal {
 
     public form = this.fb.group({
         wave: ['1', Validators.required],
-        customName: [''],
+        customName: [{ value: '', disabled: true }],
         timer: [''],
         monolit: [false]
     });
 
-    ngOnInit() {
-        if (this.initialData) {
-            this.form.patchValue({
-                wave: this.initialData.wave as string,
-                customName: this.initialData.name || '',
-                timer: this.initialData.timer || '',
-                monolit: this.initialData.monolit || false
-            });
-        }
+    constructor() {
+        effect(() => {
+            if (this.initialData) {
+                const isCustom = this.initialData.wave === 'custom';
+                this.form.patchValue({
+                    wave: this.initialData.wave || '1',
+                    customName: this.initialData.name || '',
+                    timer: this.initialData.timer || '',
+                    monolit: !!this.initialData.monolit
+                });
+
+                if (isCustom) {
+                    this.form.get('customName')?.enable();
+                } else {
+                    this.form.get('customName')?.disable();
+                }
+
+                // Timer/Monolit mutual exclusion
+                if (this.initialData.timer) {
+                    this.form.get('monolit')?.disable();
+                    this.form.get('timer')?.enable();
+                } else if (this.initialData.monolit) {
+                    this.form.get('timer')?.disable();
+                    this.form.get('monolit')?.enable();
+                } else {
+                    this.form.get('timer')?.enable();
+                    this.form.get('monolit')?.enable();
+                }
+            } else {
+                this.form.reset({
+                    wave: '1',
+                    customName: '',
+                    timer: '',
+                    monolit: false
+                });
+                this.form.get('customName')?.disable();
+                this.form.get('timer')?.enable();
+                this.form.get('monolit')?.enable();
+            }
+        });
+
+        // Listen for wave changes to toggle customName disabled state
+        this.form.get('wave')?.valueChanges.subscribe(value => {
+            if (value === 'custom') {
+                this.form.get('customName')?.enable();
+            } else {
+                this.form.get('customName')?.disable();
+                this.form.get('customName')?.setValue('');
+            }
+        });
+
+        // Timer mutual exclusion
+        this.form.get('timer')?.valueChanges.subscribe(value => {
+            if (value && value.trim() !== '') {
+                this.form.get('monolit')?.disable({ emitEvent: false });
+                this.form.get('monolit')?.setValue(false, { emitEvent: false });
+            } else {
+                this.form.get('monolit')?.enable({ emitEvent: false });
+            }
+        });
+
+        // Monolit mutual exclusion
+        this.form.get('monolit')?.valueChanges.subscribe(value => {
+            if (value) {
+                this.form.get('timer')?.disable({ emitEvent: false });
+                this.form.get('timer')?.setValue('', { emitEvent: false });
+            } else {
+                this.form.get('timer')?.enable({ emitEvent: false });
+            }
+        });
     }
 
     public onClose(): void {

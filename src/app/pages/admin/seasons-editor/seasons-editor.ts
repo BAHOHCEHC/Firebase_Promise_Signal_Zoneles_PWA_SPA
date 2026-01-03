@@ -8,7 +8,7 @@ import { SeasonElementTypeModal } from '../../../core/components/season-element-
 import { CharacterService } from '../../../shared/services/charater.service';
 import { EnemiesService } from '../../../shared/services/enemies.service';
 import { SeasonService } from '../../../shared/services/season.service';
-import { sanitizeSeasonDetails } from '../../../../utils/sanitizeChars';
+import { sanitizeChars } from '../../../../utils/sanitizeChars';
 
 
 @Component({
@@ -192,7 +192,7 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   public onSavePage() {
-    const sanitizedData = sanitizeSeasonDetails(this.seasonDetails());
+    const sanitizedData = sanitizeChars(this.seasonDetails()) as Season_details;
     console.log(sanitizedData);
 
     this.seasonService.saveSeasonDetails(sanitizedData);
@@ -362,12 +362,12 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   private charactersMap = computed(() =>
-    new Map(this.allCharacters().map(c => [c.id, c.avatarUrl]))
-  );
+  new Map(this.allCharacters().map(c => [c.id, c.avatarUrl]))
+);
 
-  private enemiesMap = computed(() =>
-    new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
-  );
+private enemiesMap = computed(() =>
+  new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
+);
   public resolveAvatarUrl(
     item: string | Character | Enemy | null | undefined
   ): string {
