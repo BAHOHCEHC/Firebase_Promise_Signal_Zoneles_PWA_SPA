@@ -23,6 +23,13 @@ export class SeasonAddVariationChamberModal {
 
     private fb = inject(FormBuilder);
 
+    @Input() public initialData: {
+        wave: Wave_type;
+        timer: string;
+        name?: string;
+        monolit?: boolean;
+    } | null = null;
+
     public form = this.fb.group({
         wave: ['1', Validators.required],
         customName: [{ value: '', disabled: true }],

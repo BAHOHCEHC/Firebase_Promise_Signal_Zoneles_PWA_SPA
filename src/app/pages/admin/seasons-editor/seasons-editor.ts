@@ -16,10 +16,10 @@ import { sanitizeChars } from '../../../../utils/sanitizeChars';
   standalone: true,
   imports: [
     CommonModule,
-    SeasonElementTypeModal,
-    SeasonCharactersModal,
     SeasonAddEnemyModal,
-    SeasonAddVariationChamberModal
+    SeasonAddVariationChamberModal,
+    SeasonCharactersModal,
+    SeasonElementTypeModal
   ],
   templateUrl: './seasons-editor.html',
   styleUrl: './seasons-editor.scss'

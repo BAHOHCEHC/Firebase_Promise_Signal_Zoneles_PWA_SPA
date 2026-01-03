@@ -20,6 +20,12 @@ export class SeasonAddEnemyModal implements OnInit {
   public currentVariation = input<any | null>(null);
   public currentWave = input<Wave | null>(null);
 
+  @Input() public initialEnemies: Enemy[] = [];
+  @Input() public initialOptions: any = {};
+  @Input() public currentAct: Act | null = null;
+  @Input() public currentVariation: Variation | null = null;
+  @Input() public currentWave: Wave | null = null;
+
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<{
     enemies: Enemy[];
