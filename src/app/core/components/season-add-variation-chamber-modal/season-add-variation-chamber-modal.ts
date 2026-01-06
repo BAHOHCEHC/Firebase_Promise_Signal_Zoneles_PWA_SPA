@@ -3,6 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Wave_type, Variation } from '../../../../models/models';
 
+interface VariationModalData {
+    wave: Wave_type;
+    timer: string;
+    name?: string;
+    monolit?: boolean;
+}
+
 @Component({
     selector: 'season-add-variation-chamber-modal',
     standalone: true,
@@ -11,12 +18,7 @@ import { Wave_type, Variation } from '../../../../models/models';
     styleUrl: './season-add-variation-chamber-modal.scss'
 })
 export class SeasonAddVariationChamberModal {
-    public initialData = input<{
-        wave: Wave_type;
-        timer: string;
-        name?: string;
-        monolit?: boolean;
-    } | null>(null);
+    public initialData = input<VariationModalData | null>(null);
 
     @Output() public close = new EventEmitter<void>();
     @Output() public save = new EventEmitter<{

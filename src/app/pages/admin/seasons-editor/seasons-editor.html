@@ -51,7 +51,7 @@
         <div class="char-list">
           @for (char of seasonDetails().opening_characters; track char.id) {
           <div class="char-mini-card">
-            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name" />
+            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name" [style.background-image]="'url(' + char.rarity.bgUrl + ')'"/>
 
             @if (char.element) {
             <div class="element-mini-badge">
@@ -82,7 +82,7 @@
         <div class="char-list">
           @for (char of seasonDetails().special_guests; track char.id) {
           <div class="char-mini-card">
-            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name" />
+            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name" [style.background-image]="'url(' + char.rarity.bgUrl + ')'"/>
             @if (char.element) {
             <div class="element-mini-badge">
               <img [src]="getElementIconPath(char.element.name)" />
@@ -227,7 +227,6 @@
       </div>
     </div>
     }
-
 
     <!-- ================= VARIATIONS ================= -->
     <div class="subsection">
