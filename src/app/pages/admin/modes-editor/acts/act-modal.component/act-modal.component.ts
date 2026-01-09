@@ -112,6 +112,14 @@ export class ActModalComponent implements OnInit {
         ]);
       }
 
+
+      if (type === 'Variation_fight') {
+        this.form.controls.options.controls.defeat.setValue(false, { emitEvent: false });
+        this.form.controls.options.controls.defeat.disable({ emitEvent: false });
+      } else {
+        this.form.controls.options.controls.defeat.enable({ emitEvent: false });
+      }
+
       nameControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
     });
   }
