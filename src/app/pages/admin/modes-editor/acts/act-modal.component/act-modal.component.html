@@ -32,12 +32,14 @@
           </label>
           <label for="timer" class="radio">
             Timer
-            <input type="checkbox" formControlName="timer" id="timer" />
+            <input type="checkbox" formControlName="timerEnable" id="timerEnable" />
           </label>
+          @if (typeSignal() !== 'Variation_fight') {
           <label for="defeat" class="radio">
             Defeat
             <input type="checkbox" formControlName="defeat" id="defeat" />
           </label>
+          }
           <label for="special_type" class="radio">
             Special type
             <input type="checkbox" formControlName="special_type" id="special_type" />

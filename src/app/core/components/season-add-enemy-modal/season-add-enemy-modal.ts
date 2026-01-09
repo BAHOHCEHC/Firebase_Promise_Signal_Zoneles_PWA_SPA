@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, signal, inject, computed, effect, OnInit, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_options, Wave } from '../../../../models/models';
+import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_options, Wave, Act, Variation } from '../../../../models/models';
 
 @Component({
   selector: 'app-season-add-enemy-modal',
@@ -16,15 +16,9 @@ export class SeasonAddEnemyModal implements OnInit {
   public allEnemies = input<Enemy[]>([]);
   public initialEnemies = input<Enemy[]>([]);
   public initialOptions = input<Enemy_options>({});
-  public currentAct = input<any | null>(null);
-  public currentVariation = input<any | null>(null);
+  public currentAct = input<Act | null>(null);
+  public currentVariation = input<Variation | null>(null);
   public currentWave = input<Wave | null>(null);
-
-  @Input() public initialEnemies: Enemy[] = [];
-  @Input() public initialOptions: any = {};
-  @Input() public currentAct: Act | null = null;
-  @Input() public currentVariation: Variation | null = null;
-  @Input() public currentWave: Wave | null = null;
 
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<{
@@ -55,59 +49,34 @@ export class SeasonAddEnemyModal implements OnInit {
   public hasSelectedEnemies = computed(() => this.selectedEnemies().length > 0);
 
   public ngOnInit(): void {
-    console.log('--- SeasonAddEnemyModal Opened ---');
-    console.log('currentAct:', this.currentAct());
-    console.log('currentVariation:', this.currentVariation());
-    console.log('currentWave:', this.currentWave());
-    console.log('initialEnemies:', this.initialEnemies());
-    console.log('initialOptions:', this.initialOptions());
-    console.log('Categories:', this.categories());
-    console.log('---------------------------------');
+    console.log('--- SeasonAddEnemyModal Opened (Clean State) ---');
 
-    // Initialize state from inputs
-    const currentWaveValue = this.currentWave();
-    if (currentWaveValue?.included_enemy?.length) {
-      this.selectedEnemies.set([...currentWaveValue.included_enemy]);
-      const firstEnemy = currentWaveValue.included_enemy[0];
-      if (firstEnemy && !this.selectedCategoryId()) {
-        this.selectedCategoryId.set(firstEnemy.categoryId);
-      }
-    } else if (this.initialEnemies()?.length) {
-      const initialEnemiesValue = this.initialEnemies();
-      this.selectedEnemies.set([...initialEnemiesValue]);
-      const firstEnemy = initialEnemiesValue[0];
-      if (firstEnemy && !this.selectedCategoryId()) {
-        this.selectedCategoryId.set(firstEnemy.categoryId);
-      }
-    } else {
-      // If categories exist, select the first one
-      if (this.categories()?.length > 0) {
-        const firstValid = this.categories().find(cat => !this.isCategoryEmpty(cat.id));
-        if (firstValid) {
-          this.selectedCategoryId.set(firstValid.id);
-          this.initialized.set(true);
-        }
+    // Always start fresh, just select the first valid category
+    if (this.categories()?.length > 0) {
+      const firstValid = this.categories().find(cat => !this.isCategoryEmpty(cat.id));
+      if (firstValid) {
+        this.selectedCategoryId.set(firstValid.id);
+        this.initialized.set(true);
       }
     }
 
-    const initialOpts = this.initialOptions();
-    if (initialOpts) {
-      this.form.patchValue({
-        amount: initialOpts.amount || '',
-        timer: initialOpts.timer || '',
-        defeat: initialOpts.defeat || '',
-        special_type: !!initialOpts.special_type,
-      });
+    // Lock timer if it exists in current variation
+    const currentVar = this.currentVariation();
+    const timerControl = this.form.get('timer');
+
+    if (currentVar?.timer && timerControl) {
+      timerControl.setValue(currentVar.timer);
+      timerControl.disable(); // 🔒 стартово заблокований
     }
+
   }
 
   constructor() { }
 
-
   // Форма для опцій (amount, timer тощо)
   public form = this.fb.group({
     amount: [''],
-    timer: [''],
+    timer: [this.currentVariation()?.timer],
     defeat: [''],
     special_type: [false],
   });
@@ -128,10 +97,11 @@ export class SeasonAddEnemyModal implements OnInit {
   }
 
   // Множинний вибір ворога
+  // Одиничний вибір ворога
   public toggleEnemy(enemy: Enemy): void {
     this.selectedEnemies.update(current => {
       const exists = current.some(e => e.id === enemy.id);
-      return exists ? current.filter(e => e.id !== enemy.id) : [...current, enemy];
+      return exists ? [] : [enemy];
     });
   }
 
@@ -158,7 +128,7 @@ export class SeasonAddEnemyModal implements OnInit {
     const opts = this.actOptions();
     const options = {
       amount: opts.amount ? formValue.amount || undefined : undefined,
-      timer: opts.timer ? formValue.timer || undefined : undefined,
+      timer: opts.timerEnable ? formValue.timer || undefined : undefined,
       defeat: opts.defeat ? formValue.defeat || undefined : undefined,
       special_type: opts.special_type !== undefined
         ? !!formValue.special_type
@@ -175,5 +145,16 @@ export class SeasonAddEnemyModal implements OnInit {
   public onClose(): void {
     this.close.emit();
   }
+
+  enableEditTimer(): void {
+    const timerControl = this.form.get('timer');
+
+    if (!timerControl) return;
+
+    timerControl.enable();          // ✅ розблокувати
+    timerControl.markAsTouched();
+    timerControl.markAsDirty();
+  }
+
 }
 

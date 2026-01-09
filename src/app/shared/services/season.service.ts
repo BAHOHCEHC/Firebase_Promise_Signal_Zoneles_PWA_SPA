@@ -81,17 +81,25 @@ export class SeasonService {
   }
 
 
-  async resetSeasonDetails(): Promise<void> {
-    const querySnapshot = await getDocs(this.seasonCollection);
-    const batch = writeBatch(this.firestore);
+async resetSeasonDetails(): Promise<void> {
+  const batch = writeBatch(this.firestore);
 
-    querySnapshot.docs.forEach((d) => {
-      batch.delete(d.ref);
+  const seasonSnapshot = await getDocs(this.seasonCollection);
+  seasonSnapshot.docs.forEach(d => batch.delete(d.ref));
+
+  const actsSnapshot = await getDocs(this.actsCollection);
+  actsSnapshot.docs.forEach(d => {
+    batch.update(d.ref, {
+      enemy_options: {},
+      enemy_selection: [],
+      variation_fight_settings: null,
+      variations: []
     });
+  });
 
-    await batch.commit();
-    this.seasonDetails.set(null);
-  }
+  await batch.commit();
+}
+
 
   // Method to get all acts from the 'acts' collection to populate the editor initially if season_details is empty
   async getAllActs(): Promise<Act[]> {

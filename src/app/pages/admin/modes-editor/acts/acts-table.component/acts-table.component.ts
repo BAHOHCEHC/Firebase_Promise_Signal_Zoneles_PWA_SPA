@@ -86,7 +86,7 @@ export class ActsTableComponent {
     const activeOptions: string[] = [];
 
     if (options.amount) activeOptions.push('Amount');
-    if (options.timer) activeOptions.push('Timer');
+    if (options.timerEnable) activeOptions.push('Timer');
     if (options.defeat) activeOptions.push('Defeat');
     if (options.special_type) activeOptions.push('Special Type');
 

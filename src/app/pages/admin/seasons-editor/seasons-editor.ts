@@ -48,6 +48,7 @@ export class SeasonsEditorComponent implements OnInit {
   public showCharactersModal = signal(false);
   public showAddEnemyModal = signal(false);
   public showVariationModal = signal(false);
+  public resetInProgress = signal(false);
 
   // --- Modal Context Signals ---
   public characterModalMode = signal<'opening' | 'special'>('opening');
@@ -176,20 +177,30 @@ export class SeasonsEditorComponent implements OnInit {
 
   // --- Actions ---
 
-  public onReset() {
-    if (confirm('Are you sure you want to reset all data?')) {
-      this.seasonService.resetSeasonDetails();
-      // Reload acts fresh
-      this.seasonService.getAllActs().then(acts => {
-        this.seasonDetails.set({
-          elemental_type_limided: [],
-          opening_characters: [],
-          special_guests: [],
-          acts: acts
-        });
+  public async onReset() {
+    if (!confirm('Are you sure you want to reset all data?')) return;
+
+    this.resetInProgress.set(true);
+
+    try {
+      await this.seasonService.resetSeasonDetails();
+      const acts = await this.seasonService.getAllActs();
+
+      this.seasonDetails.set({
+        elemental_type_limided: [],
+        opening_characters: [],
+        special_guests: [],
+        acts
       });
+    } catch (e) {
+      console.error(e);
+      alert('Reset failed');
+    } finally {
+      this.resetInProgress.set(false);
     }
   }
+
+
 
   public onSavePage() {
     const sanitizedData = sanitizeChars(this.seasonDetails()) as Season_details;
@@ -273,7 +284,9 @@ export class SeasonsEditorComponent implements OnInit {
 
     if (act.type === 'Variation_fight') {
       const wave = this.currentWaveForEnemy();
-      if (wave) wave.included_enemy = [...processedEnemies];
+      if (wave) {
+        wave.included_enemy = [...(wave.included_enemy || []), ...processedEnemies];
+      }
     } else {
       if (!act.variations?.length) {
         act.variations = [{
@@ -286,9 +299,9 @@ export class SeasonsEditorComponent implements OnInit {
       const variation = act.variations[0];
       if (!variation.waves) variation.waves = [{ waveCount: 0, included_enemy: [] }];
 
-      variation.waves[0].included_enemy = [...processedEnemies];
+      variation.waves[0].included_enemy = [...(variation.waves[0].included_enemy || []), ...processedEnemies];
       variation.timer = data.options.timer || '';
-      act.enemy_selection = [...processedEnemies]; // Sync for legacy
+      act.enemy_selection = [...(act.enemy_selection || []), ...processedEnemies]; // Sync for legacy
       act.enemy_options = { ...data.options };
     }
     this.seasonDetails.set({ ...this.seasonDetails() });
@@ -362,12 +375,12 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   private charactersMap = computed(() =>
-  new Map(this.allCharacters().map(c => [c.id, c.avatarUrl]))
-);
+    new Map(this.allCharacters().map(c => [c.id, c.avatarUrl]))
+  );
 
-private enemiesMap = computed(() =>
-  new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
-);
+  private enemiesMap = computed(() =>
+    new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
+  );
   public resolveAvatarUrl(
     item: string | Character | Enemy | null | undefined
   ): string {

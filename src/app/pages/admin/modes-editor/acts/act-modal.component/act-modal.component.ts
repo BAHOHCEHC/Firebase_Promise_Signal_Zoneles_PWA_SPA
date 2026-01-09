@@ -45,7 +45,7 @@ export class ActModalComponent implements OnInit {
 
     options: this.fb.group({
       amount: false,
-      timer: false,
+      timerEnable: false,
       defeat: false,
       special_type: false,
     }),
@@ -76,7 +76,7 @@ export class ActModalComponent implements OnInit {
       name: act.name,
       options: {
         amount: act.options.amount,
-        timer: act.options.timer,
+        timerEnable: act.options.timerEnable,
         defeat: act.options.defeat,
         special_type: act.options.special_type,
       }
@@ -110,6 +110,14 @@ export class ActModalComponent implements OnInit {
           rangeValidator,
           Validators.pattern('^[0-9]*$')
         ]);
+      }
+
+
+      if (type === 'Variation_fight') {
+        this.form.controls.options.controls.defeat.setValue(false, { emitEvent: false });
+        this.form.controls.options.controls.defeat.disable({ emitEvent: false });
+      } else {
+        this.form.controls.options.controls.defeat.enable({ emitEvent: false });
       }
 
       nameControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
@@ -264,7 +272,7 @@ export class ActModalComponent implements OnInit {
         type: type!,
         options: {
           amount: value.options.amount ? true : false,
-          timer: value.options.timer ? true : false,
+          timerEnable: value.options.timerEnable ? true : false,
           defeat: value.options.defeat ? true : false,
           special_type: value.options.special_type ? true : false,
         },

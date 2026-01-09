@@ -86,8 +86,9 @@ export interface Enemy_options {
   special_type?: boolean;
 }
 export interface Act_options {
+  timer?: string;
   amount?: boolean;
-  timer?: boolean;
+  timerEnable?: boolean;
   defeat?: boolean;
   special_type?: boolean;
 }

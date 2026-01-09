@@ -1,7 +1,14 @@
-import { Component, EventEmitter, Input, Output, inject, effect } from '@angular/core';
+import { Component, EventEmitter, Output, inject, effect, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Wave_type, Variation } from '../../../../models/models';
+
+interface VariationModalData {
+    wave: Wave_type;
+    timer: string;
+    name?: string;
+    monolit?: boolean;
+}
 
 @Component({
     selector: 'season-add-variation-chamber-modal',
@@ -11,7 +18,7 @@ import { Wave_type, Variation } from '../../../../models/models';
     styleUrl: './season-add-variation-chamber-modal.scss'
 })
 export class SeasonAddVariationChamberModal {
-    @Input() public initialData: Partial<Variation> | null = null;
+    public initialData = input<VariationModalData | null>(null);
 
     @Output() public close = new EventEmitter<void>();
     @Output() public save = new EventEmitter<{
@@ -23,13 +30,6 @@ export class SeasonAddVariationChamberModal {
 
     private fb = inject(FormBuilder);
 
-    @Input() public initialData: {
-        wave: Wave_type;
-        timer: string;
-        name?: string;
-        monolit?: boolean;
-    } | null = null;
-
     public form = this.fb.group({
         wave: ['1', Validators.required],
         customName: [{ value: '', disabled: true }],
@@ -39,13 +39,14 @@ export class SeasonAddVariationChamberModal {
 
     constructor() {
         effect(() => {
-            if (this.initialData) {
-                const isCustom = this.initialData.wave === 'custom';
+            const data = this.initialData();
+            if (data) {
+                const isCustom = data.wave === 'custom';
                 this.form.patchValue({
-                    wave: this.initialData.wave || '1',
-                    customName: this.initialData.name || '',
-                    timer: this.initialData.timer || '',
-                    monolit: !!this.initialData.monolit
+                    wave: data.wave || '1',
+                    customName: data.name || '',
+                    timer: data.timer || '',
+                    monolit: !!data.monolit
                 });
 
                 if (isCustom) {
@@ -55,10 +56,10 @@ export class SeasonAddVariationChamberModal {
                 }
 
                 // Timer/Monolit mutual exclusion
-                if (this.initialData.timer) {
+                if (data.timer) {
                     this.form.get('monolit')?.disable();
                     this.form.get('timer')?.enable();
-                } else if (this.initialData.monolit) {
+                } else if (data.monolit) {
                     this.form.get('timer')?.disable();
                     this.form.get('monolit')?.enable();
                 } else {
