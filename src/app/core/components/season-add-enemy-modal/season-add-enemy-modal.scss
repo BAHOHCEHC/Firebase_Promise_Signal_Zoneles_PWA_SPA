@@ -253,7 +253,6 @@ label.label_control {
     }
 
     input:checked + .checkbox-ui {
-
       &::after {
         transform: rotate(45deg) scale(1);
         opacity: 1;
@@ -264,4 +263,21 @@ label.label_control {
       box-shadow: 0 0 0 2px rgba($btn-primary-hover, 0.35);
     }
   }
+}
+
+input:disabled {
+  cursor: not-allowed;
+  color: $grey-color;
+}
+.form-control {
+  display: flex;
+  align-items: center;
+}
+.edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
 }

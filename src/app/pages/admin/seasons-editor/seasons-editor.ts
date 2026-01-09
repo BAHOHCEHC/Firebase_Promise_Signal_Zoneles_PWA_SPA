@@ -273,7 +273,9 @@ export class SeasonsEditorComponent implements OnInit {
 
     if (act.type === 'Variation_fight') {
       const wave = this.currentWaveForEnemy();
-      if (wave) wave.included_enemy = [...processedEnemies];
+      if (wave) {
+        wave.included_enemy = [...(wave.included_enemy || []), ...processedEnemies];
+      }
     } else {
       if (!act.variations?.length) {
         act.variations = [{
@@ -286,9 +288,9 @@ export class SeasonsEditorComponent implements OnInit {
       const variation = act.variations[0];
       if (!variation.waves) variation.waves = [{ waveCount: 0, included_enemy: [] }];
 
-      variation.waves[0].included_enemy = [...processedEnemies];
+      variation.waves[0].included_enemy = [...(variation.waves[0].included_enemy || []), ...processedEnemies];
       variation.timer = data.options.timer || '';
-      act.enemy_selection = [...processedEnemies]; // Sync for legacy
+      act.enemy_selection = [...(act.enemy_selection || []), ...processedEnemies]; // Sync for legacy
       act.enemy_options = { ...data.options };
     }
     this.seasonDetails.set({ ...this.seasonDetails() });
@@ -362,12 +364,12 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   private charactersMap = computed(() =>
-  new Map(this.allCharacters().map(c => [c.id, c.avatarUrl]))
-);
+    new Map(this.allCharacters().map(c => [c.id, c.avatarUrl]))
+  );
 
-private enemiesMap = computed(() =>
-  new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
-);
+  private enemiesMap = computed(() =>
+    new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
+  );
   public resolveAvatarUrl(
     item: string | Character | Enemy | null | undefined
   ): string {

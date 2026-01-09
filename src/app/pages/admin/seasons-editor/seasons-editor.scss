@@ -236,8 +236,9 @@
   min-height: 50px;
   position: relative;
 
-  &-wrapper {
+  &-wrap {
     display: flex;
+    position: relative;
     align-items: center;
     gap: 10px;
   }
