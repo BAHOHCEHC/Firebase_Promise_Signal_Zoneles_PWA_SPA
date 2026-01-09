@@ -3,7 +3,7 @@
   <!-- Header -->
   <div class="header-actions">
     <div class="actions-right">
-      <button class="btn btn-warning" (click)="onReset()">
+      <button class="btn btn-warning" [disabled]="resetInProgress()" (click)="onReset()">
         Reset ↺
       </button>
 
