@@ -1,7 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Season_details, Character, Act, Wave, Variation, ElementTypeName, ElementType, Enemy, Enemy_options, Wave_type } from '../../../models/models';
-import { sanitizeChars } from '../../../utils/sanitizeChars';
+import { Season_details, Character, Act, Wave, Variation, ElementTypeName, Enemy } from '../../../models/models';
 import { CharacterService } from '../../shared/services/charater.service';
 import { EnemiesService } from '../../shared/services/enemies.service';
 import { SeasonService } from '../../shared/services/season.service';
@@ -45,7 +44,7 @@ export class SeasonsDetails implements OnInit {
   public currentVariationIndex = signal<number>(-1);
   public currentActForVariation = signal<Act | null>(null);
 
-  public loading = signal(false);
+  public loading = signal(true);
 
   // --- Computed Selections ---
   public currentInitialEnemies = computed(() => this.currentWaveForEnemy()?.included_enemy ?? []);
@@ -109,6 +108,7 @@ export class SeasonsDetails implements OnInit {
   public elementTypes: ElementTypeName[] = ["pyro", "hydro", "electro", "cryo", "dendro", "anemo", "geo"];
 
   async ngOnInit() {
+    this.loading.set(true);
     // Init services
     await this.enemiesService.initializeData();
 
@@ -118,42 +118,30 @@ export class SeasonsDetails implements OnInit {
 
     // Load Season Details
     const details = await this.seasonService.loadSeasonDetails();
+    // Fetch generic Acts structure to ensure we have all acts (e.g. name, type)
+    const allActs = await this.seasonService.getAllActs();
+
     if (details) {
-      // If loaded, we might need to merge with existing acts if structure changed?
-      // But prompt says "at initialization loads data from collection season_details for additional setting of acts created earlier".
-      // So we should verify acts match known acts?
-      // Assuming season_details acts are the source of truth for this editor.
-      // However, if acts were added in "act-and-modes-editor", we should probably fetch ALL acts and see if season_details has them.
-      // If season_details is partial, we fill it.
-      // For now, let's load what we have.
-
-      // We also need to fetch acts from 'acts' collection to ensure we have the structure for all acts (e.g. name, type)
-      // because season_details might only store overrides? Or full objects?
-      // Implementation plan assumed season_details stores full Act objects or linked.
-      // I will fetch all ACTS to be sure we have the structure to display.
-      const allActs = await this.seasonService.getAllActs();
-
-      // Merge logic: use season details acts if present, else use allActs (but initialized empty for season-specifics)
-      // Actually, if we reset, we should probably reload Acts from 'acts' collection with empty season settings.
-
       if (details.acts && details.acts.length > 0) {
-        // Ensure we have all acts from DB, maybe some new ones appeared
+        // Merge saved details with fresh Act definitions
         const mergedActs = allActs.map(dbAct => {
           const savedAct = details.acts.find(a => a.id === dbAct.id);
           if (savedAct) {
-            return { ...dbAct, ...savedAct }; // Prefer saved details but keep ref
+            return { ...dbAct, ...savedAct };
           }
           return dbAct;
         });
         this.seasonDetails.set({ ...details, acts: mergedActs });
       } else {
-        this.seasonDetails.update(s => ({ ...s, acts: allActs }));
+        // Details exist but no acts saved, use allActs
+        this.seasonDetails.update(s => ({ ...details, acts: allActs }));
       }
     } else {
       // New season setup
-      const allActs = await this.seasonService.getAllActs();
       this.seasonDetails.update(s => ({ ...s, acts: allActs }));
     }
+
+    this.loading.set(false);
   }
 
   public getElementIconPath(type: ElementTypeName): string {
