@@ -22,6 +22,43 @@
     gap: 12px;
   }
 }
+.editor__header {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+.editor__actions {
+  min-width: 25%;
+  display: flex;
+  justify-content: space-between;
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    &-warning {
+      &:hover {
+        color: $red-color;
+        filter: brightness(1.1);
+      }
+    }
+    &-save {
+      &:hover {
+        color: $green-color;
+        filter: brightness(1.1);
+      }
+    }
+  }
+}
 
 .content-section {
   margin-bottom: 32px;
@@ -231,7 +268,6 @@
 .enemy-inner {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
   align-items: center;
   min-height: 50px;
   position: relative;
@@ -255,7 +291,7 @@
   border-radius: 50%;
   overflow: hidden;
   position: relative;
-  background: black;
+  background: $light-grey-color;
   border: 1px solid rgba(255, 255, 255, 0.2);
 
   img {
@@ -268,8 +304,6 @@
 .badge {
   position: absolute;
   color: $primary-white;
-  top: -5px;
-  background: black;
   font-size: 12px;
   border-radius: 50%;
   width: 16px;
@@ -278,10 +312,21 @@
   padding: 3px;
   z-index: 5;
   &-specialMark {
-    left: 0;
+    top: -5px;
+    left: -5px;
   }
-  &-amount{
-    right: 0;
+  &-amount {
+    top: -5px;
+    right: -5px;
+  }
+  &-element {
+    left: -5px;
+    bottom: 0;
+    width: 15px;
+    height: 15px;
+    img {
+      width: 100%;
+    }
   }
 }
 
@@ -290,7 +335,7 @@
   height: 48px;
   border-radius: 50%;
   background-color: #151515;
-  color: #5233af;
+  color: $btn-primary-default;
   border: none;
   cursor: pointer;
   font-size: 24px;
@@ -320,7 +365,7 @@
   border-radius: 10px;
   font-size: 14px;
   cursor: pointer;
-
+  margin-top: auto;
   &:hover {
     background: $btn-primary-hover;
   }
@@ -385,32 +430,6 @@
   border: none;
   cursor: pointer;
   font-size: 16px;
-}
-
-.btn-save {
-  background: $green-color;
-  color: black;
-  padding: 8px 24px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    filter: brightness(1.1);
-  }
-}
-
-.btn-warning {
-  background: transparent;
-  color: $red-color;
-  border: 1px solid $red-color;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba($red-color, 0.1);
-  }
 }
 
 .page-container {
@@ -479,5 +498,12 @@
   &:nth-child(4),
   &:nth-child(5) {
     border-right: 2px solid rgba($btn-primary-default, 0.3);
+  }
+}
+.var {
+  &-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* або конкретна висота */
   }
 }
