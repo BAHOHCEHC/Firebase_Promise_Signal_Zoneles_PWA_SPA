@@ -24,9 +24,7 @@
         <div class="selected-elements">
           @for (el of elementTypes; track el) {
           @if (activeElements().has(el)) {
-          <button class="element-btn-mini">
             <img [src]="getElementIconPath(el)" [alt]="el" />
-          </button>
           }
           }
         </div>
