@@ -178,3 +178,22 @@ export type Wave_type =
 
 
 export type ModalType = 'categories' | 'group' | 'enemy';
+
+
+
+export interface Region {
+  name: string;
+  task : Region_task[]
+}
+
+export interface Region_task {
+  name: string;
+  regionId: string;
+  youtubeLink?: string;
+  taskSeries?: boolean;
+  parts?: Part[];
+  finished?: boolean;
+}
+export interface Part {
+  name: string;
+}
