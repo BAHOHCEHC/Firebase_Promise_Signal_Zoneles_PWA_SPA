@@ -98,7 +98,7 @@ export class EnemiesService {
 
       const categories = querySnapshot.docs.map(doc =>
         this.convertToCategory(doc)
-      );
+      ).reverse();
 
       this._categories.set(categories);
     } catch (error) {

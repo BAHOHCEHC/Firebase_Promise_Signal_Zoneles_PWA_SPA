@@ -14,13 +14,14 @@
   background: $primary-bg;
   padding: 24px;
   border-radius: 16px;
-  width: 90%;
-  max-width: 1000px;
+  width: 100%;
+  max-width: 1400px;
   max-height: 90vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: relative;
 }
 
 .modal-title {
@@ -92,7 +93,7 @@
 
 .groups-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 24px;
 }
 
@@ -182,6 +183,9 @@
   justify-content: flex-end;
   gap: 16px;
   margin-top: 20px;
+  position: absolute;
+  bottom: 25px;
+  right: 24px;
 }
 label.label_control {
   margin: 0 10px 0 0;
