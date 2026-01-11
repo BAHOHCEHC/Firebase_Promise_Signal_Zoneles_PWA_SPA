@@ -49,8 +49,8 @@
 }
 
 .category-buttons {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 в ряд */
   gap: 12px;
 }
 
@@ -63,6 +63,7 @@
   cursor: pointer;
   font-size: 15px;
   transition: all 0.2s ease;
+  width: 100%; /* всі однакової ширини */
 
   &:hover:not(:disabled) {
     background: #555;
@@ -131,7 +132,7 @@
   height: 64px;
   border-radius: 50%;
   overflow: hidden;
-  background: $grey-color;
+  background: $enemy-bg;
 }
 
 .enemy-avatar {

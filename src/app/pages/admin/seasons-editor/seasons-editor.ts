@@ -207,7 +207,6 @@ export class SeasonsEditorComponent implements OnInit {
     console.log(sanitizedData);
 
     this.seasonService.saveSeasonDetails(sanitizedData);
-    alert('Saved!');
   }
 
   // --- Element Modal ---
@@ -274,6 +273,7 @@ export class SeasonsEditorComponent implements OnInit {
   // public onSaveEnemy(data: { enemy: Enemy, options: any }) {
   public onSaveEnemy(data: { enemies: Enemy[], options: Enemy_options }): void {
     const act = this.currentActForEnemy();
+    debugger
     if (!act) return;
 
     const processedEnemies = data.enemies.map(e => ({
@@ -301,6 +301,7 @@ export class SeasonsEditorComponent implements OnInit {
 
       variation.waves[0].included_enemy = [...(variation.waves[0].included_enemy || []), ...processedEnemies];
       variation.timer = data.options.timer || '';
+      variation.defeat = data.options.defeat || '';
       act.enemy_selection = [...(act.enemy_selection || []), ...processedEnemies]; // Sync for legacy
       act.enemy_options = { ...data.options };
     }

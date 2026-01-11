@@ -1,10 +1,4 @@
-/* ===== ROOT ===== */
-.admin {
-  min-height: 100vh;
-  background: linear-gradient(180deg, #2b2c3d 0%, #1b1c29 100%);
-  color: #ffffff;
-  font-family: Inter, system-ui, sans-serif;
-}
+@import '../../../../styles/variables';
 
 /* ===== CONTENT ===== */
 .admin__content {
@@ -36,9 +30,9 @@
   justify-content: center;
 
   border-radius: 10px;
-  border: 1px solid rgba(140, 90, 255, 0.5);
+  border: 1px solid $btn-primary-default;
   background: transparent;
-  color: #ffffff;
+  color: $primary-white;
   font-size: 14px;
   cursor: pointer;
   text-decoration: none;
@@ -46,12 +40,11 @@
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: #8c5aff;
-    box-shadow: 0 0 0 1px rgba(140, 90, 255, 0.5);
+    border-color: $btn-primary-hover;
   }
 
   &--active {
-    background: linear-gradient(180deg, #6d46ff 0%, #5433cc 100%);
+    background: $btn-primary-default;
     border-color: transparent;
   }
 }

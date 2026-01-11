@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Character, ElementTypeName } from '../../../../models/models';
+import { sortCharacters } from '../../../../utils/sorting-characters';
 
 @Component({
   selector: 'app-season-characters-modal',
@@ -44,9 +45,9 @@ export class SeasonCharactersModal {
   public filteredCharacters = computed(() => {
     const filters = this.activeElementFilters();
     if (filters.size === 0) {
-      return this.allCharacters;
+      return sortCharacters(this.allCharacters);
     }
-    return this.allCharacters.filter(c => c.element && c.element.name && filters.has(c.element.name));
+    return sortCharacters(this.allCharacters.filter(c => c.element && c.element.name && filters.has(c.element.name)));
   });
 
   public selectionCount = computed(() => this.currentSelection().size);
@@ -83,7 +84,16 @@ export class SeasonCharactersModal {
 
   public onSave(): void {
     const selectedIds = this.currentSelection();
-    const selectedChars = this.allCharacters.filter(c => selectedIds.has(c.id));
+    const charMap = new Map(this.allCharacters.map(c => [c.id, c]));
+    const selectedChars: Character[] = [];
+
+    for (const id of selectedIds) {
+      const char = charMap.get(id);
+      if (char) {
+        selectedChars.push(char);
+      }
+    }
+
     this.save.emit(selectedChars);
   }
 

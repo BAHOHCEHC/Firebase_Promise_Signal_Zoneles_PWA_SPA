@@ -20,6 +20,7 @@ export interface Act {
 
 export interface Variation {
   timer: string;
+  defeat?: string;
   waves: Wave[];
   wave: Wave_type;
   name?: any;

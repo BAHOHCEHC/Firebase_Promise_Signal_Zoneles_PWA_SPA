@@ -95,7 +95,7 @@ export class EnemyEditor implements OnInit {
   public async onSaveEditor(data: any): Promise<void> {
     try {
       const type = this.editorModalType();
-
+      //  TO DO : bug with update group
       if (type === 'categories') {
         if (data.id) {
           // Edit existing category
