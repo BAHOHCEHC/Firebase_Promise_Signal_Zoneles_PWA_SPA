@@ -58,9 +58,7 @@
         <label class="form-label">Select element</label>
         <div class="element-selector">
           @for (el of elementTypes; track el) {
-          <!-- <div class="element-icon" [class.active]="form.get('element')?.value === el" (click)="selectElement(el)">
-            <img [src]="'assets/images/ElementType_' + el + '.png'" [alt]="el">
-          </div> -->
+
           @if (el === 'empty') {
           <!-- SVG квадрат з пунктиром -->
           <div class="element-icon" [class.active]="form.get('element')?.value === el" (click)="selectElement(el)">
