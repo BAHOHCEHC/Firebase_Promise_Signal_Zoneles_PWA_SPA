@@ -27,7 +27,6 @@ export class SeasonsDetails implements OnInit {
   });
 
   public allCharacters = signal<Character[]>([]);
-  public isEditMode = signal(false);
 
   // --- Modals State ---
   public showElementModal = signal(false);
@@ -155,6 +154,7 @@ export class SeasonsDetails implements OnInit {
   private enemiesMap = computed(() =>
     new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
   );
+
   public resolveAvatarUrl(
     item: string | Character | Enemy | null | undefined
   ): string {

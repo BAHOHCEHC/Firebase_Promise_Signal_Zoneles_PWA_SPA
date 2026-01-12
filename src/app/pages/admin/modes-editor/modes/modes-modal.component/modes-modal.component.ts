@@ -106,6 +106,7 @@ import { Act, Mode, Fight_type } from '../../../../../../models/models';
 import { actModesStore } from '../../../../../store/act-modes.store';
 import { CommonModule } from '@angular/common';
 import { ActModsService } from '../../../../../shared/services/act-mods.service';
+import { generateUUID } from '../../../../../shared/utils/uuid';
 
 @Component({
   selector: 'app-mode-modal',
@@ -329,7 +330,7 @@ export class ModeModalComponent implements OnInit {
     const selectedChambers = this.acts().filter(a => selectedActIds.includes(a.id));
 
     const modeData: Mode = {
-      id: this.modeToEdit ? this.modeToEdit.id : crypto.randomUUID(),
+      id: this.modeToEdit ? this.modeToEdit.id : generateUUID(),
       name: this.form.value.name!.trim(),
       min_characters: this.form.value.min!,
       max_characters: this.form.value.max!,

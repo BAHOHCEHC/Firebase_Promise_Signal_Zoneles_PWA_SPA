@@ -1,0 +1,330 @@
+@import '../../../styles/variables.scss';
+
+/* =========================
+   PAGE LAYOUT
+========================= */
+
+.page-container {
+  min-height: 100vh;
+  color: white;
+  display: flex;
+  gap: 60px;
+}
+
+.loading-state {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 24px;
+}
+
+/* =========================
+   LEFT / RIGHT SECTIONS
+========================= */
+
+.left-section {
+  width: 480px;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 20px 0 0;
+  }
+}
+
+.right-section {
+  width: 860px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  h2 {
+    margin: 20px 0 0;
+  }
+}
+
+/* =========================
+   ELEMENT REQUIREMENTS
+========================= */
+
+.element-req-section {
+  margin: 15px 0;
+
+  .label-row {
+    display: flex;
+    min-height: 30px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-icon {
+    background: $dark-bg;
+    border: none;
+    color: $light-grey-color;
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .selected-elements {
+    display: flex;
+    gap: 8px;
+  }
+
+  img {
+    width: 26px;
+    height: 26px;
+    animation: pulse 1.6s ease-in-out infinite;
+    transform-origin: center;
+  }
+}
+
+/* === PULSE ANIMATION === */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   CHARACTERS BLOCK
+========================= */
+
+.characters-blocks {
+  display: flex;
+  gap: 24px;
+
+  .char-block {
+    h3 {
+      margin-bottom: 12px;
+    }
+  }
+
+  .char-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}
+
+.char-mini-card {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .element-badge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+
+    img {
+      filter: drop-shadow(0 1px 2px black);
+    }
+  }
+
+  .energy-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 26px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* =========================
+   BOSS / ARCANA SECTION
+========================= */
+
+.boss-arcana {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* subsection — В ОДИН РЯД, НА ВСЮ ШИРИНУ */
+.subsection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+}
+
+/* =========================
+   ACTS GRID (FLEX!)
+========================= */
+
+.acts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+/* Картка акту */
+.act-card {
+  flex: 1 1 calc(50% - 12px); // дві рівні колонки
+  min-width: 380px;
+
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ARCANA варіант */
+.act-card.arcana {
+  background: linear-gradient(180deg, rgba(120, 120, 255, 0.08), rgba(120, 120, 255, 0.03));
+}
+
+/* =========================
+   ACT HEADER
+========================= */
+
+.act-header {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+/* =========================
+   ENEMIES BLOCK
+========================= */
+
+.enemies-container-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.act-options-info {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.enemies-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.enemy-inner {
+  display: flex;
+  gap: 6px;
+}
+
+.enemy-inner-wrap {
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+
+/* =========================
+   ENEMY ICON
+========================= */
+
+.enemy-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge {
+  position: absolute;
+  z-index: 2;
+}
+
+.badge-amount {
+  top: -4px;
+  left: -4px;
+  font-size: 10px;
+  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 6px;
+}
+
+.badge-specialMark {
+  top: -4px;
+  right: -4px;
+
+  img {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.badge-element {
+  bottom: -2px;
+  left: -4px;
+  width: 15px;
+  height: 15px;
+
+  img {
+    width: 100%;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+}
+
+/* =========================
+   ACT HELPER
+========================= */
+
+.act {
+  &-section {
+    display: flex;
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    min-width: 400px;
+  }
+}

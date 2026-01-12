@@ -63,10 +63,17 @@ export class SeasonAddEnemyModal implements OnInit {
     // Lock timer if it exists in current variation
     const currentVar = this.currentVariation();
     const timerControl = this.form.get('timer');
+    const defeatControl = this.form.get('defeat');
+
 
     if (currentVar?.timer && timerControl) {
       timerControl.setValue(currentVar.timer);
       timerControl.disable(); // 🔒 стартово заблокований
+    }
+
+    if (currentVar?.defeat && defeatControl) {
+      defeatControl.setValue(currentVar.defeat);
+      defeatControl.disable(); // 🔒 стартово заблокований
     }
 
   }
@@ -77,7 +84,7 @@ export class SeasonAddEnemyModal implements OnInit {
   public form = this.fb.group({
     amount: [''],
     timer: [this.currentVariation()?.timer],
-    defeat: [''],
+    defeat: [this.currentVariation()?.defeat],
     special_type: [false],
   });
 

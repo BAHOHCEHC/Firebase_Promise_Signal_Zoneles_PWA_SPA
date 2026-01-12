@@ -10,6 +10,7 @@ import {
 import { Fight_type, Act, Enemy_options, Variation_fight } from '../../../../../../models/models';
 import { ActModsService } from '../../../../../shared/services/act-mods.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { generateUUID } from '../../../../../shared/utils/uuid';
 
 @Component({
   selector: 'app-act-modal',
@@ -267,7 +268,7 @@ export class ActModalComponent implements OnInit {
       // Створюємо або оновлюємо акт
       const value = this.form.getRawValue();
       const act: Act = {
-        id: this.actToEdit?.id || crypto.randomUUID(), // Використовуємо існуючий ID при редагуванні
+        id: this.actToEdit?.id ?? generateUUID(), // Використовуємо існуючий ID при редагуванні
         name: value.name ?? 1,
         type: type!,
         options: {
@@ -305,6 +306,7 @@ export class ActModalComponent implements OnInit {
       this.isLoading.set(false);
     }
   }
+
 
   private async updateAct(act: Act): Promise<void> {
     try {

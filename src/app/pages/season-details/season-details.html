@@ -111,7 +111,7 @@
                 <div class="enemy-inner">
                   @for (enemy of wave.included_enemy; track enemy.id) {
                   <div class="enemy-inner-wrap">
-                    @if (enemy.quantity > 1) {
+                    @if (enemy.quantity) {
                     <span class="badge badge-amount">{{ enemy.quantity }}</span>
                     }
                     @if (enemy.specialMark) {
@@ -159,7 +159,7 @@
                 <div class="enemy-inner">
                   @for (enemy of wave.included_enemy; track enemy.id) {
                   <div class="enemy-inner-wrap">
-                    @if (enemy.quantity > 1) {
+                    @if (enemy.quantity) {
                     <span class="badge badge-amount">{{ enemy.quantity }}</span>
                     }
                     @if (enemy.specialMark) {
@@ -236,7 +236,7 @@
                         <div class="enemy-inner">
                           @for (enemy of wave.included_enemy; track enemy.id) {
                           <div class="enemy-inner-wrap">
-                            @if (enemy.quantity > 1) {
+                            @if (enemy.quantity) {
                             <span class="badge badge-amount">
                               {{ enemy.quantity }}
                             </span>
