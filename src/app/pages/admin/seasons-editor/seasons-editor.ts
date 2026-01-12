@@ -278,7 +278,7 @@ export class SeasonsEditorComponent implements OnInit {
 
     const processedEnemies = data.enemies.map(e => ({
       ...e,
-      quantity: data.options.amount ? parseInt(data.options.amount) : 1,
+      quantity: data.options.amount ? parseInt(data.options.amount) : undefined,
       specialMark: !!data.options.special_type
     }));
 

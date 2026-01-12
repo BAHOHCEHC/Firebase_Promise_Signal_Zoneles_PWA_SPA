@@ -176,7 +176,11 @@ export class EnemyEditorModalComponent implements OnInit {
 
   onSave(): void {
     if (this.form.valid) {
-      this.save.emit(this.form.value);
+      const payload = {
+        ...this.form.value,
+        id: this.data?.id
+      };
+      this.save.emit(payload);
     } else {
       this.form.markAllAsTouched();
     }

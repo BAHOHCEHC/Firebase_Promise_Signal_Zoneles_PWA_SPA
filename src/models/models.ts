@@ -49,7 +49,7 @@ export interface Enemy {
   element: ElementType;
   avatarUrl: string;
   specialMark: boolean;
-  quantity: number;
+  quantity?: number;
   categoryId: string; // Reference to category ID
   groupId: string; // Reference to group ID (це має бути string)
   createdAt: Date;

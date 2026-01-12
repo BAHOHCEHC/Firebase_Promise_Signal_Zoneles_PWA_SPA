@@ -82,7 +82,7 @@
 }
 
 /* === PULSE ANIMATION === */
-@keyframes pulse{
+@keyframes pulse {
   0% {
     transform: scale(1);
     opacity: 1;
@@ -266,6 +266,7 @@
   &-amount {
     top: -5px;
     right: -5px;
+    background-color: rgba(0, 0, 0, 0.6);
   }
   &-element {
     left: -5px;
@@ -308,6 +309,12 @@
   align-items: center;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   padding-right: 8px;
+  display: flex;
+  min-width: 40px;
+  position: relative;
+  &:last-child {
+    border: none;
+  }
 }
 
 .variation-row {
@@ -324,7 +331,7 @@
   position: absolute;
   top: -20px;
   left: 0;
-  width: 150px;
+  width: 280px;
 }
 
 .wave-timer {
@@ -334,15 +341,9 @@
   color: $golden;
 }
 
-.wave-column {
-  display: flex;
-  min-width: 40px;
-  position: relative;
-}
-
 .wave-column-wrapper {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: nowrap; // ❗ хвилі НЕ переносяться
 }
 
