@@ -68,7 +68,7 @@
 
   select,
   input {
-    background: #1f1f2b;
+    background: $bg-input;
     border: none;
     color: $primary-white;
     padding: 8px 10px;
@@ -180,15 +180,19 @@
     input {
       background: darken($grey-bg, 4%);
       border-color: transparent;
-      cursor: not-allowed;
+      &:disabled {
+        &:hover {
+          cursor: not-allowed;
+        }
+      }
     }
   }
 
   input {
-    background: $grey-bg;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: $bg-input;
+    border: none;
     color: $primary-white;
-    padding: 8px 10px;
+    padding: 9px 10px;
     border-radius: 10px;
     transition: border 0.2s, background 0.2s;
 

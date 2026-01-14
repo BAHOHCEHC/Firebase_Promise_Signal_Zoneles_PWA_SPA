@@ -178,16 +178,18 @@ export type Wave_type =
   | "custom";
 
 
-export type ModalType = 'categories' | 'group' | 'enemy';
+export type ModalType = 'categories' | 'group' | 'enemy' | 'region' | 'task';
 
 
 
 export interface Region {
+  id?: string;
   name: string;
-  task : Region_task[]
+  tasks?: Region_task[]
 }
 
 export interface Region_task {
+  id?: string;
   name: string;
   regionId: string;
   youtubeLink?: string;

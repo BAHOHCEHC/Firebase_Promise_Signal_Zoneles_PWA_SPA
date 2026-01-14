@@ -1,0 +1,86 @@
+<div class="modal-overlay" (click)="close.emit()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2>{{ data ? 'Edit Task' : 'Add Task' }}</h2>
+    </header>
+
+    <form [formGroup]="form" class="modal-form">
+      <!-- Task Name -->
+      <div class="form-group">
+        <label for="task-name">Task name</label>
+        <input id="task-name" type="text" formControlName="name" placeholder="Enter task name" class="form-control"
+          [class.invalid]="form.get('name')?.invalid && form.get('name')?.touched" />
+      </div>
+
+      <!-- Select Region -->
+      <div class="form-group">
+        <label for="task-region">Select Region</label>
+        <select id="task-region" formControlName="regionId" class="form-control"
+          [class.invalid]="form.get('regionId')?.invalid && form.get('regionId')?.touched">
+          <option value="" disabled>Select Region</option>
+          @for (region of categories; track region.id) {
+          <option [value]="region.id">{{ region.name }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- YouTube Link -->
+      <div class="form-group">
+        <label for="youtube-link">Add link to YouTube</label>
+        <input id="youtube-link" type="url" formControlName="youtubeLink" placeholder="https://youtube.com/..."
+          class="form-control" />
+      </div>
+
+      <!-- Task Series Checkbox -->
+      <div class="form-group checkbox-group">
+        <div class="checkbox-group-wrap">
+          <input type="checkbox" id="task-series" formControlName="taskSeries" />
+          <label for="task-series">Task series</label>
+        </div>
+
+        @if (form.get('taskSeries')?.value) {
+        <button type="button" class="btn btn-add-part" (click)="addPart()">
+          + Add part
+        </button>
+        }
+      </div>
+
+      <!-- Series Parts (тільки якщо taskSeries = true) -->
+      @if (form.get('taskSeries')?.value) {
+      <div class="parts-section" formArrayName="parts">
+        <h4>Parts of series</h4>
+        <div class="parts-list">
+          @for (part of parts.controls; track $index; let i = $index) {
+          <div [formGroupName]="i" class="form-group part-item">
+            <label [for]="'part-name-' + i">
+              Part {{ i + 1 }}
+            </label>
+            <div class="input-with-action">
+              <input [id]="'part-name-' + i" type="text" formControlName="quest_name" placeholder="Part name"
+                class="form-control"
+                [class.invalid]="part.get('quest_name')?.invalid && part.get('quest_name')?.touched" />
+              <button type="button" class="btn-icon delete" (click)="removePart(i)" title="Remove part">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+          </div>
+          } @empty {
+          <p class="no-parts">No parts added yet</p>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- Actions -->
+      <div class="modal-actions">
+        @if (data) {
+        <button type="button" class="btn btn-delete" (click)="onDelete()">Delete</button>
+        }
+        <button type="button" class="btn btn-secondary" (click)="close.emit()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="onSave()" [disabled]="form.invalid || isSaving()">
+          {{ isSaving() ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

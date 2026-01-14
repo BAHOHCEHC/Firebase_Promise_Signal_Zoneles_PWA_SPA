@@ -1,0 +1,133 @@
+@import '../../../../../styles/_variables';
+.table-header {
+  display: flex;
+  justify-content: space-between;
+}
+.row-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Загальні стилі для клітинок
+.grid-cell {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+// Розподіл ширини колонок
+.act-name-header,
+.act-name-cell {
+  flex: 0 0 25%; // 25% ширини
+  min-width: 150px;
+}
+
+.act-type-header,
+.act-type-cell {
+  flex: 0 0 15%; // 15% ширини
+  min-width: 100px;
+  justify-content: center;
+}
+
+.act-options-header,
+.act-options-cell {
+  flex: 0 0 35%; // 35% ширини
+  min-width: 200px;
+  justify-content: flex-end;
+}
+
+.act-actions-header,
+.act-actions-cell {
+  flex: 0 0 10%; // 10% ширини
+  min-width: 80px;
+  justify-content: center;
+}
+
+.act-actions-cell {
+  gap: 20px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+
+  .material-symbols-outlined,
+  svg {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .material-symbols-outlined.red,
+  svg.red {
+    color: $red-color;
+  }
+
+  .material-symbols-outlined.color-green,
+  svg.color-green {
+    color: $green-color;
+  }
+}
+
+.edit-btn,
+.delete-btn {
+  &:hover {
+    background-color: $grey-color;
+  }
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+
+  .material-symbols-outlined {
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: #ccc;
+  }
+
+  p {
+    margin: 0 0 16px;
+    color: #666;
+  }
+}
+
+.error-state .material-symbols-outlined {
+  color: $red-color;
+}
+
+.loading-state .spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.table-footer {
+  text-align: right;
+  .count-info {
+    color: #666;
+    font-size: 14px;
+  }
+}
