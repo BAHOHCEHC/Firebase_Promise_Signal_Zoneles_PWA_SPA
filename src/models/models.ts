@@ -192,6 +192,7 @@ export interface Region_task {
   id?: string;
   name: string;
   regionId: string;
+  achiviment?: string;
   youtubeLink?: string;
   taskSeries?: boolean;
   parts?: Part[];

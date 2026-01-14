@@ -43,16 +43,21 @@
 
 .col {
   &-name {
-    width: 50%;
+    width: 55%;
     padding: 0 15px;
   }
   &-type {
     text-align: center;
-    width: 12%;
+    width: 10%;
+  }
+  &-achiviment {
+    width: 17%;
+    padding: 0 0 0 10px;
+    text-align: center;
   }
   &-link {
-    width: 40%;
-    padding: 0 0 0 20px;
+    width: 10%;
+    padding: 0 0 0 10px;
     a {
       color: $purple;
       text-decoration: none;

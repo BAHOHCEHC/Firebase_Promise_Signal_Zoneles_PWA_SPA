@@ -89,6 +89,7 @@ export class TasksService {
       id: doc.id,
       name: data.title || '',
       regionId: data.categoryId || '',
+      achiviment: data.achiviment,
       youtubeLink: data.youtubeLink,
       taskSeries: data.taskSeries,
       parts: data.parts,
@@ -178,6 +179,7 @@ export class TasksService {
       const taskData = {
         title: task.name,
         categoryId: task.regionId,
+        achiviment: task.achiviment || '',
         youtubeLink: task.youtubeLink || '',
         taskSeries: task.taskSeries || false,
         parts: task.parts || [],
@@ -206,6 +208,7 @@ export class TasksService {
       const taskData = {
         title: task.name,
         categoryId: task.regionId,
+        achiviment: task.achiviment || '',
         youtubeLink: task.youtubeLink || '',
         taskSeries: task.taskSeries || false,
         parts: task.parts || [],

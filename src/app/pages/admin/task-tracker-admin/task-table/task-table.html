@@ -14,6 +14,7 @@
     <div class="table-header">
       <div class="col-name">Quest name</div>
       <div class="col-type">Type</div>
+      <div class="col-achiviment">Achiviment</div>
       <div class="col-link">Link</div>
       <div class="col-actions">Actions</div>
     </div>
@@ -40,10 +41,16 @@
             </span>
           </div>
 
+          <!-- achiviment -->
+          <div class="col-achiviment">
+            @if (task.achiviment) {
+            <span>{{ task.achiviment }}</span>
+            }
+          </div>
           <!-- Link -->
           <div class="col-link">
             @if (task.youtubeLink) {
-            <a [href]="task.youtubeLink" target="_blank">{{ task.youtubeLink }}</a>
+            <a [href]="task.youtubeLink" target="_blank">Link</a>
             } @else {
             <span class="no-link">-</span>
             }

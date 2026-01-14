@@ -27,6 +27,7 @@ export class AddTaskModal implements OnInit {
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     regionId: ['', [Validators.required]],
+    achiviment: [''],
     youtubeLink: [''],
     taskSeries: [false],
     parts: this.fb.array([])
@@ -62,6 +63,7 @@ export class AddTaskModal implements OnInit {
     this.form.patchValue({
       name: task.name,
       regionId: task.regionId,
+      achiviment: task.achiviment || '',
       youtubeLink: task.youtubeLink || '',
       taskSeries: !!task.taskSeries
     });
@@ -93,6 +95,7 @@ export class AddTaskModal implements OnInit {
         id: this.data?.id ?? generateUUID(),
         name: formValue.name!,
         regionId: formValue.regionId!,
+        achiviment: formValue.achiviment || '',
         youtubeLink: formValue.youtubeLink || '',
         taskSeries: formValue.taskSeries ?? false,   // ← null → false
         parts: (formValue.taskSeries ?? false)
