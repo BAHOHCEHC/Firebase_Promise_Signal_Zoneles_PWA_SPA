@@ -1,11 +1,14 @@
 <section class="tasks-section">
-  @if (loading) {
+  @if (loading()) {
   <div class="loading-state">
     <span class="material-symbols-outlined spin">progress_activity</span>
-    <p>Loading acts...</p>
+    <p>Loading tasks...</p>
   </div>
+  } @else if (error) {
+  <div class="error-state">{{ error }}</div>
   }
 
+  @if (!!tasks.length) {
   <div class="task-table-container">
     <!-- Header -->
     <div class="table-header">
@@ -14,14 +17,6 @@
       <div class="col-link">Link</div>
       <div class="col-actions">Actions</div>
     </div>
-
-    @if (loading) {
-    <div class="loading-state">Loading tasks...</div>
-    } @else if (error) {
-    <div class="error-state">{{ error }}</div>
-    } @else if (tasks.length === 0) {
-    <div class="empty-state">No tasks found.</div>
-    } @else {
     <div class="table-body">
       @for (task of tasks; track task.id) {
       <div class="table-row">
@@ -75,6 +70,6 @@
       </div>
       }
     </div>
-    }
   </div>
+  }
 </section>

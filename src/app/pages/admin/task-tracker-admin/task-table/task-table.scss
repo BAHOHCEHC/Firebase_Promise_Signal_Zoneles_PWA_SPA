@@ -2,68 +2,116 @@
 .table-header {
   display: flex;
   justify-content: space-between;
+  font-size: 12px;
+  align-items: center;
+  color: $light-grey-color;
+  margin-bottom: 10px;
+}
+.table {
+  &-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  &-row {
+    background-color: $grey-bg-modal;
+    border-radius: 10px;
+  }
 }
 .row-main {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  padding: 14px 0 4px;
 }
 
 // Загальні стилі для клітинок
 .grid-cell {
   display: flex;
-  align-items: center;
-  flex-shrink: 0;
 }
-
-// Розподіл ширини колонок
-.act-name-header,
-.act-name-cell {
-  flex: 0 0 25%; // 25% ширини
-  min-width: 150px;
-}
-
-.act-type-header,
-.act-type-cell {
-  flex: 0 0 15%; // 15% ширини
-  min-width: 100px;
-  justify-content: center;
-}
-
-.act-options-header,
-.act-options-cell {
-  flex: 0 0 35%; // 35% ширини
-  min-width: 200px;
-  justify-content: flex-end;
-}
-
 .act-actions-header,
 .act-actions-cell {
-  flex: 0 0 10%; // 10% ширини
   min-width: 80px;
   justify-content: center;
 }
 
 .act-actions-cell {
-  gap: 20px;
+  gap: 10px;
+  width: 8%;
+  position: relative;
+  top: -6px;
+}
+
+.col {
+  &-name {
+    width: 50%;
+    padding: 0 15px;
+  }
+  &-type {
+    text-align: center;
+    width: 12%;
+  }
+  &-link {
+    width: 40%;
+    padding: 0 0 0 20px;
+    a {
+      color: $purple;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  &-actions {
+    text-align: center;
+    width: 8%;
+  }
+}
+.task {
+  &-name {
+    font-size: 16px;
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+  &-parts {
+    padding: 0 20px;
+    li {
+      margin: 5px 0;
+    }
+  }
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  &-series {
+    color: $orange-color;
+    background-color: $orange-bg;
+  }
+  &-world {
+    color: $blue-color;
+    background-color: $blue-bg;
+  }
 }
 
 .btn-icon {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 4px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   transition: background-color 0.2s;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  border-radius: 8px;
 
   .material-symbols-outlined,
   svg {
     font-size: 22px;
-    width: 22px;
-    height: 22px;
   }
 
   .material-symbols-outlined.red,
@@ -85,8 +133,7 @@
 }
 
 .loading-state,
-.error-state,
-.empty-state {
+.error-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -121,13 +168,5 @@
 
   to {
     transform: rotate(360deg);
-  }
-}
-
-.table-footer {
-  text-align: right;
-  .count-info {
-    color: #666;
-    font-size: 14px;
   }
 }

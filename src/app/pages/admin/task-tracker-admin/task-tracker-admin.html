@@ -69,10 +69,7 @@
   }
 
   <!-- Tasks -->
-
-  @if (tasks().length ) {
   <app-task-table [tasks]="tasks()" [loading]="isLoading()" [error]="error()" (edit)="onEditTask($event)"
     (delete)="onDeleteTask($event)">
   </app-task-table>
-  }
 </section>

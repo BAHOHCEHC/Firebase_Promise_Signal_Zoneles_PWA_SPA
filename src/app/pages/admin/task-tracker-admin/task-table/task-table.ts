@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Region_task } from '../../../../../models/models';
 
@@ -11,7 +11,7 @@ import { Region_task } from '../../../../../models/models';
 })
 export class TaskTable {
   @Input() tasks: Region_task[] = [];
-  @Input() loading = false;
+  public loading = input<boolean>(true);
   @Input() error: string | null = null;
 
   @Output() edit = new EventEmitter<Region_task>();
