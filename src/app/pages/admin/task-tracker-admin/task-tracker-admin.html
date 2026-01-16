@@ -69,7 +69,7 @@
   }
 
   <!-- Tasks -->
-  <app-task-table [tasks]="tasks()" [loading]="isLoading()" [error]="error()" (edit)="onEditTask($event)"
-    (delete)="onDeleteTask($event)">
+  <app-task-table [adminMode]="true" [tasks]="tasks()" [loading]="isLoading()" [error]="error()"
+    (edit)="onEditTask($event)" (delete)="onDeleteTask($event)">
   </app-task-table>
 </section>

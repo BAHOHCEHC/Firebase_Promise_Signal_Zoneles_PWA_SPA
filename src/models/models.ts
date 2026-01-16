@@ -118,6 +118,7 @@ export interface UserSettings {
   language: string;
   UserCharacters: Character[];
   UserLineup: string;
+  UserTasks: Region_task[];
 }
 
 
@@ -200,4 +201,5 @@ export interface Region_task {
 }
 export interface Part {
   name: string;
+  finished?: boolean;
 }
