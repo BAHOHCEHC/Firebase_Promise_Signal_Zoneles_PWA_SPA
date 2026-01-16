@@ -9,6 +9,7 @@ import { CharacterService } from '../../../shared/services/charater.service';
 import { EnemiesService } from '../../../shared/services/enemies.service';
 import { SeasonService } from '../../../shared/services/season.service';
 import { sanitizeChars } from '../../../../utils/sanitizeChars';
+import { ActModsService } from '../../../shared/services/act-mods.service';
 
 
 @Component({
@@ -27,7 +28,10 @@ import { sanitizeChars } from '../../../../utils/sanitizeChars';
 export class SeasonsEditorComponent implements OnInit {
   private seasonService = inject(SeasonService);
   private characterService = inject(CharacterService);
-  public enemiesService = inject(EnemiesService); // Public to access signals in template if needed, or mapped
+  public enemiesService = inject(EnemiesService);
+  public modeService = inject(ActModsService);
+
+
 
   public readonly OPENING_CHARACTER_LIMIT = 6;
   public readonly SPECIAL_GUEST_LIMIT = 4;
@@ -207,6 +211,7 @@ export class SeasonsEditorComponent implements OnInit {
     console.log(sanitizedData);
 
     this.seasonService.saveSeasonDetails(sanitizedData);
+    this.modeService.updateModesByEnemyOptions(sanitizedData);
   }
 
   // --- Element Modal ---

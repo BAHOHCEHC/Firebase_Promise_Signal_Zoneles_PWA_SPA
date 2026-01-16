@@ -162,158 +162,6 @@
 }
 
 /* =========================
-   BOSS / ARCANA SECTION
-========================= */
-
-.boss-arcana {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-/* subsection — В ОДИН РЯД, НА ВСЮ ШИРИНУ */
-.subsection {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  h3 {
-    font-size: 18px;
-    font-weight: 600;
-    opacity: 0.9;
-  }
-}
-
-/* =========================
-   ACTS GRID (FLEX!)
-========================= */
-
-.acts-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-}
-
-/* Картка акту */
-.act-card {
-  flex: 1 1 calc(50% - 12px); // дві рівні колонки
-  min-width: 380px;
-
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-  border-radius: 12px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* ARCANA варіант */
-.act-card.arcana {
-  background: linear-gradient(180deg, rgba(120, 120, 255, 0.08), rgba(120, 120, 255, 0.03));
-}
-
-/* =========================
-   ACT HEADER
-========================= */
-
-.act-header {
-  font-size: 14px;
-  font-weight: 600;
-  opacity: 0.8;
-}
-
-/* =========================
-   ENEMIES BLOCK
-========================= */
-
-.enemies-container-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.act-options-info {
-  font-size: 12px;
-  opacity: 0.6;
-}
-
-.enemies-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.enemy-inner {
-  display: flex;
-  gap: 6px;
-}
-
-.enemy-inner-wrap {
-  position: relative;
-  width: 36px;
-  height: 36px;
-}
-
-/* =========================
-   ENEMY ICON
-========================= */
-
-.enemy-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-/* =========================
-   BADGES
-========================= */
-
-.badge {
-  position: absolute;
-  z-index: 2;
-}
-
-.badge-amount {
-  top: -4px;
-  left: -4px;
-  font-size: 10px;
-  padding: 1px 4px;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 6px;
-}
-
-.badge-specialMark {
-  top: -4px;
-  right: -4px;
-
-  img {
-    width: 14px;
-    height: 14px;
-  }
-}
-
-.badge-element {
-  bottom: -2px;
-  left: -4px;
-  width: 15px;
-  height: 15px;
-
-  img {
-    width: 100%;
-    animation: pulse 1.6s ease-in-out infinite;
-  }
-}
-
-/* =========================
    ACT HELPER
 ========================= */
 
@@ -327,4 +175,26 @@
     align-items: center;
     min-width: 400px;
   }
+}
+.btn-cta {
+  background: $btn-primary-default;
+  color: $primary-white;
+  width: 150px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: auto;
+}
+.mode_selector select{
+  display: flex;
+  align-items: center;
+  background: #262633;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+  color: #fff;
 }

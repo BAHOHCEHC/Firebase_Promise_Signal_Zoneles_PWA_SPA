@@ -4,15 +4,18 @@ import { EnemiesService } from '../../shared/services/enemies.service';
 import { SeasonService } from '../../shared/services/season.service';
 import { Character, ElementTypeName, Enemy, Mode, Season_details } from '../../../models/models';
 import { ActModsService } from '../../shared/services/act-mods.service';
-
+import { characterStore } from '../../store/character.store';
+import { sortCharacters } from '../../../utils/sorting-characters';
+import { SeasonCharactersModal } from '../../core/components/season-characters-modal/season-characters-modal';
 @Component({
   selector: 'app-lineup-simulator',
-  imports: [],
+  imports: [SeasonCharactersModal],
   standalone: true,
   templateUrl: './lineup-simulator.html',
   styleUrl: './lineup-simulator.scss',
 })
 export class LineupSimulator implements OnInit {
+
   private seasonService = inject(SeasonService);
   private characterService = inject(CharacterService);
   public enemiesService = inject(EnemiesService);
@@ -21,8 +24,15 @@ export class LineupSimulator implements OnInit {
   public loading = signal(true);
 
   public allCharacters = signal<Character[]>([]);
+
+  readonly usersCharacter = computed(() => {
+    const chars = sortCharacters(characterStore.selectedCharacters());
+    return chars
+  });
+
   public modes = signal<Mode[]>([]);
   public enemies = signal<Enemy[]>([]);
+  public activeMode = signal<Mode | null>(null);
   // --- State Signals ---
   public seasonDetails = signal<Season_details>({
     elemental_type_limided: [],
@@ -98,6 +108,10 @@ export class LineupSimulator implements OnInit {
       this.enemiesMap().get(id) ||
       'assets/images/avatar_placeholder.png'
     );
+  }
+
+  onModeChange(mode: Event) {
+    console.log(mode);
   }
 
   // --- Helpers ---
