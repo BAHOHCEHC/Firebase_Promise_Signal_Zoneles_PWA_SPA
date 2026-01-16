@@ -17,12 +17,12 @@
 /* ===== TABS ===== */
 .admin__tabs {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   justify-content: space-between;
 }
 
 .admin__tab {
-  min-width: calc(25% - 20px);
+  min-width: calc(20% - 10px);
   height: 44px;
 
   display: flex;

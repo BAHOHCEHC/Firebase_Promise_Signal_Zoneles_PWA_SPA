@@ -1,0 +1,258 @@
+@import '../../../../../styles/variables';
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: $primary-bg;
+  /* Dark background from image */
+  color: $primary-white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 90vw;
+
+  h2 {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+  }
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+
+  label {
+    font-size: 14px;
+    color: #eee;
+  }
+
+  input {
+    background: $bg-input;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: $primary-white;
+    font-size: 14px;
+    outline: none;
+    // Для number inputs - прибираємо стрілочки
+    &:focus {
+      border-color: $btn-primary-default;
+    }
+
+    &::placeholder {
+      color: #666;
+    }
+  }
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.small {
+  width: 60px;
+  flex: none;
+}
+
+.acts-section {
+  margin-bottom: 24px;
+
+  label {
+    display: block;
+    font-size: 14px;
+    color: #eee;
+    margin-bottom: 12px;
+  }
+}
+
+.acts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.act-btn {
+  background: $btn-secondary-default;
+  border: none;
+  border-radius: 8px;
+  color: $primary-white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: $btn-secondary-hover;
+  }
+
+  &.wide {
+    width: auto;
+    padding: 0 16px;
+  }
+
+  &.active {
+    background: #6c5ce7;
+    /* Purple accent color */
+    color: $primary-white;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+button{
+ color: $primary-white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.cancel-btn {
+  background: $btn-secondary-default;
+  &:hover {
+    background: $btn-secondary-hover;
+  }
+}
+
+.save-btn {
+  background: $btn-primary-default;
+  &:hover {
+    background: $btn-primary-hover;
+  }
+}
+.delete-btn {
+  background: $red-color;
+  &:hover {
+    background: $delete-hover-color;
+  }
+}
+
+// Додайте ці стилі до вашого файлу modes-modal.component.scss
+
+.error {
+  border-color: $red-color !important;
+  background-color: #fff5f5;
+}
+
+.error-message {
+  color: $red-color;
+  font-size: 12px;
+  margin-top: 4px;
+
+  small {
+    display: block;
+  }
+}
+
+.form-error {
+  color: $red-color;
+  font-size: 12px;
+  position: relative;
+  bottom: 15px;
+}
+
+.selection-error {
+  color: $red-color;
+  font-size: 12px;
+  margin: 0;
+  padding: 8px;
+}
+
+.validation-summary {
+  padding: 0px;
+
+  ul {
+    margin: 0;
+    padding-left: 20px;
+
+    li {
+      color: $red-color;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+.save-btn {
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: $btn-primary-disabled !important;
+
+    &:hover {
+      background-color: $btn-primary-hover !important;
+    }
+  }
+}
+
+.acts-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+
+  h5 {
+    margin: 0 20px 0 0;
+  }
+}
+
+.acts-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.select-all-btn,
+.clear-btn {
+  padding: 6px 12px;
+  border: none;
+  color: $primary-white;
+  background: #6c5ce7;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover {
+    background: $red-color;
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: $btn-secondary-hover;
+  }
+}
+
+.select-all-btn.active {
+  background-color: $red-color;
+  color: $primary-white;
+}
+
+.selected-count {
+  font-size: 12px;
+  color: $primary-white;
+  margin-bottom: 8px;
+}

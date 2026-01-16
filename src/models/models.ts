@@ -118,6 +118,7 @@ export interface UserSettings {
   language: string;
   UserCharacters: Character[];
   UserLineup: string;
+  UserTasks: Region_task[];
 }
 
 
@@ -178,18 +179,21 @@ export type Wave_type =
   | "custom";
 
 
-export type ModalType = 'categories' | 'group' | 'enemy';
+export type ModalType = 'categories' | 'group' | 'enemy' | 'region' | 'task';
 
 
 
 export interface Region {
+  id?: string;
   name: string;
-  task : Region_task[]
+  tasks?: Region_task[]
 }
 
 export interface Region_task {
+  id?: string;
   name: string;
   regionId: string;
+  achiviment?: string;
   youtubeLink?: string;
   taskSeries?: boolean;
   parts?: Part[];
@@ -197,4 +201,5 @@ export interface Region_task {
 }
 export interface Part {
   name: string;
+  finished?: boolean;
 }

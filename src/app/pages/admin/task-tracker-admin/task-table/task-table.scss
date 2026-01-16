@@ -1,0 +1,406 @@
+@import '../../../../../styles/_variables';
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  align-items: center;
+  color: $light-grey-color;
+  margin-bottom: 10px;
+}
+
+.table {
+  &-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &-row {
+    background-color: $grey-bg-modal;
+    border-radius: 10px;
+  }
+}
+
+.row-main {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+// Загальні стилі для клітинок
+.grid-cell {
+  display: flex;
+}
+
+.act-actions-header,
+.act-actions-cell {
+  min-width: 80px;
+  justify-content: center;
+}
+
+.act-actions-cell {
+  gap: 10px;
+  width: 7%;
+  position: relative;
+}
+
+.col {
+  &-name {
+    width: 40%;
+    padding: 3px 15px 0;
+  }
+
+  &-type {
+    text-align: center;
+    width: 10%;
+    padding: 3px 0 0 10px;
+  }
+
+  &-achiviment {
+    width: 30%;
+    padding: 3px 0 0 10px;
+    text-align: center;
+  }
+
+  &-link {
+    width: 3%;
+    padding: 5px 0 0 10px;
+
+    a {
+      color: $purple;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &-actions {
+    text-align: center;
+    width: 7%;
+  }
+}
+
+.task {
+  &-name {
+    font-size: 16px;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  &-parts {
+    padding: 0 26px;
+
+    li {
+      margin: 5px 0;
+    }
+  }
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+
+  &-series {
+    color: $orange-color;
+    background-color: $orange-bg;
+  }
+
+  &-world {
+    color: $blue-color;
+    background-color: $blue-bg;
+  }
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  transition: background-color 0.2s;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  border-radius: 8px;
+  justify-content: center; // Ensure icons are centered
+  color: $primary-white;
+  outline: none;
+  caret-color: transparent;
+  user-select: none;
+
+  .material-symbols-outlined,
+  svg {
+    font-size: 22px;
+    font-weight: normal;
+  }
+
+  .material-symbols-outlined.red,
+  svg.red {
+    color: $red-color;
+  }
+
+  .material-symbols-outlined.color-green,
+  svg.color-green {
+    color: $green-color;
+  }
+}
+
+.edit-btn,
+.delete-btn {
+  &:hover {
+    background-color: $grey-color;
+  }
+}
+
+.loading-state,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 26px;
+  text-align: center;
+
+  .material-symbols-outlined {
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: #ccc;
+  }
+
+  p {
+    margin: 0 0 16px;
+    color: #666;
+  }
+}
+
+.error-state .material-symbols-outlined {
+  color: $red-color;
+}
+
+.loading-state .spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// User Mode Specifics
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 26px;
+  padding: 0 10px;
+
+  .radio-text {
+    font-size: 14px;
+    color: $light-grey-color;
+  }
+
+  input[type='checkbox'] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  label {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    background-color: $bg-input;
+    border: 1px solid $btn-secondary-hover;
+    outline: none;
+    caret-color: transparent;
+    user-select: none;
+  }
+
+  /* checked */
+  input[type='checkbox']:checked + label {
+    background-color: $bg-input;
+  }
+
+  /* галочка */
+  input[type='checkbox']:checked + label::after {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 3px;
+    width: 7px;
+    height: 14px;
+    border: solid $green-color;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  input[type='checkbox']:focus + label {
+    outline: none;
+  }
+}
+
+.parts-grid {
+  padding: 0;
+  border-radius: 0 0 10px 10px;
+  position: relative;
+}
+
+.part-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  position: relative;
+
+  $line-offset: 12px; // "падінг" лінії з боків
+
+  /* нижня лінія */
+  &::after {
+    content: '';
+    position: absolute;
+    left: $line-offset;
+    right: $line-offset;
+    bottom: 0;
+    height: 1px;
+    background-color: $bg-main;
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+
+  /* верхня лінія тільки у першого */
+  &:first-child::before {
+    content: '';
+    position: absolute;
+    left: $line-offset;
+    right: $line-offset;
+    top: 0;
+    height: 1px;
+    background-color: $bg-main;
+  }
+
+  .part-name {
+    font-size: 14px;
+    color: darken(white, 15%);
+    padding-left: 26px;
+    width: 93%;
+  }
+
+  .part-action {
+    width: 7%; // Align with actions column
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    input[type='checkbox'] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    label {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+      background-color: $bg-input;
+      outline: none;
+      caret-color: transparent;
+      user-select: none;
+    }
+    /* checked */
+    input[type='checkbox']:checked + label {
+      border: none;
+      background-color: $bg-input;
+    }
+
+    /* галочка */
+    input[type='checkbox']:checked + label::after {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 3px;
+      width: 7px;
+      height: 14px;
+      border: solid $green-color;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    input[type='checkbox']:focus + label {
+      outline: none;
+    }
+  }
+}
+
+.col-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  input[type='checkbox'] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  label {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    background-color: $bg-input;
+    outline: none;
+    caret-color: transparent;
+    user-select: none;
+  }
+
+  /* checked */
+  input[type='checkbox']:checked + label {
+    border: none;
+    background-color: $bg-input;
+  }
+
+  /* галочка */
+  input[type='checkbox']:checked + label::after {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 3px;
+    width: 7px;
+    height: 14px;
+    border: solid $green-color;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  input[type='checkbox']:focus + label {
+    outline: none;
+  }
+}
+
+.empty-state {
+  padding: 30px;
+  text-align: center;
+  color: $light-grey-color;
+  font-size: 14px;
+  background-color: $grey-bg-modal;
+  border-radius: 10px;
+}

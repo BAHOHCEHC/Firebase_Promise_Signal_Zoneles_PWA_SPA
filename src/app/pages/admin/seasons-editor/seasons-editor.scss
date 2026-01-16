@@ -369,8 +369,8 @@
   }
 
   &.small {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     font-size: 18px;
   }
 }
@@ -420,9 +420,11 @@
 .wave-header {
   font-size: 12px;
   position: absolute;
-  top: -20px;
+  top: -23px;
   left: 0;
   min-width: 280px;
+  display: flex;
+  align-items: center;
 }
 
 .wave-timer {
@@ -447,28 +449,18 @@
 
 .btn-edit-settings {
   background: transparent;
-  color: $light-grey-color;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  transition: all 0.3s ease;
+  padding: 0;
+  &:hover {
+    transform: scale(1.2);
+  }
 }
 
 .page-container {
-  padding: 20px;
-  background: $primary-bg;
+  padding: 0 20px;
   min-height: 100vh;
-}
-
-.acts-container {
-  display: flex;
-  gap: 16px;
-  padding: 24px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow-x: auto;
-  align-items: stretch;
 }
 
 .variation-card {
@@ -476,7 +468,7 @@
   min-width: 200px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 12px;
-  padding: 16px;
+  padding: 16px 10px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -486,45 +478,5 @@
   &:hover {
     background: rgba(255, 255, 255, 0.07);
     transform: translateY(-4px);
-  }
-
-  .card-header {
-    font-size: 18px;
-    font-weight: 600;
-    color: #e0e0ff;
-    text-align: center;
-    border-bottom: 2px solid $btn-primary-default;
-    padding-bottom: 8px;
-  }
-
-  .content-placeholder {
-    height: 100px;
-    border: 1px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-  }
-
-  /* Border logic as requested */
-  // Option 1: middle block (Act 3) has borders on both sides
-  // Since Act 3 is :nth-child(3)
-  &:nth-child(3) {
-    padding-left: 18px;
-    padding-right: 18px;
-    // To make it look "middle", we can also add some margin or different background
-  }
-
-  // Option 2 (Complementary): 1-2 and 4-5 blocks have borders on the right
-  // If the user wants 1-2 and 4-5 to have borders on the right:
-  &:nth-child(1),
-  &:nth-child(2),
-  &:nth-child(4),
-  &:nth-child(5) {
-    border-right: 2px solid rgba($btn-primary-default, 0.3);
-  }
-}
-.var {
-  &-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* або конкретна висота */
   }
 }

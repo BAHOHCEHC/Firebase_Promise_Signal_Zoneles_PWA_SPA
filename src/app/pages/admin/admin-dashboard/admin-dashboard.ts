@@ -32,6 +32,7 @@ export class AdminDashboard {
       { key: 'enemies', label: 'Monsters list', route: 'enemies' },
       { key: 'modes', label: 'Acts & Mods list', route: 'modes' },
       { key: 'seasons', label: 'Season details', route: 'seasons' },
+      { key: 'ttracker', label: 'Task tracker', route: 'ttracker' },
     ];
   });
 
@@ -41,6 +42,7 @@ export class AdminDashboard {
     if (url.includes('/enemies')) return 'enemies';
     if (url.includes('/modes')) return 'modes';
     if (url.includes('/seasons')) return 'seasons';
+    if (url.includes('/ttracker')) return 'ttracker';
     return 'characters';
   });
 }

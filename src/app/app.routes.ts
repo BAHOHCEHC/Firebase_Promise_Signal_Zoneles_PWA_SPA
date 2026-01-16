@@ -9,6 +9,8 @@ import { ActAndModesEditor } from './pages/admin/modes-editor/act-and-modes-edit
 import { EnemyEditor } from './pages/admin/enemy-editor/enemy-editor';
 import { SeasonsEditorComponent } from './pages/admin/seasons-editor/seasons-editor';
 import { SeasonsDetails } from './pages/season-details/season-details';
+import { TaskTrackerAdmin } from './pages/admin/task-tracker-admin/task-tracker-admin';
+import { TaskTracker } from './pages/task-tracker/task-tracker';
 
 
 // app.routes.ts
@@ -17,6 +19,7 @@ export const routes: Routes = [
   { path: 'season', component: SeasonsDetails },
   { path: 'characters', component: YourCharacters },
   { path: 'enemies', component: EnemyList },
+  { path: 'task-tracker', component: TaskTracker },
 
   {
     path: 'admin',
@@ -29,6 +32,7 @@ export const routes: Routes = [
       { path: 'enemies', component: EnemyEditor },
       { path: 'modes', component: ActAndModesEditor },
       { path: 'seasons', component: SeasonsEditorComponent },
+      { path: 'ttracker', component: TaskTrackerAdmin },
     ]
   }
 ];

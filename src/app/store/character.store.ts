@@ -33,6 +33,11 @@ class CharacterStore {
       'UserCharacters',
       JSON.stringify(this.selectedCharacters())
     );
+  // TO DO : store for tasks
+    // localStorage.setItem(
+    //   'UserTasks',
+    //   JSON.stringify(this.userTasks())
+    // );
   }
 
   /** Загрузить выбранных персонажей из localStorage */

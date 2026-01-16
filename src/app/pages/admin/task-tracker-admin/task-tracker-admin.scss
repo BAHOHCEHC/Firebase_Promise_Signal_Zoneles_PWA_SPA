@@ -2,7 +2,6 @@
 
 .editor {
   color: $primary-white;
-
   &__header {
     margin-bottom: 20px;
   }
@@ -13,6 +12,19 @@
     align-items: center;
     justify-content: flex-end;
   }
+}
+.editor__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &-title {
+    margin: 0;
+  }
+}
+.editor__actions {
+  min-width: 30%;
+  display: flex;
+  justify-content: space-between;
 }
 
 .btn {
@@ -107,24 +119,6 @@
   }
 }
 
-// Content
-.groups-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); // "Page divides by 2 groups in row"
-  gap: 24px;
-}
-
-.group-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.group-title {
-  font-size: 16px;
-  color: $primary-white;
-}
 
 .btn-icon {
   background: transparent;
@@ -146,83 +140,3 @@
   }
 }
 
-.enemies-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.enemy-card {
-  position: relative;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%; // Circular avatars
-  background: $enemy-bg;
-  cursor: pointer;
-
-  .enemy-avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  .enemy-element-icon {
-    position: absolute;
-    bottom: 0px;
-    right: -5px;
-    width: 16px;
-    height: 16px;
-    z-index: 4;
-    animation: pulse 1.6s ease-in-out infinite;
-    transform-origin: center;
-  }
-  /* === PULSE ANIMATION === */
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-
-    50% {
-      transform: scale(1.2);
-    }
-
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  .delete-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.6);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    color: $primary-white;
-    z-index: 3;
-    transform: scale(1.2);
-    span {
-      font-size: 24px;
-      color: $red-color;
-    }
-  }
-
-  &:hover {
-    & > img {
-      transform: scale(1.2);
-      transition: all 0.2s ease;
-    }
-    transform: scale(1);
-    transition: all 0.2s ease;
-    .delete-overlay {
-      display: flex;
-    }
-  }
-}

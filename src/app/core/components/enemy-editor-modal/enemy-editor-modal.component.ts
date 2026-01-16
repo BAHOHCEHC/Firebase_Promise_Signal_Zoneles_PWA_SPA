@@ -15,9 +15,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ElementTypeName, EnemyCategory, EnemyGroup } from '../../../../models/models';
+import { ElementTypeName, EnemyCategory, EnemyGroup, ModalType } from '../../../../models/models';
 
-export type ModalType = 'categories' | 'group' | 'enemy';
 
 @Component({
   selector: 'app-enemy-editor-modal',

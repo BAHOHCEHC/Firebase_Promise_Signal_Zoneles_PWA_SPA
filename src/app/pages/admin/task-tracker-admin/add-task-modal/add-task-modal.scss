@@ -1,0 +1,242 @@
+@import '../../../../../styles/variables';
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: $primary-bg;
+  padding: 24px;
+  border-radius: 16px;
+  width: 600px;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+.modal-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-direction: column;
+}
+.label {
+  color: #e0e0ff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  width: 100%;
+  min-height: 36px;
+}
+.form-control {
+  display: flex;
+  align-items: center;
+  background: $bg-input;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+  color: $primary-white;
+}
+.checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.checkbox-group-wrap {
+  display: flex;
+}
+.input-with-action {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  .form-control {
+    flex: 1 1 auto; /* головний трюк — займає весь доступний простір */
+    min-width: 0; /* важливо для коректної роботи flex */
+  }
+}
+.input {
+  background: $grey-bg;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+
+  &:focus {
+    border-color: $btn-primary-default;
+    outline: none;
+  }
+}
+.parts-section {
+  width: 100%; /* або max-width: 100%; */
+}
+
+.btn {
+  padding: 10px 28px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: $primary-white;
+
+  &-primary {
+    background: $btn-primary-default;
+
+    &:hover:not(:disabled) {
+      background: $btn-primary-hover;
+    }
+
+    &:disabled {
+      background: rgba($btn-primary-default, 0.5);
+      cursor: not-allowed;
+    }
+  }
+
+  &-secondary {
+    background: $btn-secondary-default;
+    &:hover {
+      background: $btn-secondary-hover;
+    }
+  }
+  &-delete {
+    background: $red-color;
+
+    &:hover {
+      background: $delete-hover-color;
+    }
+  }
+}
+
+.btn-add-part {
+  background: $btn-primary-default;
+  color: $primary-white;
+  &:hover {
+    background: $btn-primary-hover;
+  }
+}
+
+.delete {
+  cursor: pointer;
+  border: none;
+  background: $grey-bg;
+  border-radius: 10px;
+  transition: filter 0.3s ease;
+  span {
+    color: $red-color;
+  }
+  &:hover {
+    span {
+      filter: brightness(140%);
+    }
+  }
+}
+
+.checkbox-group {
+  .checkbox-group-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    color: $primary-white;
+    user-select: none;
+    font-size: 16px;
+
+    // Повністю ховаємо стандартний чекбокс
+    input[type='checkbox'] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      margin: 0;
+    }
+
+    // Кастомний квадрат + галочка через label
+    label {
+      position: relative;
+      padding-left: 36px; // місце під квадрат 24px + відступ
+      cursor: pointer;
+      line-height: 1.4;
+
+      // Квадрат (unchecked стан)
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        background: $bg-input;
+        border: none; // темна рамка
+        border-radius: 6px; // легке закруглення, як у Material
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+      }
+
+      // Галочка (✓) — створюємо за допомогою border
+      &::after {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: 50%;
+        width: 8px;
+        height: 14px;
+        border: solid $green-color; // зелена галочка
+        border-width: 0 2px 2px 0;
+        transform: translateY(-65%) rotate(45deg) scale(0);
+        opacity: 0;
+        transition: transform 0.18s ease, opacity 0.18s ease;
+      }
+    }
+
+    // Checked стан — зелений квадрат + галочка
+    input:checked + label {
+      &::after {
+        transform: translateY(-65%) rotate(45deg) scale(1);
+        opacity: 1;
+      }
+    }
+
+    // Hover ефект
+    &:hover label::before {
+      background: $bg-input;
+    }
+
+    // Фокус для клавіатури (доступність)
+    input:focus-visible + label::before {
+      outline: 3px solid $btn-primary-hover;
+      outline-offset: 2px;
+    }
+  }
+}
+input:disabled {
+  cursor: not-allowed;
+  color: $grey-color;
+}
+.modal-actions {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 12px;
+}
+.parts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
