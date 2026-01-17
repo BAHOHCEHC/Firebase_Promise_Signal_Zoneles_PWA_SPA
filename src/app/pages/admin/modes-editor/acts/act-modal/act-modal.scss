@@ -1,9 +1,5 @@
-$bg: #303040;
-$btn-primary-default: #5233af;
-$btn-primary-hover: #7e63d0;
-$btn-secondary-default: #292935;
-$btn-secondary-hover: #333345;
-@import '../../../../../../styles/variables';
+@use 'variables' as *;
+
 
 
 .modal-backdrop {
@@ -19,7 +15,7 @@ $btn-secondary-hover: #333345;
 .modal {
   width: 550px;
   height: 350px;
-  background: $bg;
+  background: $grey-bg-modal;
   border-radius: 10px;
   padding: 20px;
   display: flex;

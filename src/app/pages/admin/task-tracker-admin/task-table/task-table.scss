@@ -1,4 +1,4 @@
-@import '../../../../../styles/_variables';
+@use 'variables' as *;
 
 .table-header {
   display: flex;
