@@ -2,6 +2,7 @@
   <!-- Стан завантаження -->
   @if (loading()) {
     <div class="loading-state">
+      <span class="material-symbols-outlined spin">progress_activity</span>
       <p>Loading data...</p>
     </div>
   } @else {
@@ -173,7 +174,7 @@
                 <div class="act-section-enemy">
                   <!-- Element requirements or what? Design shows element icons or boss icons? -->
                   <!-- Design shows some enemies. -->
-                  @for (enemy of getActEnemies(act); track enemy.id) {
+                  @for (enemy of getActEnemies(act); track $index) {
                     <img [src]="resolveAvatarUrl(enemy)" [alt]="enemy.name" [title]="enemy.name" />
                   }
                 </div>
@@ -204,11 +205,17 @@
                   <!-- Placed Characters -->
                   @for (char of getPlacedCharacters(act.id); track char.id) {
                     <div
-                      class="placed-char"
+                      class="char-mini-card placed-char"
                       (click)="onRemoveCharacter(act.id, char.id)"
                       title="Click to remove"
+                      [style.background-image]="'url(' + char.rarity.bgUrl + ')'"
                     >
                       <img [src]="resolveAvatarUrl(char)" [alt]="char.name" />
+                      @if (char.element) {
+                        <div class="element-badge">
+                          <img [src]="getElementIconPath(char.element.name)" />
+                        </div>
+                      }
                     </div>
                   }
                 </div>
@@ -224,7 +231,7 @@
               </div>
               <div class="act-section-inner">
                 <div class="act-section-enemy">
-                  @for (enemy of getActEnemies(act); track enemy.id) {
+                  @for (enemy of getActEnemies(act); track $index) {
                     <img [src]="resolveAvatarUrl(enemy)" [alt]="enemy.name" [title]="enemy.name" />
                   }
                 </div>
@@ -255,11 +262,17 @@
                   <!-- Placed Characters -->
                   @for (char of getPlacedCharacters(act.id); track char.id) {
                     <div
-                      class="placed-char"
+                      class="char-mini-card placed-char"
                       (click)="onRemoveCharacter(act.id, char.id)"
                       title="Click to remove"
+                      [style.background-image]="'url(' + char.rarity.bgUrl + ')'"
                     >
                       <img [src]="resolveAvatarUrl(char)" [alt]="char.name" />
+                      @if (char.element) {
+                        <div class="element-badge">
+                          <img [src]="getElementIconPath(char.element.name)" />
+                        </div>
+                      }
                     </div>
                   }
                 </div>
@@ -279,7 +292,7 @@
               </div>
               <div class="act-section-inner">
                 <div class="act-section-enemy">
-                  @for (enemy of getActEnemies(act); track enemy.id) {
+                  @for (enemy of getActEnemies(act); track $index) {
                     <img [src]="resolveAvatarUrl(enemy)" [alt]="enemy.name" [title]="enemy.name" />
                   }
                 </div>
@@ -310,11 +323,17 @@
                   <!-- Placed Characters -->
                   @for (char of getPlacedCharacters(act.id); track char.id) {
                     <div
-                      class="placed-char"
+                      class="char-mini-card placed-char"
                       (click)="onRemoveCharacter(act.id, char.id)"
                       title="Click to remove"
+                      [style.background-image]="'url(' + char.rarity.bgUrl + ')'"
                     >
                       <img [src]="resolveAvatarUrl(char)" [alt]="char.name" />
+                      @if (char.element) {
+                        <div class="element-badge">
+                          <img [src]="getElementIconPath(char.element.name)" />
+                        </div>
+                      }
                     </div>
                   }
                 </div>

@@ -1,11 +1,15 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, addDoc, deleteDoc, doc, updateDoc, getDocs } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, deleteDoc, doc, updateDoc, getDocs, CollectionReference, DocumentData } from '@angular/fire/firestore';
 import { Character } from '../../../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class CharacterService {
   private firestore = inject(Firestore);
-  private collectionRef = collection(this.firestore, 'characters');
+  private collectionRef: CollectionReference<DocumentData, DocumentData>;
+
+  constructor() {
+    this.collectionRef = collection(this.firestore, 'characters');
+  }
 
   // /** Створити персонажа */
   // create(character: Omit<Character, 'id'>): Promise<void> {

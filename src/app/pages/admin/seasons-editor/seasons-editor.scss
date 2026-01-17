@@ -5,7 +5,28 @@
   min-height: 100vh;
   color: white;
 }
+.loading-state {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 24px;
+}
+.spin {
+  animation: spin 1s linear infinite;
+}
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
 .header-actions {
   display: flex;
   justify-content: space-between;
@@ -27,6 +48,7 @@
   justify-content: end;
   align-items: center;
 }
+
 .editor__actions {
   min-width: 25%;
   display: flex;

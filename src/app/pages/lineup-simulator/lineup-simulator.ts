@@ -233,6 +233,11 @@ export class LineupSimulator implements OnInit {
     if (event.dataTransfer) {
       event.dataTransfer.setData('text/plain', char.id);
       event.dataTransfer.effectAllowed = 'copy';
+
+      // Set custom drag image using the card element itself
+      // event.currentTarget is the div.char-mini-card which contains the img and background
+      const dragElement = event.currentTarget as HTMLElement;
+      event.dataTransfer.setDragImage(dragElement, 35, 35); // Center cursor roughly (70x70 card)
     }
   }
 

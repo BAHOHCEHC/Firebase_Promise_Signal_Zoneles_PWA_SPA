@@ -15,8 +15,11 @@ import { sortCharacters } from '../../../../utils/sorting-characters';
 })
 export class CharacterListEditor {
   private service = inject(CharacterService);
-  selectedCharacter = signal<Character | null>(null);
   readonly isModalOpen = signal(false);
+
+  public selectedCharacter = signal<Character | null>(null);
+  public isLoading = signal(true);
+
   readonly now = Date.now();
 
   // Список персонажів для відображення (з стора)
@@ -38,11 +41,11 @@ export class CharacterListEditor {
     try {
       const chars = await this.service.getAllCharacters();
       characterStore.setCharacters(sortCharacters(chars));
-      console.log(chars);
-
     } catch (error) {
       console.error('Error loading characters:', error);
     }
+
+    this.isLoading.set(false);
   }
 
   toggle(character: Character) {

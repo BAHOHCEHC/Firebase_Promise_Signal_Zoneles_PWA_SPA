@@ -15,6 +15,7 @@ import { CharacterService } from '../../shared/services/charater.service';
 })
 export class YourCharacters implements OnInit {
   private characterService = inject(CharacterService);
+  public isLoading = signal(true);
 
   readonly elementTypes = [
     'pyro', 'hydro', 'electro', 'cryo', 'dendro', 'anemo', 'geo'
@@ -49,6 +50,7 @@ export class YourCharacters implements OnInit {
   );
 
   async ngOnInit(): Promise<void> {
+    this.isLoading.set(true);
     // ❌ стара mock-логіка
     /*
     if (characterStore.allCharacters().length === 0) {
@@ -64,6 +66,7 @@ export class YourCharacters implements OnInit {
 
     // localStorage — як і було
     characterStore.loadFromLocalStorage();
+    this.isLoading.set(false);
   }
 
   toggleElement(type: ElementTypeName): void {
