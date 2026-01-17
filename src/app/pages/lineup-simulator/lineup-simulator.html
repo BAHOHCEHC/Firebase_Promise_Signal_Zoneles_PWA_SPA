@@ -88,7 +88,9 @@
             </select>
 
             <div class="mode_limit">
-              {{ activeMode()?.min_characters }} / {{ activeMode()?.max_characters }}
+              <span class="fs_14">
+                {{ activeMode()?.min_characters }} / {{ activeMode()?.max_characters }}
+              </span>
             </div>
 
             <button type="button" class="btn-cta" (click)="openAlternateCastModal()">
@@ -100,8 +102,8 @@
 
       <div class="user_characters_list">
         <div class="char-list">
-          @if (usersCharacter().length === 0) {
-            <div class="chars_empty_msg">
+          @if (!usersCharacter().length) {
+            <div class="chars_empty_msg fs_14">
               <span>Empty. Please select your cast first</span>
             </div>
           }
@@ -145,13 +147,15 @@
               }
             </div>
           }
-
+        </div>
+        @if (!!usersCharacter().length) {
           <div class="btn_wrapper">
             <button type="button" class="btn-save" (click)="saveConfiguration()">
-              Save your configuration
+              <span class="material-symbols-outlined"> download </span>
+              Save your config
             </button>
           </div>
-        </div>
+        }
       </div>
     </div>
 

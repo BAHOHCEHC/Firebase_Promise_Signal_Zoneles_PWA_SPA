@@ -6,9 +6,9 @@
 
 .page-container {
   min-height: 100vh;
-  color: white;
+  color: $primary-white;
   display: flex;
-  gap: 60px;
+  justify-content: space-between;
 }
 
 .loading-state {
@@ -26,7 +26,7 @@
 ========================= */
 
 .left-section {
-  width: 480px;
+  width: 35%;
   margin-bottom: 20px;
 
   h2 {
@@ -35,7 +35,7 @@
 }
 
 .right-section {
-  width: 860px;
+  width: 65%;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
@@ -106,9 +106,14 @@
    CHARACTERS BLOCK
 ========================= */
 
+.char-list {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+}
 .characters-blocks {
   display: flex;
-  gap: 24px;
+  justify-content: space-between;
 
   .char-block {
     h3 {
@@ -116,13 +121,14 @@
     }
   }
 }
-.char-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: flex-start;
+.user_characters_list {
+  .char-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-around;
+  }
 }
-
 .char-mini-card {
   width: 70px;
   height: 70px;
@@ -176,53 +182,92 @@
   }
 }
 
-.act-left-column,
-.act-right-column,
-.act-arcana-row {
+// Act / Chamber Section Wrapper
+.act-section {
   display: flex;
-  flex-wrap: wrap; // Allow wrapping if needed, though act-items have min-width
+  flex-wrap: wrap;
+  gap: 20px; // Gap between left and right columns
+}
+
+.act-left-column,
+.act-right-column {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
+}
+
+.act-arcana-row {
+  width: 100%;
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 // Act Item Layout
 .act-item {
   display: flex;
-  flex-direction: column;
   background: #1e1e2d;
   border-radius: 8px;
   overflow: hidden;
-  width: 160px; // Fixed width for consistent grid
-  min-height: 220px;
   border: 1px solid #333;
+  width: 100%; // Full width of parent column
 
+  // Normal acts (horizontal layout)
+  &:not(.arcana) {
+    flex-direction: row; // Name left, content right
+    min-height: 120px; // Reasonable height for horiz layout
+
+    .act-section-name {
+      width: 100px; // Fixed width for name section
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: none;
+      border-right: 1px solid #333;
+      padding: 10px;
+
+      h5 {
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+
+    .act-section-inner {
+    }
+  }
+
+  // Arcana acts (remain as vertical cards?)
   &.arcana {
-    width: 100%; // Arcana takes full width logic? Or same size?
-    // User request didn't specify special size for arcana, usually acts are uniform.
-    // But arcana might have many enemies?
-    // Let's keep it uniform for now unless layout breaks.
-    width: 160px;
+    flex-direction: column;
+    .act-section-name {
+      border-bottom: 1px solid #333;
+    }
   }
 
   .act-section-name {
     background: #2a2a3c;
     padding: 8px;
     text-align: center;
-    border-bottom: 1px solid #333;
+    color: #aaa;
 
     h5 {
       margin: 0;
       font-size: 14px;
-      color: #aaa;
     }
   }
 
   .act-section-inner {
-    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
     align-items: center;
     flex: 1;
+    padding-top: 10px;
+    // For horizontal acts, we might want inner to be row?
+    // User didn't specify. Assuming inner content stack is fine.
   }
 }
 
@@ -231,7 +276,9 @@
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
-  justify-content: center;
+  padding-bottom: 8px;
+
+  justify-content: space-between;
 
   img {
     width: 40px;
@@ -245,25 +292,20 @@
 // Drop Zone
 .act-section-dragNdrop {
   width: 100%;
-  flex: 1; // Take remaining space
-  border: 2px dashed #444;
-  border-radius: 6px;
+  min-height: 80px;
+  flex: 1;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 5px;
-  padding: 5px;
   background: rgba(0, 0, 0, 0.2);
   transition:
     border-color 0.2s,
     background 0.2s;
-  min-height: 80px;
 
   // Placed Characters
   .placed-char {
-    width: 45px;
-    height: 45px;
+    width: 70px;
+    height: 70px;
     border-radius: 4px;
     overflow: hidden;
     cursor: pointer;
@@ -283,7 +325,7 @@
       right: 0;
       bottom: 0;
       background: rgba(189, 44, 44, 0.7);
-      color: white;
+      color: $primary-white;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -330,11 +372,8 @@
 .mode_selector {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-  background: #1e1e2d;
-  padding: 15px;
-  border-radius: 12px;
+  justify-content: space-between;
+  padding: 15px 0 20px;
 
   label {
     font-weight: bold;
@@ -349,15 +388,8 @@
     border-radius: 8px;
     padding: 10px 12px;
     font-size: 14px;
-    outline: none;
     color: #fff;
-    min-width: 150px;
-  }
-
-  .mode_limit {
-    font-family: monospace;
-    font-size: 16px;
-    color: #ffd700;
+    min-width: 220px;
   }
 }
 
@@ -369,16 +401,21 @@
 }
 
 .btn-save {
-  background: #4caf50;
-  color: white;
-  padding: 12px 24px;
+  background: $btn-primary-default;
+  color: $primary-white;
+  padding: 7px 10px;
   border: none;
   border-radius: 8px;
+  width: 100%;
   font-size: 16px;
+  display: flex;
   cursor: pointer;
-  font-weight: bold;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  gap: 5px;
 
   &:hover {
-    background: #45a049;
+    background: $btn-primary-hover;
   }
 }
