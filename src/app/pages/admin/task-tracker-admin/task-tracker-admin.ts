@@ -1,9 +1,9 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { TasksService } from '../../../shared/services/tasks.service';
+import { TasksService } from '@shared/services/_index';
 import { AddTaskRegionModal } from './add-task-region-modal/add-task-region-modal';
 import { TaskTable } from './task-table/task-table';
 import { AddTaskModal } from './add-task-modal/add-task-modal';
-import { ConfirmModal } from '../../../core/components/confirm-modal/confirm-modal';
+import { ConfirmModal } from '@core/components/_index';
 
 
 @Component({

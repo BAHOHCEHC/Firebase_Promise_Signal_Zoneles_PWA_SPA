@@ -1,5 +1,5 @@
 import { signal, computed } from '@angular/core';
-import { Character, ElementTypeName } from '../../models/models';
+import { Character, ElementTypeName } from '@models/models';
 
 
 class CharacterStore {

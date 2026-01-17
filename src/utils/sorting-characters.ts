@@ -1,4 +1,4 @@
-import { Character } from "../models/models";
+import { Character } from "@models/models";
 
 export function sortCharacters(list: Character[]): Character[] {
   return [...list].sort((a, b) => {

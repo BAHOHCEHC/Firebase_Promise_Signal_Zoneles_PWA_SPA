@@ -8,20 +8,18 @@ import {
   Wave,
   ElementTypeName,
   ElementType,
-  Act_options,
   Enemy,
   Wave_type,
   Enemy_options,
-} from '../../../../models/models';
-import { SeasonAddEnemyModal } from '../../../core/components/season-add-enemy-modal/season-add-enemy-modal';
-import { SeasonAddVariationChamberModal } from '../../../core/components/season-add-variation-chamber-modal/season-add-variation-chamber-modal';
-import { SeasonCharactersModal } from '../../../core/components/season-characters-modal/season-characters-modal';
-import { SeasonElementTypeModal } from '../../../core/components/season-element-type-modal/season-element-type-modal';
-import { CharacterService } from '../../../shared/services/charater.service';
-import { EnemiesService } from '../../../shared/services/enemies.service';
-import { SeasonService } from '../../../shared/services/season.service';
-import { sanitizeChars } from '../../../../utils/sanitizeChars';
-import { ActModsService } from '../../../shared/services/act-mods.service';
+} from '@models/models';
+import {
+  SeasonAddEnemyModal,
+  SeasonAddVariationChamberModal,
+  SeasonCharactersModal,
+  SeasonElementTypeModal
+} from '@core/components/_index';
+import { CharacterService, EnemiesService, SeasonService, ActModsService } from '@shared/services/_index';
+import { sanitizeChars } from '@utils/sanitizeChars';
 
 @Component({
   selector: 'app-seasons-editor',

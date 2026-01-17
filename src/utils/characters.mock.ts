@@ -1,4 +1,4 @@
-import { Character, ElementType, CharacterRarityID } from '../models/models';
+import { Character, ElementType, CharacterRarityID } from '@models/models';
 
 const now = Date.now();
 const day = 24 * 60 * 60 * 1000;

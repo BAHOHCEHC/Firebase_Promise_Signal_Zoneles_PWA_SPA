@@ -1,10 +1,11 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { CharacterFormModal } from '../../../core/components/character-form-modal/character-form-modal';
 import { CommonModule } from '@angular/common';
-import { CharacterService } from '../../../shared/services/charater.service';
-import { characterStore } from '../../../store/character.store';
-import { Character } from '../../../../models/models';
-import { sortCharacters } from '../../../../utils/sorting-characters';
+
+import { CharacterFormModal } from '@core/components/_index';
+import { CharacterService } from '@shared/services/_index';
+import { characterStore } from '@store/_index';
+import { Character } from '@models/models';
+import { sortCharacters } from '@utils/sorting-characters';
 
 @Component({
   standalone: true,

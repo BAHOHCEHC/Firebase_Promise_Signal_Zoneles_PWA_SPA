@@ -1,5 +1,5 @@
-import { signal, computed } from '@angular/core';
-import { Region_task, Part } from '../../models/models';
+import { signal } from '@angular/core';
+import { Region_task } from '../../models/models';
 
 class UserTasksStore {
     /** Tasks with user state (finished status) loaded from localStorage */
@@ -48,7 +48,7 @@ class UserTasksStore {
                     finished: !currentTask.finished,
                     regionId: regionId // Ensure regionId is up to date
                 };
-                // If task is unchecked, should we remove it if it has no other data? 
+                // If task is unchecked, should we remove it if it has no other data?
                 // for now keep it to remember state.
                 return updatedTasks;
             } else {

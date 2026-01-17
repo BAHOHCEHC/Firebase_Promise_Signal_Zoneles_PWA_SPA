@@ -1,5 +1,5 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
-import { Character, LineUpConfig, ModeConfiguration } from '../../models/models';
+import { Character, LineUpConfig, ModeConfiguration } from '@models/models';
 
 @Injectable({ providedIn: 'root' })
 export class LineupStore {

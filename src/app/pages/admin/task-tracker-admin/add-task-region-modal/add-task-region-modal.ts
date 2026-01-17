@@ -1,9 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit, Input, Output, EventEmitter, signal, inject, computed } from "@angular/core";
 import { ReactiveFormsModule, FormBuilder, Validators } from "@angular/forms";
-import { Region, Region_task } from "../../../../../models/models";
-import { TasksService } from "../../../../shared/services/tasks.service";
-import { generateUUID } from "../../../../shared/utils/uuid";
+import { Region, Region_task } from "@models/models";
+import { TasksService } from "@shared/services/_index";
+import { generateUUID } from "@shared/utils/uuid";
 
 
 @Component({

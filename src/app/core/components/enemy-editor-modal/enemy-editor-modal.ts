@@ -15,17 +15,17 @@ import {
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ElementTypeName, EnemyCategory, EnemyGroup, ModalType } from '../../../../models/models';
+import { ElementTypeName, EnemyCategory, EnemyGroup, ModalType } from '@models/models';
 
 
 @Component({
   selector: 'app-enemy-editor-modal',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './enemy-editor-modal.component.html',
-  styleUrl: './enemy-editor-modal.component.scss'
+  templateUrl: './enemy-editor-modal.html',
+  styleUrl: './enemy-editor-modal.scss'
 })
-export class EnemyEditorModalComponent implements OnInit {
+export class EnemyEditorModal implements OnInit {
 
   @Input() type: ModalType = 'categories';
   @Input() data: any = null;

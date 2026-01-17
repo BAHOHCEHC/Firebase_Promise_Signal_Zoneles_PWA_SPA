@@ -1,9 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Season_details, Character, Act, Wave, Variation, ElementTypeName, Enemy } from '../../../models/models';
-import { CharacterService } from '../../shared/services/charater.service';
-import { EnemiesService } from '../../shared/services/enemies.service';
-import { SeasonService } from '../../shared/services/season.service';
+import { Season_details, Character, Act, Wave, Variation, ElementTypeName, Enemy } from '@models/models';
+import { CharacterService, EnemiesService, SeasonService } from '@shared/services/_index';
 @Component({
   selector: 'app-seasons-details',
   standalone: true,

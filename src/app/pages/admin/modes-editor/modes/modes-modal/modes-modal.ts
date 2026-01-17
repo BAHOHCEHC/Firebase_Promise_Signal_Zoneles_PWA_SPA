@@ -1,19 +1,19 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, computed } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
-import { Act, Mode, Fight_type } from '../../../../../../models/models';
-import { actModesStore } from '../../../../../store/act-modes.store';
+import { Act, Mode, Fight_type } from '@models/models';
+import { actModesStore } from '@store/_index';
 import { CommonModule } from '@angular/common';
-import { ActModsService } from '../../../../../shared/services/act-mods.service';
-import { generateUUID } from '../../../../../shared/utils/uuid';
+import { ActModsService } from '@shared/services/_index';
+import { generateUUID } from '@shared/utils/uuid';
 
 @Component({
   selector: 'app-mode-modal',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './modes-modal.component.html',
-  styleUrl: './modes-modal.component.scss'
+  templateUrl: './modes-modal.html',
+  styleUrl: './modes-modal.scss'
 })
-export class ModeModalComponent implements OnInit {
+export class ModeModal implements OnInit {
   @Input() modeToEdit: Mode | null = null;
   @Output() close = new EventEmitter<void>();
 

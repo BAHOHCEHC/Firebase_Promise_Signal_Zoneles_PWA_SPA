@@ -1,15 +1,15 @@
 import { Component, Input, Output, EventEmitter, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Act } from '../../../../../../models/models';
+import { Act } from '@models/models';
 
 @Component({
   selector: 'app-acts-table',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './acts-table.component.html',
-  styleUrls: ['./acts-table.component.scss']
+  templateUrl: './acts-table.html',
+  styleUrls: ['./acts-table.scss']
 })
-export class ActsTableComponent {
+export class ActsTable {
   private _acts = signal<Act[]>([]);
 
   @Input() set acts(value: Act[]) {

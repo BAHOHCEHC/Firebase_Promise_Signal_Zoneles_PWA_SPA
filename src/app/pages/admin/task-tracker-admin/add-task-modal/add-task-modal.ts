@@ -2,7 +2,7 @@ import { Component, computed, EventEmitter, inject, Input, OnInit, Output, signa
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { Region, Region_task } from '../../../../../models/models';
-import { TasksService } from '../../../../shared/services/tasks.service';
+import { TasksService } from '../../../../shared/services/_index';
 import { generateUUID } from '../../../../shared/utils/uuid';
 
 @Component({

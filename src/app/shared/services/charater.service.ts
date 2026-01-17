@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, deleteDoc, doc, updateDoc, getDocs, CollectionReference, DocumentData } from '@angular/fire/firestore';
-import { Character } from '../../../models/models';
+import { Character } from '@models/models';
 
 @Injectable({ providedIn: 'root' })
 export class CharacterService {

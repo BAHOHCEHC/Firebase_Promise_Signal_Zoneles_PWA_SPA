@@ -1,6 +1,6 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
-import { LoginModalComponent } from './core/components/login-modal/login-modal.component';
+import { LoginModalComponent } from '@core/components/_index';
 import { AdminToken } from './core/services/admin-token';
 
 @Component({

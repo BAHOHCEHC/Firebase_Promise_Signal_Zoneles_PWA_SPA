@@ -1,13 +1,9 @@
 import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
-import { CharacterService } from '../../shared/services/charater.service';
-import { EnemiesService } from '../../shared/services/enemies.service';
-import { SeasonService } from '../../shared/services/season.service';
-import { Character, ElementTypeName, Enemy, Mode, Season_details } from '../../../models/models';
-import { ActModsService } from '../../shared/services/act-mods.service';
-import { characterStore } from '../../store/character.store';
-import { LineupStore } from '../../store/lineup.store';
-import { sortCharacters } from '../../../utils/sorting-characters';
-import { SeasonCharactersModal } from '../../core/components/season-characters-modal/season-characters-modal';
+import { CharacterService, EnemiesService, SeasonService, ActModsService } from '@shared/services/_index';
+import { Character, ElementTypeName, Enemy, Mode, Season_details } from '@models/models';
+import { characterStore, LineupStore } from '@store/_index';
+import { sortCharacters } from '@utils/sorting-characters';
+import { SeasonCharactersModal } from '@core/components/_index';
 
 @Component({
   selector: 'app-lineup-simulator',
@@ -211,7 +207,7 @@ export class LineupSimulator implements OnInit {
       return [];
     }
   }
-  
+
   public isEnemyActive(actId: string, index: number): boolean {
     const selectedIndices = this.store.selectedEnemyIndices();
     // Default to index 0 if not set

@@ -11,10 +11,10 @@ import {
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { CharacterService } from '../../../shared/services/charater.service';
-import { characterStore } from '../../../store/character.store';
-import { Character, ElementTypeName } from '../../../../models/models';
-import { RARITY } from '../../../../utils/characters.mock';
+import { CharacterService } from '@shared/services/_index';
+import { characterStore } from '@store/_index';
+import { Character, ElementTypeName } from '@models/models';
+import { RARITY } from '@utils/characters.mock';
 
 @Component({
   standalone: true,

@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { EnemiesService } from '../../shared/services/enemies.service';
-import { Enemy } from '../../../models/models';
+import { EnemiesService } from '@shared/services/_index';
+import { Enemy } from '@models/models';
 
 @Component({
   selector: 'app-enemy-list',
