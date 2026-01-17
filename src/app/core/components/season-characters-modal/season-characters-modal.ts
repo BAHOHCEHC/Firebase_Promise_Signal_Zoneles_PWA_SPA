@@ -8,21 +8,36 @@ import { sortCharacters } from '../../../../utils/sorting-characters';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './season-characters-modal.html',
-  styleUrl: './season-characters-modal.scss'
+  styleUrl: './season-characters-modal.scss',
 })
 export class SeasonCharactersModal {
   @Input() public title: string = 'Select this season Characters';
-  @Input() public limit: number = 6;
+  @Input() public type: string = 'season';
+
+  // Dynamic limits
+  @Input() public min: number = 0;
+  @Input() public max: number = 0;
+
   @Input() public allCharacters: Character[] = [];
+
+  // Forced filters (e.g. from Season settings)
+  @Input() public forcedElements: ElementTypeName[] = [];
+
   @Input() public set startSelection(value: Character[]) {
-    this.currentSelection.set(new Set(value.map(c => c.id)));
+    this.currentSelection.set(new Set(value.map((c) => c.id)));
   }
 
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<Character[]>();
 
   public readonly elementTypes: ElementTypeName[] = [
-    "pyro", "hydro", "electro", "cryo", "dendro", "anemo", "geo"
+    'pyro',
+    'hydro',
+    'electro',
+    'cryo',
+    'dendro',
+    'anemo',
+    'geo',
   ];
 
   public activeElementFilters = signal<Set<ElementTypeName>>(new Set());
@@ -43,16 +58,55 @@ export class SeasonCharactersModal {
   });
 
   public filteredCharacters = computed(() => {
-    const filters = this.activeElementFilters();
+    let filters = this.activeElementFilters();
+
+    // Merge with forced filters if any
+    if (this.forcedElements.length > 0) {
+      // If user filters are empty, show only forced? Or intersect?
+      // Logic: User can select subsets of forced elements, or if no user filter, show all forced.
+      // Usually forced means "Only these allowed".
+      // Let's assume forcedElements restricts the pool.
+
+      const forcedSet = new Set(this.forcedElements);
+      if (filters.size === 0) {
+        filters = forcedSet;
+      } else {
+        // Intersect
+        const intersected = new Set<ElementTypeName>();
+        for (const f of filters) {
+          if (forcedSet.has(f)) intersected.add(f);
+        }
+        filters = intersected;
+      }
+    }
+
     if (filters.size === 0) {
+      if (this.forcedElements.length > 0) {
+        return sortCharacters(
+          this.allCharacters.filter(
+            (c) => c.element && this.forcedElements.includes(c.element.name),
+          ),
+        );
+      }
       return sortCharacters(this.allCharacters);
     }
-    return sortCharacters(this.allCharacters.filter(c => c.element && c.element.name && filters.has(c.element.name)));
+    return sortCharacters(
+      this.allCharacters.filter((c) => c.element && c.element.name && filters.has(c.element.name)),
+    );
   });
 
   public selectionCount = computed(() => this.currentSelection().size);
 
+  public isSaveDisabled = computed(() => {
+    if (this.type === 'lineup') {
+      return this.selectionCount() < this.min;
+    }
+    return false;
+  });
+
   public toggleElementFilter(type: ElementTypeName): void {
+    // If forced elements exist, only allow toggling those?
+    // For now, let's just let the computed property handle the actual filtering of characters.
     const filters = new Set(this.activeElementFilters());
     if (filters.has(type)) {
       filters.delete(type);
@@ -67,7 +121,7 @@ export class SeasonCharactersModal {
     if (current.has(charId)) {
       current.delete(charId);
     } else {
-      if (current.size < this.limit) {
+      if (current.size < this.max) {
         current.add(charId);
       }
     }
@@ -84,7 +138,7 @@ export class SeasonCharactersModal {
 
   public onSave(): void {
     const selectedIds = this.currentSelection();
-    const charMap = new Map(this.allCharacters.map(c => [c.id, c]));
+    const charMap = new Map(this.allCharacters.map((c) => [c.id, c]));
     const selectedChars: Character[] = [];
 
     for (const id of selectedIds) {

@@ -115,13 +115,12 @@
       margin-bottom: 12px;
     }
   }
-
-  .char-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: flex-start;
-  }
+}
+.char-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
 }
 
 .char-mini-card {
@@ -162,39 +161,224 @@
 }
 
 /* =========================
-   ACT HELPER
+   ACT / CHAMBER SECTION
 ========================= */
 
-.act {
-  &-section {
-    display: flex;
-  }
+.right-section {
+  width: 860px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column; // Acts 1-5, Acts 6-10, Arcana stacked vertically
+  gap: 20px;
 
-  &-item {
-    display: flex;
-    align-items: center;
-    min-width: 400px;
+  h2 {
+    margin: 20px 0 0;
   }
 }
+
+.act-left-column,
+.act-right-column,
+.act-arcana-row {
+  display: flex;
+  flex-wrap: wrap; // Allow wrapping if needed, though act-items have min-width
+  gap: 16px;
+}
+
+// Act Item Layout
+.act-item {
+  display: flex;
+  flex-direction: column;
+  background: #1e1e2d;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 160px; // Fixed width for consistent grid
+  min-height: 220px;
+  border: 1px solid #333;
+
+  &.arcana {
+    width: 100%; // Arcana takes full width logic? Or same size?
+    // User request didn't specify special size for arcana, usually acts are uniform.
+    // But arcana might have many enemies?
+    // Let's keep it uniform for now unless layout breaks.
+    width: 160px;
+  }
+
+  .act-section-name {
+    background: #2a2a3c;
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+
+    h5 {
+      margin: 0;
+      font-size: 14px;
+      color: #aaa;
+    }
+  }
+
+  .act-section-inner {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    flex: 1;
+  }
+}
+
+// Enemy Section in Act
+.act-section-enemy {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #444;
+  }
+}
+
+// Drop Zone
+.act-section-dragNdrop {
+  width: 100%;
+  flex: 1; // Take remaining space
+  border: 2px dashed #444;
+  border-radius: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+  min-height: 80px;
+
+  // Placed Characters
+  .placed-char {
+    width: 45px;
+    height: 45px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &:hover::after {
+      content: '×'; // Close icon hint
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(189, 44, 44, 0.7);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+}
+
+// Drag States
+.char-mini-card {
+  /* ... existing styles ... */
+  cursor: grab;
+
+  &.tired {
+    filter: grayscale(100%);
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none; // Prevent dragging
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+/* =========================
+   UI CONTROLS
+========================= */
+
 .btn-cta {
   background: $btn-primary-default;
   color: $primary-white;
-  width: 150px;
-  padding: 10px;
+  // width: 150px;
+  padding: 10px 16px;
   border: none;
   border-radius: 10px;
   font-size: 14px;
   cursor: pointer;
-  margin-top: auto;
+  // margin-top: auto;
+  white-space: nowrap;
 }
-.mode_selector select{
+
+.mode_selector {
   display: flex;
   align-items: center;
-  background: #262633;
+  gap: 15px;
+  margin-bottom: 20px;
+  background: #1e1e2d;
+  padding: 15px;
+  border-radius: 12px;
+
+  label {
+    font-weight: bold;
+    color: #ccc;
+  }
+
+  select {
+    display: flex;
+    align-items: center;
+    background: #262633;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    outline: none;
+    color: #fff;
+    min-width: 150px;
+  }
+
+  .mode_limit {
+    font-family: monospace;
+    font-size: 16px;
+    color: #ffd700;
+  }
+}
+
+.btn_wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-save {
+  background: #4caf50;
+  color: white;
+  padding: 12px 24px;
   border: none;
   border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 14px;
-  outline: none;
-  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background: #45a049;
+  }
 }

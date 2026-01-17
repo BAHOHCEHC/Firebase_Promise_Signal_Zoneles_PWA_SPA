@@ -1,20 +1,20 @@
 <div class="page-container">
-
   <!-- Header -->
   <header class="editor__header">
     <div class="editor__actions">
-      <button class="btn fs_24 btn-warning" title="Reset" [disabled]="resetInProgress()" (click)="onReset()">
+      <button
+        class="btn fs_24 btn-warning"
+        title="Reset"
+        [disabled]="resetInProgress()"
+        (click)="onReset()"
+      >
         Reset
-        <span class="material-symbols-outlined">
-          replay
-        </span>
+        <span class="material-symbols-outlined"> replay </span>
       </button>
 
       <button class="btn fs_24 btn-save" title="Save" (click)="onSavePage()">
         Save
-        <span class="material-symbols-outlined">
-          bookmark_check
-        </span>
+        <span class="material-symbols-outlined"> bookmark_check </span>
       </button>
     </div>
   </header>
@@ -29,55 +29,51 @@
         <span>This season Elemental Type Requirements:</span>
 
         @if (activeElements().size === 0) {
-        <button class="btn-icon" (click)="openElementModal()">
-          ?
-        </button>
+          <button class="btn-icon" (click)="openElementModal()">?</button>
         }
 
         @if (activeElements().size > 0) {
-        <div class="selected-elements">
-          @for (el of elementTypes; track el) {
-          @if (activeElements().has(el)) {
-          <button class="element-btn-mini" (click)="openElementModal()">
-            <img [src]="getElementIconPath(el)" [alt]="el" />
-          </button>
-          }
-          }
-        </div>
+          <div class="selected-elements">
+            @for (el of elementTypes; track el) {
+              @if (activeElements().has(el)) {
+                <button class="element-btn-mini" (click)="openElementModal()">
+                  <img [src]="getElementIconPath(el)" [alt]="el" />
+                </button>
+              }
+            }
+          </div>
         }
       </div>
     </div>
 
     <!-- Opening Characters -->
     <div class="characters-blocks">
-
       <div class="char-block">
         <h3>Opening characters</h3>
 
         <div class="char-list">
           @for (char of seasonDetails().opening_characters; track char.id) {
-          <div class="char-mini-card">
-            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name"
-              [style.background-image]="'url(' + char.rarity.bgUrl + ')'" />
+            <div class="char-mini-card">
+              <img
+                [src]="resolveAvatarUrl(char.id)"
+                [alt]="char.name"
+                [style.background-image]="'url(' + char.rarity.bgUrl + ')'"
+              />
 
-            @if (char.element) {
-            <div class="element-mini-badge">
-              <img [src]="getElementIconPath(char.element.name)" />
+              @if (char.element) {
+                <div class="element-mini-badge">
+                  <img [src]="getElementIconPath(char.element.name)" />
+                </div>
+              }
             </div>
-            }
-          </div>
           }
 
           @if (seasonDetails().opening_characters.length === 0) {
-          <button class="add-char-btn" (click)="openCharacterModal('opening')">
-            +
-          </button>
+            <button class="add-char-btn" (click)="openCharacterModal('opening')">+</button>
           } @else {
-          <button class="add-char-btn" (click)="openCharacterModal('opening')">
-            <span class="material-symbols-outlined">
-              refresh
-            </span>
-          </button>
+            <button class="add-char-btn" (click)="openCharacterModal('opening')">
+              <span class="material-symbols-outlined"> refresh </span>
+            </button>
           }
         </div>
       </div>
@@ -88,31 +84,29 @@
 
         <div class="char-list">
           @for (char of seasonDetails().special_guests; track char.id) {
-          <div class="char-mini-card">
-            <img [src]="resolveAvatarUrl(char.id)" [alt]="char.name"
-              [style.background-image]="'url(' + char.rarity.bgUrl + ')'" />
-            @if (char.element) {
-            <div class="element-mini-badge">
-              <img [src]="getElementIconPath(char.element.name)" />
+            <div class="char-mini-card">
+              <img
+                [src]="resolveAvatarUrl(char.id)"
+                [alt]="char.name"
+                [style.background-image]="'url(' + char.rarity.bgUrl + ')'"
+              />
+              @if (char.element) {
+                <div class="element-mini-badge">
+                  <img [src]="getElementIconPath(char.element.name)" />
+                </div>
+              }
             </div>
-            }
-          </div>
           }
 
           @if (seasonDetails().special_guests.length === 0) {
-          <button class="add-char-btn" (click)="openCharacterModal('special')">
-            +
-          </button>
+            <button class="add-char-btn" (click)="openCharacterModal('special')">+</button>
           } @else {
-          <button class="add-char-btn" (click)="openCharacterModal('special')">
-            <span class="material-symbols-outlined">
-              refresh
-            </span>
-          </button>
+            <button class="add-char-btn" (click)="openCharacterModal('special')">
+              <span class="material-symbols-outlined"> refresh </span>
+            </button>
           }
         </div>
       </div>
-
     </div>
   </div>
 
@@ -123,123 +117,113 @@
     <!-- Boss & Arcana -->
     <!-- ================= Boss Chambers ================= -->
     @if (bossActs().length) {
-    <div class="subsection">
-      <h3>Boss Chambers</h3>
+      <div class="subsection">
+        <h3>Boss Chambers</h3>
 
-      <div class="acts-grid">
-        @for (act of bossActs(); track act.id) {
-        <div class="act-card">
-          <div class="act-header">
-            Act {{ act.name }}
-          </div>
+        <div class="acts-grid">
+          @for (act of bossActs(); track act.id) {
+            <div class="act-card">
+              <div class="act-header">Act {{ act.name }}</div>
 
-          <div class="enemies-container-wrapper">
-            @if (act.enemy_options?.timer) {
-            <div class="act-options-info">
-              {{ act.enemy_options?.timer }} sec
-            </div>
-            }
-            @if (act.enemy_options?.defeat) {
-            <div class="act-options-info">
-              Defeat {{ act.enemy_options?.defeat }}
-            </div>
-            }
-
-            <div class="enemies-container">
-              <!-- Boss usually has 1 variation, 1 wave -->
-              @if (act.variations && act.variations[0]?.waves) {
-              @for (wave of act.variations[0].waves; track $index) {
-              <div class="enemy-inner">
-                @for (enemy of wave.included_enemy; track enemy.id) {
-                <div class="enemy-inner-wrap">
-                  @if (enemy.quantity) {
-                  <span class="badge badge-amount">{{ enemy.quantity }}</span>
-                  }
-                  @if (enemy.specialMark) {
-                  <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
-                  }
-                  @if (enemy.element.iconUrl && enemy.element.name !== 'empty') {
-                  <span class="badge badge-element"><img [src]="enemy.element.iconUrl" /></span>
-                  }
-                  <div class="enemy-circle">
-                    <img [src]="resolveAvatarUrl(enemy.id)" />
-                  </div>
-                </div>
+              <div class="enemies-container-wrapper">
+                @if (act.enemy_options?.timer) {
+                  <div class="act-options-info">{{ act.enemy_options?.timer }} sec</div>
                 }
+                @if (act.enemy_options?.defeat) {
+                  <div class="act-options-info">Defeat {{ act.enemy_options?.defeat }}</div>
+                }
+
+                <div class="enemies-container">
+                  <!-- Boss usually has 1 variation, 1 wave -->
+                  @if (act.variations && act.variations[0]?.waves) {
+                    @for (wave of act.variations[0].waves; track $index) {
+                      <div class="enemy-inner">
+                        @for (enemy of wave.included_enemy; track enemy.id) {
+                          <div class="enemy-inner-wrap">
+                            @if (enemy.quantity) {
+                              <span class="badge badge-amount">{{ enemy.quantity }}</span>
+                            }
+                            @if (enemy.specialMark) {
+                              <span class="badge badge-specialMark"
+                                ><img src="assets/images/specia_mark.svg"
+                              /></span>
+                            }
+                            @if (enemy.element.iconUrl && enemy.element.name !== 'empty') {
+                              <span class="badge badge-element"
+                                ><img [src]="enemy.element.iconUrl"
+                              /></span>
+                            }
+                            <div class="enemy-circle">
+                              <img [src]="resolveAvatarUrl(enemy.id)" />
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    }
+                  }
+
+                  <button class="btn-add-circle" (click)="openAddEnemyModal(act)">+</button>
+                </div>
               </div>
-              }
-              }
-
-              <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
-                +
-              </button>
-
             </div>
-          </div>
+          }
         </div>
-        }
       </div>
-    </div>
     }
 
     <!-- ================= Arcana Chambers ================= -->
     @if (arcanaActs().length) {
-    <div class="subsection">
-      <h3>Arcana Chambers</h3>
+      <div class="subsection">
+        <h3>Arcana Chambers</h3>
 
-      <div class="acts-grid acts-grid-arcana">
-        @for (act of arcanaActs(); track act.id) {
-        <div class="act-card arcana">
-          <div class="act-header">
-            Arcana {{ act.name }}
-          </div>
+        <div class="acts-grid acts-grid-arcana">
+          @for (act of arcanaActs(); track act.id) {
+            <div class="act-card arcana">
+              <div class="act-header">Arcana {{ act.name }}</div>
 
-          <div class="enemies-container-wrapper">
-            @if (act.enemy_options?.timer) {
-            <div class="act-options-info">
-              {{ act.enemy_options?.timer }} sec
-            </div>
-            }
-            @if (act.enemy_options?.defeat) {
-            <div class="act-options-info">
-              Defeat {{ act.enemy_options?.defeat }}
-            </div>
-            }
-            <div class="enemies-container">
-              <!-- Arcana usually has 1 variation, 1 wave -->
-              @if (act.variations && act.variations[0]?.waves) {
-              @for (wave of act.variations[0].waves; track $index) {
-              <div class="enemy-inner">
-                @for (enemy of wave.included_enemy; track enemy.id) {
-                <div class="enemy-inner-wrap">
-                  @if (enemy.quantity) {
-                  <span class="badge badge-amount">{{ enemy.quantity }}</span>
-                  }
-                  @if (enemy.specialMark) {
-                  <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
-                  }
-                  @if (enemy.element.iconUrl && enemy.element.name !== 'empty') {
-                  <span class="badge badge-element"><img [src]="enemy.element.iconUrl" /></span>
-                  }
-                  <div class="enemy-circle">
-                    <img [src]="resolveAvatarUrl(enemy.id)" />
-                  </div>
-                </div>
+              <div class="enemies-container-wrapper">
+                @if (act.enemy_options?.timer) {
+                  <div class="act-options-info">{{ act.enemy_options?.timer }} sec</div>
                 }
+                @if (act.enemy_options?.defeat) {
+                  <div class="act-options-info">Defeat {{ act.enemy_options?.defeat }}</div>
+                }
+                <div class="enemies-container">
+                  <!-- Arcana usually has 1 variation, 1 wave -->
+                  @if (act.variations && act.variations[0]?.waves) {
+                    @for (wave of act.variations[0].waves; track $index) {
+                      <div class="enemy-inner">
+                        @for (enemy of wave.included_enemy; track enemy.id) {
+                          <div class="enemy-inner-wrap">
+                            @if (enemy.quantity) {
+                              <span class="badge badge-amount">{{ enemy.quantity }}</span>
+                            }
+                            @if (enemy.specialMark) {
+                              <span class="badge badge-specialMark"
+                                ><img src="assets/images/specia_mark.svg"
+                              /></span>
+                            }
+                            @if (enemy.element.iconUrl && enemy.element.name !== 'empty') {
+                              <span class="badge badge-element"
+                                ><img [src]="enemy.element.iconUrl"
+                              /></span>
+                            }
+                            <div class="enemy-circle">
+                              <img [src]="resolveAvatarUrl(enemy.id)" />
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    }
+                  }
+
+                  <button class="btn-add-circle" (click)="openAddEnemyModal(act)">+</button>
+                </div>
               </div>
-              }
-              }
-
-              <button class="btn-add-circle" (click)="openAddEnemyModal(act)">
-                +
-              </button>
-
             </div>
-          </div>
+          }
         </div>
-        }
       </div>
-    </div>
     }
 
     <!-- ================= VARIATIONS ================= -->
@@ -248,108 +232,132 @@
 
       <div class="variations-grid">
         @for (act of variationActs(); track act.id) {
-        <div class="variation-card">
-          <div class="var-header">
-            Act {{ act.name }}
-          </div>
+          <div class="variation-card">
+            <div class="var-header">Act {{ act.name }}</div>
 
-          <div class="var-content">
-            @if (act.type == "Variation_fight") {
-            <div class="var-settings-display">
-              <div class="var-waves-container">
-                @for (variation of act.variations; track $index; let vIdx = $index) {
-                <div class="variation-row">
-                  <button class="btn-edit-settings" (click)="openVariationModal(act, vIdx)">
-                    <svg _ngcontent-ng-c3480669616="" width="16" height="16" viewBox="0 0 14 14" fill="none"
-                      xmlns="http://www.w3.org/2000/svg" class="color-green">
-                      <mask _ngcontent-ng-c3480669616="" id="mask0_211_38713" maskUnits="userSpaceOnUse" x="0" y="0"
-                        width="14" height="14" style="mask-type: alpha;">
-                        <rect _ngcontent-ng-c3480669616="" width="14" height="14" fill="#D9D9D9"></rect>
-                      </mask>
-                      <g _ngcontent-ng-c3480669616="" mask="url(#mask0_211_38713)">
-                        <path _ngcontent-ng-c3480669616=""
-                          d="M1.1665 13.9998V11.6665H12.8332V13.9998H1.1665ZM3.49984 9.33317H4.3165L8.8665 4.79775L8.03525 3.9665L3.49984 8.5165V9.33317ZM2.33317 10.4998V8.02067L8.8665 1.50192C8.97345 1.39498 9.09741 1.31234 9.23838 1.254C9.37935 1.19567 9.52762 1.1665 9.68317 1.1665C9.83873 1.1665 9.98942 1.19567 10.1353 1.254C10.2811 1.31234 10.4123 1.39984 10.529 1.5165L11.3311 2.33317C11.4478 2.44011 11.5328 2.5665 11.5863 2.71234C11.6398 2.85817 11.6665 3.00886 11.6665 3.16442C11.6665 3.31025 11.6398 3.45366 11.5863 3.59463C11.5328 3.7356 11.4478 3.86442 11.3311 3.98109L4.81234 10.4998H2.33317Z"
-                          fill="#0CD27C"></path>
-                      </g>
-                    </svg>
-                  </button>
-                  <div class="variation-number">
-                    <div class="span fs_16">
-                      {{$index + 1 + '.'}}
-                    </div>
-                  </div>
-                  <!-- Timer -->
-                  @if (variation.timer) {
-                  <div class="wave-timer">
-                    {{ variation.timer }} sec
-                  </div>
-                  }
-                  <!-- Monolit -->
-                  @if (variation.monolit) {
-                  <div class="wave-timer">
-                    Monolit
-                  </div>
-                  }
-
-                  <div class="wave-column-wrapper">
-                    @for (wave of variation.waves; track $index; let wIdx = $index) {
-                    <div class="wave-column">
-                      <!-- Wave title -->
-                      <div class="wave-header">
-                        @if (variation.wave === 'custom') {
-                        {{ variation.name || 'Custom wave' }}
-                        } @else {
-                        Wave {{ wIdx + 1 }}
-                        }
-                      </div>
-
-                      <!-- Enemies -->
-                      <div class="enemies-vertical-list">
-                        <div class="enemy-inner">
-                          @for (enemy of wave.included_enemy; track enemy.id) {
-                          <div class="enemy-inner-wrap">
-                            @if (enemy.quantity) {
-                            <span class="badge badge-amount">
-                              {{ enemy.quantity }}
-                            </span>
-                            }
-                            @if (enemy.specialMark) {
-                            <span class="badge badge-specialMark"><img src="assets/images/specia_mark.svg" /></span>
-                            }
-                            @if (enemy.element.iconUrl && enemy.element.name !== 'empty') {
-                            <span class="badge badge-element"><img [src]="enemy.element.iconUrl" /></span>
-                            }
-                            <div class="enemy-circle">
-                              <img [src]="resolveAvatarUrl(enemy.id)" [alt]="enemy.name" />
-                            </div>
-                          </div>
-                          }
-
-                        </div>
-                        <button class="btn-add-circle small" (click)="openAddEnemyToWave(act, vIdx, wIdx)">
-                          +
+            <div class="var-content">
+              @if (act.type == 'Variation_fight') {
+                <div class="var-settings-display">
+                  <div class="var-waves-container">
+                    @for (variation of act.variations; track $index; let vIdx = $index) {
+                      <div class="variation-row">
+                        <button class="btn-edit-settings" (click)="openVariationModal(act, vIdx)">
+                          <svg
+                            _ngcontent-ng-c3480669616=""
+                            width="16"
+                            height="16"
+                            viewBox="0 0 14 14"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="color-green"
+                          >
+                            <mask
+                              _ngcontent-ng-c3480669616=""
+                              id="mask0_211_38713"
+                              maskUnits="userSpaceOnUse"
+                              x="0"
+                              y="0"
+                              width="14"
+                              height="14"
+                              style="mask-type: alpha"
+                            >
+                              <rect
+                                _ngcontent-ng-c3480669616=""
+                                width="14"
+                                height="14"
+                                fill="#D9D9D9"
+                              ></rect>
+                            </mask>
+                            <g _ngcontent-ng-c3480669616="" mask="url(#mask0_211_38713)">
+                              <path
+                                _ngcontent-ng-c3480669616=""
+                                d="M1.1665 13.9998V11.6665H12.8332V13.9998H1.1665ZM3.49984 9.33317H4.3165L8.8665 4.79775L8.03525 3.9665L3.49984 8.5165V9.33317ZM2.33317 10.4998V8.02067L8.8665 1.50192C8.97345 1.39498 9.09741 1.31234 9.23838 1.254C9.37935 1.19567 9.52762 1.1665 9.68317 1.1665C9.83873 1.1665 9.98942 1.19567 10.1353 1.254C10.2811 1.31234 10.4123 1.39984 10.529 1.5165L11.3311 2.33317C11.4478 2.44011 11.5328 2.5665 11.5863 2.71234C11.6398 2.85817 11.6665 3.00886 11.6665 3.16442C11.6665 3.31025 11.6398 3.45366 11.5863 3.59463C11.5328 3.7356 11.4478 3.86442 11.3311 3.98109L4.81234 10.4998H2.33317Z"
+                                fill="#0CD27C"
+                              ></path>
+                            </g>
+                          </svg>
                         </button>
-                      </div>
-                    </div>
-                    }
-                  </div>
+                        <div class="variation-number">
+                          <div class="span fs_16">
+                            {{ $index + 1 + '.' }}
+                          </div>
+                        </div>
+                        <!-- Timer -->
+                        @if (variation.timer) {
+                          <div class="wave-timer">{{ variation.timer }} sec</div>
+                        }
+                        <!-- Monolit -->
+                        @if (variation.monolit) {
+                          <div class="wave-timer">Monolit</div>
+                        }
 
-                  <!-- <button class="btn-edit-settings" (click)="openVariationModal(act, vIdx)">
+                        <div class="wave-column-wrapper">
+                          @for (wave of variation.waves; track $index; let wIdx = $index) {
+                            <div class="wave-column">
+                              <!-- Wave title -->
+                              <div class="wave-header">
+                                @if (variation.wave === 'custom') {
+                                  {{ variation.name || 'Custom wave' }}
+                                } @else {
+                                  Wave {{ wIdx + 1 }}
+                                }
+                              </div>
+
+                              <!-- Enemies -->
+                              <div class="enemies-vertical-list">
+                                <div class="enemy-inner">
+                                  @for (enemy of wave.included_enemy; track enemy.id) {
+                                    <div class="enemy-inner-wrap">
+                                      @if (enemy.quantity) {
+                                        <span class="badge badge-amount">
+                                          {{ enemy.quantity }}
+                                        </span>
+                                      }
+                                      @if (enemy.specialMark) {
+                                        <span class="badge badge-specialMark"
+                                          ><img src="assets/images/specia_mark.svg"
+                                        /></span>
+                                      }
+                                      @if (
+                                        enemy.element.iconUrl && enemy.element.name !== 'empty'
+                                      ) {
+                                        <span class="badge badge-element"
+                                          ><img [src]="enemy.element.iconUrl"
+                                        /></span>
+                                      }
+                                      <div class="enemy-circle">
+                                        <img
+                                          [src]="resolveAvatarUrl(enemy.id)"
+                                          [alt]="enemy.name"
+                                        />
+                                      </div>
+                                    </div>
+                                  }
+                                </div>
+                                <button
+                                  class="btn-add-circle small"
+                                  (click)="openAddEnemyToWave(act, vIdx, wIdx)"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
+                          }
+                        </div>
+
+                        <!-- <button class="btn-edit-settings" (click)="openVariationModal(act, vIdx)">
                     <span class="material-symbols-outlined">
                       settings_b_roll
                     </span>
                   </button> -->
+                      </div>
+                    }
+                  </div>
                 </div>
-                }
-              </div>
-
+              }
+              <button class="btn-cta" (click)="openVariationModal(act)">+ Add variation</button>
             </div>
-            }
-            <button class="btn-cta" (click)="openVariationModal(act)">
-              + Add variation
-            </button>
           </div>
-        </div>
         }
       </div>
     </div>
@@ -358,27 +366,43 @@
   <!-- ================= MODALS ================= -->
 
   @if (showElementModal()) {
-  <app-season-element-type-modal [selectedElements]="seasonDetails().elemental_type_limided"
-    (close)="closeElementModal()" (save)="onSaveElements($event)" />
+    <app-season-element-type-modal
+      [selectedElements]="seasonDetails().elemental_type_limided"
+      (close)="closeElementModal()"
+      (save)="onSaveElements($event)"
+    />
   }
 
   @if (showCharactersModal()) {
-  <app-season-characters-modal [title]="currentCharacterTitle()" [limit]="currentCharacterLimit()"
-    [allCharacters]="allCharacters()" [startSelection]="currentCharacterSelection()" (close)="closeCharacterModal()"
-    (save)="onSaveCharacters($event)" />
+    <app-season-characters-modal
+      [title]="currentCharacterTitle()"
+      [allCharacters]="allCharacters()"
+      [startSelection]="currentCharacterSelection()"
+      (close)="closeCharacterModal()"
+      (save)="onSaveCharacters($event)"
+    />
   }
 
   @if (showAddEnemyModal()) {
-  <app-season-add-enemy-modal [actOptions]="currentActOptions()" [categories]="enemiesService.categories()"
-    [allEnemies]="enemiesService.enemies()" [initialEnemies]="currentInitialEnemies()"
-    [initialOptions]="currentInitialOptions()" [currentAct]="currentActForEnemy()"
-    [currentVariation]="currentVariationForEnemy()" [currentWave]="currentWaveForEnemy()" (close)="closeAddEnemyModal()"
-    (save)="onSaveEnemy($event)" />
+    <app-season-add-enemy-modal
+      [actOptions]="currentActOptions()"
+      [categories]="enemiesService.categories()"
+      [allEnemies]="enemiesService.enemies()"
+      [initialEnemies]="currentInitialEnemies()"
+      [initialOptions]="currentInitialOptions()"
+      [currentAct]="currentActForEnemy()"
+      [currentVariation]="currentVariationForEnemy()"
+      [currentWave]="currentWaveForEnemy()"
+      (close)="closeAddEnemyModal()"
+      (save)="onSaveEnemy($event)"
+    />
   }
 
   @if (showVariationModal()) {
-  <season-add-variation-chamber-modal [initialData]="currentInitialVariation()" (close)="closeVariationModal()"
-    (save)="onSaveVariation($event)" />
+    <season-add-variation-chamber-modal
+      [initialData]="currentInitialVariation()"
+      (close)="closeVariationModal()"
+      (save)="onSaveVariation($event)"
+    />
   }
-
 </div>

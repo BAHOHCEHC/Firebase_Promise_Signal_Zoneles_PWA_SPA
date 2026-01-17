@@ -266,3 +266,21 @@
       }
     }
 }
+
+// Pulse animation for counters
+@keyframes color-pulse {
+    0% {
+        color: $primary-white;
+    }
+    50% {
+        color: #ff3c3c; // Red
+        opacity: 0.8;
+    }
+    100% {
+        color: $primary-white;
+    }
+}
+
+.pulse {
+    animation: color-pulse 3s infinite ease-in-out;
+}

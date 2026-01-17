@@ -199,7 +199,18 @@ export interface Region_task {
   parts?: Part[];
   finished?: boolean;
 }
+
 export interface Part {
   name: string;
   finished?: boolean;
+}
+
+export interface LineUpConfig {
+  [modeId: string]: ModeConfiguration;
+}
+
+export interface ModeConfiguration {
+  selectedCharacters: string[]; // List of character IDs
+  placements: Record<string, string[]>; // Act ID -> List of Character IDs
+  energyState: Record<string, number>; // Character ID -> current energy
 }

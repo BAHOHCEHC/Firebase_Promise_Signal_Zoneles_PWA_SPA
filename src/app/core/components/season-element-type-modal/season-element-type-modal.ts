@@ -7,17 +7,23 @@ import { ElementTypeName, ElementType } from '../../../../models/models';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './season-element-type-modal.html',
-  styleUrl: './season-element-type-modal.scss'
+  styleUrl: './season-element-type-modal.scss',
 })
 export class SeasonElementTypeModal {
   @Input() public set selectedElements(value: ElementType[]) {
-    this.currentSelection.set(new Set(value.map(e => e.name)));
+    this.currentSelection.set(new Set(value.map((e) => e.name)));
   }
   @Output() public close = new EventEmitter<void>();
   @Output() public save = new EventEmitter<ElementType[]>();
 
   public readonly elementTypes: ElementTypeName[] = [
-    "pyro", "hydro", "electro", "cryo", "dendro", "anemo", "geo"
+    'pyro',
+    'hydro',
+    'electro',
+    'cryo',
+    'dendro',
+    'anemo',
+    'geo',
   ];
 
   public currentSelection = signal<Set<ElementTypeName>>(new Set());
@@ -57,10 +63,13 @@ export class SeasonElementTypeModal {
   }
 
   public onSave(): void {
-    const selected = Array.from(this.currentSelection()).map(name => ({
-      name,
-      iconUrl: this.getElementIconPath(name)
-    } as ElementType));
+    const selected = Array.from(this.currentSelection()).map(
+      (name) =>
+        ({
+          name,
+          iconUrl: this.getElementIconPath(name),
+        }) as ElementType,
+    );
     this.save.emit(selected);
   }
 

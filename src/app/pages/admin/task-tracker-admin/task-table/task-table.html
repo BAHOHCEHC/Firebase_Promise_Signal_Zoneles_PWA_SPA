@@ -1,20 +1,19 @@
 <section class="tasks-section">
   @if (loading()) {
-  <div class="loading-state">
-    <span class="material-symbols-outlined spin">progress_activity</span>
-    <p>Loading tasks...</p>
-  </div>
+    <div class="loading-state">
+      <span class="material-symbols-outlined spin">progress_activity</span>
+      <p>Loading tasks...</p>
+    </div>
   } @else if (error) {
-  <div class="error-state">{{ error }}</div>
+    <div class="error-state">{{ error }}</div>
   }
 
-
   @if (userMode && filterForm) {
-  <div class="filter-container" [formGroup]="filterForm">
-    <span class="radio-text">Show only unfinished tasks</span>
-    <input type="checkbox" formControlName="showUnfinished" id="showUnfinishedTasks" />
-    <label for="showUnfinishedTasks"></label>
-  </div>
+    <div class="filter-container" [formGroup]="filterForm">
+      <span class="radio-text">Show only unfinished tasks</span>
+      <input type="checkbox" formControlName="showUnfinished" id="showUnfinishedTasks" />
+      <label for="showUnfinishedTasks"></label>
+    </div>
   }
 
   <div class="task-table-container">
@@ -25,105 +24,141 @@
       <div class="col-achiviment">Achiviment</div>
       <div class="col-link">Link</div>
       @if (adminMode) {
-      <div class="col-actions">Actions</div>
+        <div class="col-actions">Actions</div>
       }
       @if (userMode) {
-      <div class="col-actions">Finished</div>
+        <div class="col-actions">Finished</div>
       }
     </div>
     <div class="table-body">
       @for (task of tasks; track task.id) {
-      <div class="table-row">
-        <div class="row-main">
-          <!-- Name & Parts -->
-          <div class="col-name">
-            <div class="task-name">{{ task.name }}</div>
-            @if (!userMode && task.taskSeries && task.parts && task.parts.length > 0) {
-            <ul class="task-parts">
-              @for (part of task.parts; track $index) {
-              <li>{{ part.name }}</li>
+        <div class="table-row">
+          <div class="row-main">
+            <!-- Name & Parts -->
+            <div class="col-name">
+              <div class="task-name">{{ task.name }}</div>
+              @if (!userMode && task.taskSeries && task.parts && task.parts.length > 0) {
+                <ul class="task-parts">
+                  @for (part of task.parts; track $index) {
+                    <li>{{ part.name }}</li>
+                  }
+                </ul>
               }
-            </ul>
-            }
-          </div>
-
-          <!-- Type -->
-          <div class="col-type">
-            <span class="badge" [class.badge-series]="task.taskSeries" [class.badge-world]="!task.taskSeries">
-              {{ task.taskSeries ? 'SERIES QUEST' : 'WORLD QUEST' }}
-            </span>
-          </div>
-
-          <!-- achiviment -->
-          <div class="col-achiviment">
-            @if (task.achiviment) {
-            <span>{{ task.achiviment }}</span>
-            }
-          </div>
-          <!-- Link -->
-          <div class="col-link">
-            @if (task.youtubeLink) {
-            <a [href]="task.youtubeLink" target="_blank">Link</a>
-            } @else {
-            <span class="no-link">-</span>
-            }
-          </div>
-
-          <!-- Actions -->
-          @if (adminMode) {
-          <div class="grid-cell act-actions-cell ">
-            <button class="btn-icon edit-btn" (click)="onEdit(task)" title="Edit Task">
-              <svg class="color-green" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-              </svg>
-            </button>
-            <button class="btn-icon delete-btn" (click)="onDelete(task)" title="Delete Task">
-              <svg class="red" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-            </button>
-          </div>
-          }@else if (userMode) {
-          <div class="col-actions">
-            @if (task.parts && task.parts.length > 0) {
-            <button class="btn-icon" (click)="toggleExpand(task.id)">
-              <span class="material-symbols-outlined">{{ isExpanded(task.id) ? 'keyboard_arrow_up' :
-                'keyboard_arrow_down' }}</span>
-            </button>
-            } @else {
-            <input [id]="task.id" type="checkbox" [checked]="task.finished" (change)="onToggleTask(task)">
-            <label [for]="task.id"></label>
-            }
-          </div>
-          }
-        </div>
-
-        <!-- Expanded Parts Grid -->
-        @if (userMode && isExpanded(task.id) && task.parts && task.parts.length > 0) {
-        <div class="parts-grid">
-          @for (part of task.parts; track $index) {
-          <div class="part-row">
-            <div class="part-name">• {{ part.name }}</div>
-            <div class="part-action">
-              <input [id]="part.name" type="checkbox" [checked]="part.finished"
-                (change)="onTogglePart(task, part.name)">
-              <label [for]="part.name"></label>
             </div>
+
+            <!-- Type -->
+            <div class="col-type">
+              <span
+                class="badge"
+                [class.badge-series]="task.taskSeries"
+                [class.badge-world]="!task.taskSeries"
+              >
+                {{ task.taskSeries ? 'SERIES QUEST' : 'WORLD QUEST' }}
+              </span>
+            </div>
+
+            <!-- achiviment -->
+            <div class="col-achiviment">
+              @if (task.achiviment) {
+                <span>{{ task.achiviment }}</span>
+              }
+            </div>
+            <!-- Link -->
+            <div class="col-link">
+              @if (task.youtubeLink) {
+                <a [href]="task.youtubeLink" target="_blank">Link</a>
+              } @else {
+                <span class="no-link">-</span>
+              }
+            </div>
+
+            <!-- Actions -->
+            @if (adminMode) {
+              <div class="grid-cell act-actions-cell">
+                <button class="btn-icon edit-btn" (click)="onEdit(task)" title="Edit Task">
+                  <svg
+                    class="color-green"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+                <button class="btn-icon delete-btn" (click)="onDelete(task)" title="Delete Task">
+                  <svg
+                    class="red"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path
+                      d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            } @else if (userMode) {
+              <div class="col-actions">
+                @if (task.parts && task.parts.length > 0) {
+                  <button class="btn-icon" (click)="toggleExpand(task.id)">
+                    <span class="material-symbols-outlined">{{
+                      isExpanded(task.id) ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                    }}</span>
+                  </button>
+                } @else {
+                  <input
+                    [id]="task.id"
+                    type="checkbox"
+                    [checked]="task.finished"
+                    (change)="onToggleTask(task)"
+                  />
+                  <label [for]="task.id"></label>
+                }
+              </div>
+            }
           </div>
+
+          <!-- Expanded Parts Grid -->
+          @if (userMode && isExpanded(task.id) && task.parts && task.parts.length > 0) {
+            <div class="parts-grid">
+              @for (part of task.parts; track $index) {
+                <div class="part-row">
+                  <div class="part-name">• {{ part.name }}</div>
+                  <div class="part-action">
+                    <input
+                      [id]="part.name"
+                      type="checkbox"
+                      [checked]="part.finished"
+                      (change)="onTogglePart(task, part.name)"
+                    />
+                    <label [for]="part.name"></label>
+                  </div>
+                </div>
+              }
+            </div>
           }
         </div>
-        }
-      </div>
       }
 
       @if (tasks.length === 0) {
-      <div class="empty-state">
-        {{ userMode ? 'В цьому регіоні немає невиконаних завдань' : 'No tasks' }}
-      </div>
+        <div class="empty-state">
+          {{ userMode ? 'В цьому регіоні немає невиконаних завдань' : 'No tasks' }}
+        </div>
       }
     </div>
   </div>

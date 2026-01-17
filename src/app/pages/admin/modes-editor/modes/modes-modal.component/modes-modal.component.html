@@ -5,39 +5,52 @@
     <div class="form-container" [formGroup]="form">
       <div class="field-group">
         <label>Mode name</label>
-        <input type="text" formControlName="name" placeholder="Hard mode"
-          [class.error]="form.get('name')?.invalid && form.get('name')?.touched" />
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Hard mode"
+          [class.error]="form.get('name')?.invalid && form.get('name')?.touched"
+        />
         @if (form.get('name')?.invalid && form.get('name')?.touched) {
-        <div class="error-message">
-          @if (form.get('name')?.errors?.['required']) {
-          <small>Mode name is required</small>
-          }
-          @if (form.get('name')?.errors?.['minlength']) {
-          <small>At least 2 characters required</small>
-          }
-        </div>
+          <div class="error-message">
+            @if (form.get('name')?.errors?.['required']) {
+              <small>Mode name is required</small>
+            }
+            @if (form.get('name')?.errors?.['minlength']) {
+              <small>At least 2 characters required</small>
+            }
+          </div>
         }
       </div>
 
       <div class="row">
         <div class="field-group small">
           <h5 class="tac">Min</h5>
-          <input min="1" type="number" formControlName="min" class="number-input"
-            [class.error]="form.get('min')?.invalid && form.get('min')?.touched" />
+          <input
+            min="1"
+            type="number"
+            formControlName="min"
+            class="number-input"
+            [class.error]="form.get('min')?.invalid && form.get('min')?.touched"
+          />
         </div>
         <div class="field-group small">
           <h5 class="tac">Max</h5>
-          <input min="2" type="number" formControlName="max" class="number-input"
-            [class.error]="form.get('max')?.invalid && form.get('max')?.touched" />
+          <input
+            min="2"
+            type="number"
+            formControlName="max"
+            class="number-input"
+            [class.error]="form.get('max')?.invalid && form.get('max')?.touched"
+          />
         </div>
       </div>
-
     </div>
     <!-- Помилка min > max -->
     @if (form.errors?.['minGreaterThanMax']) {
-    <div class="form-error">
-      <small>Min value cannot be greater than Max value</small>
-    </div>
+      <div class="form-error">
+        <small>Min value cannot be greater than Max value</small>
+      </div>
     }
 
     <div class="acts-section">
@@ -53,36 +66,49 @@
         </div>
       </div>
 
-      <div class="selected-count">
-        Selected: {{ selectedCount() }} of {{ acts().length }}
-      </div>
+      <div class="selected-count">Selected: {{ selectedCount() }} of {{ acts().length }}</div>
 
       <div class="acts-grid">
-        <button *ngFor="let act of normalActs()" class="act-btn" (click)="toggleSelection(act)"
-          [class.active]="isSelected(act)">
-          {{act.name}}
+        <button
+          *ngFor="let act of normalActs()"
+          class="act-btn"
+          (click)="toggleSelection(act)"
+          [class.active]="isSelected(act)"
+        >
+          {{ act.name }}
         </button>
-        <button *ngFor="let act of arcanaActs()" class="act-btn wide arcana-btn" (click)="toggleSelection(act)"
-          [class.active]="isSelected(act)">
-          Arcana {{act.name}}
+        <button
+          *ngFor="let act of arcanaActs()"
+          class="act-btn wide arcana-btn"
+          (click)="toggleSelection(act)"
+          [class.active]="isSelected(act)"
+        >
+          Arcana {{ act.name }}
         </button>
       </div>
     </div>
 
     <!-- Підсумок помилок -->
     @if (form.invalid || selectedCount() === 0) {
-    <div class="validation-summary">
-      <ul>
-        @for (error of getValidationErrors(); track error) {
-        <li><small>{{ error }}</small></li>
-        }
-      </ul>
-    </div>
+      <div class="validation-summary">
+        <ul>
+          @for (error of getValidationErrors(); track error) {
+            <li>
+              <small>{{ error }}</small>
+            </li>
+          }
+        </ul>
+      </div>
     }
 
     <div class="actions">
       <button class="cancel-btn" (click)="close.emit()">Cancel</button>
-      <button class="save-btn" (click)="save()" [disabled]="isSaveDisabled()" [class.disabled]="isSaveDisabled()">
+      <button
+        class="save-btn"
+        (click)="save()"
+        [disabled]="isSaveDisabled()"
+        [class.disabled]="isSaveDisabled()"
+      >
         {{ modeToEdit ? 'Update' : 'Save' }}
       </button>
     </div>

@@ -61,7 +61,8 @@
               @if (loginForm.get('password')?.errors?.['required']) {
                 Password required
               } @else if (loginForm.get('password')?.errors?.['minlength']) {
-                Minimum {{ loginForm.get('password')?.errors?.['minlength'].requiredLength }} characters
+                Minimum
+                {{ loginForm.get('password')?.errors?.['minlength'].requiredLength }} characters
               }
             </div>
           }

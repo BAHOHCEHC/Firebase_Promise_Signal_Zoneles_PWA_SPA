@@ -22,27 +22,45 @@
   </header>
 
   <!-- ACTS -->
-  <app-acts-table [acts]="acts" [loading]="loading()" [error]="error" (deleteAct)="onDeleteAct($event)"
-    (refresh)="loadActs()" (editAct)="onEditAct($event)" />
+  <app-acts-table
+    [acts]="acts"
+    [loading]="loading()"
+    [error]="error"
+    (deleteAct)="onDeleteAct($event)"
+    (refresh)="loadActs()"
+    (editAct)="onEditAct($event)"
+  />
 
   <!-- MODES -->
   <h2 class="section-title">Modes</h2>
-  <app-modes-table [modes]="modes" [loading]="loadingModes()" [error]="errorModes" (edit)="onEditMode($event)"
-    (delete)="onDeleteMode($event)" />
+  <app-modes-table
+    [modes]="modes"
+    [loading]="loadingModes()"
+    [error]="errorModes"
+    (edit)="onEditMode($event)"
+    (delete)="onDeleteMode($event)"
+  />
 
   <!-- Модалка Add/Edit Act -->
   @if (showActModal()) {
-  <app-act-modal [actToEdit]="editingAct()" (close)="closeActModal()" (saved)="loadActs()" />
+    <app-act-modal [actToEdit]="editingAct()" (close)="closeActModal()" (saved)="loadActs()" />
   }
 
   <!-- Модалка Add Mode -->
   @if (showModeModal()) {
-  <app-mode-modal [modeToEdit]="editingMode()" (close)="closeModeModal()" />
+    <app-mode-modal [modeToEdit]="editingMode()" (close)="closeModeModal()" />
   }
 
   <!-- Модалка Confirm delete -->
   @if (showConfirmModal()) {
-  <app-confirm-modal [title]="getConfirmTitle()" [message]="getConfirmMessage()" [confirmButtonText]="'Delete'"
-    [cancelButtonText]="'Cancel'" [type]="'danger'" (confirm)="onConfirmDelete()" (close)="closeConfirmModal()" />
+    <app-confirm-modal
+      [title]="getConfirmTitle()"
+      [message]="getConfirmMessage()"
+      [confirmButtonText]="'Delete'"
+      [cancelButtonText]="'Cancel'"
+      [type]="'danger'"
+      (confirm)="onConfirmDelete()"
+      (close)="closeConfirmModal()"
+    />
   }
 </section>

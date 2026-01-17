@@ -1,56 +1,60 @@
 <section class="yc">
   <header class="yc__header-row">
     @if (!charactersPanelOpened()) {
-    <h1 class="yc__title">Your Characters</h1>
-    <button class="yc__add-button fs_24" (click)="onAddCharacters()">
-      Add Characters +
-    </button>
+      <h1 class="yc__title">Your Characters</h1>
+      <button class="yc__add-button fs_24" (click)="onAddCharacters()">Add Characters +</button>
     } @else {
-    <h1 class="yc__title color-green">Select Characters you have</h1>
-    <button class="yc__save-button fs_24" (click)="onSaveAddCharacters()">
-      Save
-      <span class="material-symbols-outlined color-green">
-        bookmark_check
-      </span>
-    </button>
+      <h1 class="yc__title color-green">Select Characters you have</h1>
+      <button class="yc__save-button fs_24" (click)="onSaveAddCharacters()">
+        Save
+        <span class="material-symbols-outlined color-green"> bookmark_check </span>
+      </button>
     }
   </header>
 
   <!-- Фільтри елементів -->
   <div class="yc__elements" [class.yc__elements--dim-inactive]="shouldDimInactive()">
     @for (type of elementTypes; track type) {
-    <button class="yc__element-button" [class.yc__element-button--active]="characterStore.activeElements().has(type)"
-      (click)="toggleElement(type)">
-      <img class="yc__element-icon" [src]="getElementIconPath(type)" [alt]="type" />
-    </button>
+      <button
+        class="yc__element-button"
+        [class.yc__element-button--active]="characterStore.activeElements().has(type)"
+        (click)="toggleElement(type)"
+      >
+        <img class="yc__element-icon" [src]="getElementIconPath(type)" [alt]="type" />
+      </button>
     }
   </div>
 
   <!-- Порожні стани -->
   @if (charactersArrayEmpty() && !charactersPanelOpened()) {
-  <section class="yc__empty">
-    <p class="yc__empty-text">Looks like you haven't added any characters yet.</p>
-    <p class="yc__empty-subtext">Click "Add Characters" to start.</p>
-  </section>
+    <section class="yc__empty">
+      <p class="yc__empty-text">Looks like you haven't added any characters yet.</p>
+      <p class="yc__empty-subtext">Click "Add Characters" to start.</p>
+    </section>
   }
 
   @if (charactersPanelOpened() && characterStore.selectedCharacters().length === 0) {
-  <section class="yc__empty">
-    <p class="yc__empty-text">Select all characters that exist on your account.</p>
-    <p class="yc__empty-subtext">It’s best to choose those who are above level 70.</p>
-  </section>
+    <section class="yc__empty">
+      <p class="yc__empty-text">Select all characters that exist on your account.</p>
+      <p class="yc__empty-subtext">It’s best to choose those who are above level 70.</p>
+    </section>
   }
 
   @if (hasSelectedCharacters()) {
-  <section class="yc__empty">
-    <p class="yc__empty-text">{{ characterStore.selectedCharacters().length }} characters selected</p>
-  </section>
+    <section class="yc__empty">
+      <p class="yc__empty-text">
+        {{ characterStore.selectedCharacters().length }} characters selected
+      </p>
+    </section>
   }
 
   <!-- Грид персонажів — показується, якщо є персонажі або відкрита панель редагування -->
   @if (shouldShowCharacterGrid()) {
-  <section class="yc__content">
-    <app-character-grid [characters]="displayCharacters" [activeElements]="characterStore.activeElements" />
-  </section>
+    <section class="yc__content">
+      <app-character-grid
+        [characters]="displayCharacters"
+        [activeElements]="characterStore.activeElements"
+      />
+    </section>
   }
 </section>

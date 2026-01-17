@@ -8,19 +8,30 @@
 
   <!-- regions Tabs -->
   @if (hasRegions()) {
-  <div class="categories-tabs">
-    @for (region of regions(); track region.id) {
-    <div class="btn-wrap">
-      <button class="tab-btn" [class.active]="activeRegionId() === region.id" (click)="selectRegion(region.id)">
-        {{ region.name }}
-      </button>
+    <div class="categories-tabs">
+      @for (region of regions(); track region.id) {
+        <div class="btn-wrap">
+          <button
+            class="tab-btn"
+            [class.active]="activeRegionId() === region.id"
+            (click)="selectRegion(region.id)"
+          >
+            {{ region.name }}
+          </button>
+        </div>
+      }
     </div>
-    }
-  </div>
   }
 
   <!-- Tasks -->
-  <app-task-table [tasks]="tasks()" [userMode]="true" [loading]="isLoading()" [error]="error()"
-    [filterForm]="filterForm" (toggleTask)="onToggleTask($event)" (togglePart)="onTogglePart($event)">
+  <app-task-table
+    [tasks]="tasks()"
+    [userMode]="true"
+    [loading]="isLoading()"
+    [error]="error()"
+    [filterForm]="filterForm"
+    (toggleTask)="onToggleTask($event)"
+    (togglePart)="onTogglePart($event)"
+  >
   </app-task-table>
 </section>
