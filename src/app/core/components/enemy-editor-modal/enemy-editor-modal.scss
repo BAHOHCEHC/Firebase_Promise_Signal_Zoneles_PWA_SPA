@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as *;
 
 .modal-overlay {
@@ -169,7 +170,7 @@
   overflow: hidden;
 
   &:hover {
-    background: lighten($btn-secondary-hover, 10%);
+    background: color.adjust($btn-secondary-hover, $lightness: 10%);
   }
 
   img {

@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as *;
 
 .modal-overlay {
@@ -178,7 +179,7 @@
     pointer-events: none;
     color: $grey-color;
     input {
-      background: darken($grey-bg, 4%);
+      background: color.adjust($grey-bg, $lightness: -4%);
       border-color: transparent;
       &:disabled {
         &:hover {

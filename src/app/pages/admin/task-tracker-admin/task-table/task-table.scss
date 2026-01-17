@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as *;
 
 .table-header {
@@ -305,7 +306,7 @@
 
   .part-name {
     font-size: 14px;
-    color: darken(white, 15%);
+    color: color.adjust(white, $lightness: -15%);
     padding-left: 26px;
     width: 93%;
   }
