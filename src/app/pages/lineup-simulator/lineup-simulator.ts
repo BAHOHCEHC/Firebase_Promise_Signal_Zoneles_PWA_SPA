@@ -17,7 +17,6 @@ import { SeasonCharactersModal } from '../../core/components/season-characters-m
   styleUrl: './lineup-simulator.scss',
 })
 export class LineupSimulator implements OnInit {
-
   @ViewChild(SeasonCharactersModal) seasonCharactersModal!: SeasonCharactersModal;
 
   private seasonService = inject(SeasonService);
@@ -36,7 +35,7 @@ export class LineupSimulator implements OnInit {
     const usersSelectedChars = this.allCharacters();
     const allowed = this.activeElements();
     if (allowed.size === 0) return usersSelectedChars;
-    return usersSelectedChars.filter(c => c.element && allowed.has(c.element.name));
+    return usersSelectedChars.filter((c) => c.element && allowed.has(c.element.name));
   });
 
   // Users characters for the ACTIVE mode
@@ -50,11 +49,12 @@ export class LineupSimulator implements OnInit {
 
     const energyState = this.store.energyState();
 
-    const chars = all.filter(c => selectedIds.has(c.id)).map(c => {
-      const consumed = energyState[c.id] || 0;
-      return { ...c, energy: Math.max(0, 2 - consumed) };
-    });
-
+    const chars = all
+      .filter((c) => selectedIds.has(c.id))
+      .map((c) => {
+        const consumed = energyState[c.id] || 0;
+        return { ...c, energy: Math.max(0, 2 - consumed) };
+      });
     return sortCharacters(chars);
   });
 
@@ -65,7 +65,7 @@ export class LineupSimulator implements OnInit {
 
     const energyState = this.store.energyState();
 
-    return opening.map(c => {
+    return opening.map((c) => {
       const consumed = energyState[c.id] || 0;
       return { ...c, energy: Math.max(0, 2 - consumed) };
     });
@@ -75,7 +75,7 @@ export class LineupSimulator implements OnInit {
   public enemies = signal<Enemy[]>([]);
   public activeMode = computed(() => {
     const id = this.store.activeModeId();
-    return this.modes().find(m => m.id === id) || null;
+    return this.modes().find((m) => m.id === id) || null;
   });
 
   // --- State Signals ---
@@ -83,30 +83,42 @@ export class LineupSimulator implements OnInit {
     elemental_type_limided: [],
     opening_characters: [],
     special_guests: [],
-    acts: []
+    acts: [],
   });
 
   // Element helpers
-  public elementTypes: ElementTypeName[] = ["pyro", "hydro", "electro", "cryo", "dendro", "anemo", "geo"];
+  public elementTypes: ElementTypeName[] = [
+    'pyro',
+    'hydro',
+    'electro',
+    'cryo',
+    'dendro',
+    'anemo',
+    'geo',
+  ];
 
-  public activeElements = computed(() =>
-    new Set(this.seasonDetails().elemental_type_limided.map(e => e.name))
+  public activeElements = computed(
+    () => new Set(this.seasonDetails().elemental_type_limided.map((e) => e.name)),
   );
 
   // Split acts for 2-column layout (Act 1-5 Left, Act 6-10 Right) + Arcana
   public leftActs = computed(() => {
     const acts = this.activeMode()?.chambers || [];
-    return acts.filter(a => a.type !== 'Arcana_fight' && a.name <= 5).sort((a, b) => a.name - b.name);
+    return acts
+      .filter((a) => a.type !== 'Arcana_fight' && a.name <= 5)
+      .sort((a, b) => a.name - b.name);
   });
 
   public rightActs = computed(() => {
     const acts = this.activeMode()?.chambers || [];
-    return acts.filter(a => a.type !== 'Arcana_fight' && a.name > 5).sort((a, b) => a.name - b.name);
+    return acts
+      .filter((a) => a.type !== 'Arcana_fight' && a.name > 5)
+      .sort((a, b) => a.name - b.name);
   });
 
   public arcanaActs = computed(() => {
     const acts = this.activeMode()?.chambers || [];
-    return acts.filter(a => a.type === 'Arcana_fight').sort((a, b) => a.name - b.name);
+    return acts.filter((a) => a.type === 'Arcana_fight').sort((a, b) => a.name - b.name);
   });
 
   async ngOnInit() {
@@ -127,11 +139,10 @@ export class LineupSimulator implements OnInit {
       this.store.setActiveMode(modes[0].id);
     } else if (modes.length > 0 && this.store.activeModeId()) {
       // Ensure active mode is valid
-      const exists = modes.some(m => m.id === this.store.activeModeId());
+      const exists = modes.some((m) => m.id === this.store.activeModeId());
       if (!exists) this.store.setActiveMode(modes[0].id);
       else this.store.setActiveMode(this.store.activeModeId()!);
     }
-
 
     // Load Season Details
     const details = await this.seasonService.loadSeasonDetails();
@@ -140,8 +151,8 @@ export class LineupSimulator implements OnInit {
     if (details) {
       if (details.acts && details.acts.length > 0) {
         // Merge saved details with fresh Act definitions
-        const mergedActs = allActs.map(dbAct => {
-          const savedAct = details.acts.find(a => a.id === dbAct.id);
+        const mergedActs = allActs.map((dbAct) => {
+          const savedAct = details.acts.find((a) => a.id === dbAct.id);
           if (savedAct) {
             return { ...dbAct, ...savedAct };
           }
@@ -150,11 +161,11 @@ export class LineupSimulator implements OnInit {
         this.seasonDetails.set({ ...details, acts: mergedActs });
       } else {
         // Details exist but no acts saved, use allActs
-        this.seasonDetails.update(s => ({ ...details, acts: allActs }));
+        this.seasonDetails.update((s) => ({ ...details, acts: allActs }));
       }
     } else {
       // New season setup
-      this.seasonDetails.update(s => ({ ...s, acts: allActs }));
+      this.seasonDetails.update((s) => ({ ...s, acts: allActs }));
     }
 
     // Load enemies for lookups
@@ -173,7 +184,8 @@ export class LineupSimulator implements OnInit {
     this.store.setActiveMode(modeId);
   }
 
-  public getActEnemies(act: any): Enemy[] { // using any for Act temporarily if import needed or use Act type
+  public getActEnemies(act: any): Enemy[] {
+    // using any for Act temporarily if import needed or use Act type
     if (!act) return [];
 
     // Logic: if Variation_fight -> show first monster from variations -> waves -> included_enemy
@@ -182,11 +194,10 @@ export class LineupSimulator implements OnInit {
       const enemies: Enemy[] = [];
       if (act.variations) {
         for (const v of act.variations) {
-          if (v.waves) {
-            for (const w of v.waves) {
-              if (w.included_enemy && w.included_enemy.length > 0) {
-                enemies.push(w.included_enemy[0]);
-              }
+          if (v.waves && v.waves.length > 0) {
+            const w = v.waves[0];
+            if (w.included_enemy && w.included_enemy.length > 0) {
+              enemies.push(w.included_enemy[0]);
             }
           }
         }
@@ -208,7 +219,7 @@ export class LineupSimulator implements OnInit {
 
     // Resolve chars from GLOBAL store to ensure we find Opening characters (who aren't in 'selected')
     const all = characterStore.allCharacters();
-    return charIds.map(id => all.find(c => c.id === id)).filter(c => !!c) as Character[];
+    return charIds.map((id) => all.find((c) => c.id === id)).filter((c) => !!c) as Character[];
   }
 
   // --- Modal Logic ---
@@ -223,7 +234,7 @@ export class LineupSimulator implements OnInit {
   }
 
   onSaveAlternateCast(selectedChars: Character[]) {
-    this.store.updateSelectedCharacters(selectedChars.map(c => c.id));
+    this.store.updateSelectedCharacters(selectedChars.map((c) => c.id));
     this.closeModal();
   }
 
@@ -272,9 +283,7 @@ export class LineupSimulator implements OnInit {
     }, 500);
   }
 
-  public resolveAvatarUrl(
-    item: string | Character | Enemy | null | undefined
-  ): string {
+  public resolveAvatarUrl(item: string | Character | Enemy | null | undefined): string {
     if (!item) return 'assets/images/avatar_placeholder.png';
 
     // Priority: 1. Direct URL on object, 2. Map lookup by ID
@@ -291,11 +300,11 @@ export class LineupSimulator implements OnInit {
     );
   }
   // --- Helpers ---
-  private charactersMap = computed(() =>
-    new Map(characterStore.allCharacters().map(c => [c.id, c.avatarUrl]))
+  private charactersMap = computed(
+    () => new Map(characterStore.allCharacters().map((c) => [c.id, c.avatarUrl])),
   );
 
-  private enemiesMap = computed(() =>
-    new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
+  private enemiesMap = computed(
+    () => new Map(this.enemiesService.enemies().map((e) => [e.id, e.avatarUrl])),
   );
 }
