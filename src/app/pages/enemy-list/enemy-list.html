@@ -1,1 +1,85 @@
-<p>enemy-list works!</p>
+<section class="page-container">
+  @if (isLoading()) {
+    <div class="loading-state">
+      <span class="material-symbols-outlined spin">progress_activity</span>
+      <p>Loading data...</p>
+    </div>
+  } @else {
+    <!-- HEADER -->
+    <header class="editor__header">
+    </header>
+
+    <!-- Categories Tabs -->
+    @if (hasCategories()) {
+      <div class="categories-tabs">
+        @for (cat of categories(); track cat.id) {
+          <div class="btn-wrap">
+            <button
+              class="tab-btn"
+              [class.active]="activeCategoryId() === cat.id"
+              (click)="selectCategory(cat.id)"
+            >
+              {{ cat.title }}
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Content Area (Active Category Groups) -->
+    @if (activeCategory(); as category) {
+      <div class="editor__content">
+        <div class="groups-grid">
+          <!-- Groups List -->
+          @for (group of category.groups; track group.id) {
+            <div class="group-item">
+              <div class="group-header">
+                <span class="group-title">{{ group.title }}</span>
+              </div>
+
+              <div class="enemies-list">
+                @for (enemy of getEnemiesForGroup(group.id); track enemy.id) {
+                  <div class="enemy-item">
+                    <div class="enemy-card">
+                      <img
+                        [src]="enemy.avatarUrl || 'assets/images/mock_avatar.png'"
+                        class="enemy-avatar"
+                        alt="enemy"
+                        [title]="enemy.name"
+                      />
+                      <!-- Element Icon overlay -->
+                      @if (enemy.element.name !== 'empty') {
+                        <img
+                          [src]="'assets/images/ElementType_' + enemy.element.name + '.png'"
+                          class="enemy-element-icon"
+                          [alt]="enemy.element.name + ' element'"
+                        />
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          } @empty {
+            <div class="no-groups-message">
+              <span class="material-symbols-outlined">group</span>
+              <p>No groups in this category yet. Create your first group!</p>
+            </div>
+          }
+        </div>
+      </div>
+    } @else {
+      @if (hasCategories()) {
+        <div class="no-category-selected">
+          <span class="material-symbols-outlined">category</span>
+          <p>Select a category to view its groups and enemies</p>
+        </div>
+      } @else {
+        <div class="no-categories-message">
+          <span class="material-symbols-outlined">inventory_2</span>
+          <p>No categories found. Create your first category!</p>
+        </div>
+      }
+    }
+  }
+</section>

@@ -1,10 +1,10 @@
-import { CharacterGridComponent } from './../../shared/components/character-grid.component/character-grid.component';
+import { CharacterGridComponent } from '@shared/components/character-grid.component/character-grid.component';
 import { Component, signal, computed, OnInit, inject } from '@angular/core';
-import { ElementTypeName } from '../../../models/models';
-import { sortCharacters } from '../../../utils/sorting-characters';
+import { ElementTypeName } from '@models/models';
+import { sortCharacters } from '@utils/sorting-characters';
 // import { CHARACTERS_MOCK } from '../../../utils/characters.mock';
-import { characterStore } from '../../store/character.store';
-import { CharacterService } from '../../shared/services/charater.service';
+import { characterStore } from '@store/_index';
+import { CharacterService } from '@shared/services/_index';
 
 @Component({
   selector: 'app-your-characters',
@@ -15,6 +15,7 @@ import { CharacterService } from '../../shared/services/charater.service';
 })
 export class YourCharacters implements OnInit {
   private characterService = inject(CharacterService);
+  public isLoading = signal(true);
 
   readonly elementTypes = [
     'pyro', 'hydro', 'electro', 'cryo', 'dendro', 'anemo', 'geo'
@@ -49,6 +50,7 @@ export class YourCharacters implements OnInit {
   );
 
   async ngOnInit(): Promise<void> {
+    this.isLoading.set(true);
     // ❌ стара mock-логіка
     /*
     if (characterStore.allCharacters().length === 0) {
@@ -64,6 +66,7 @@ export class YourCharacters implements OnInit {
 
     // localStorage — як і було
     characterStore.loadFromLocalStorage();
+    this.isLoading.set(false);
   }
 
   toggleElement(type: ElementTypeName): void {

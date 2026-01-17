@@ -1,4 +1,4 @@
-@import '../../../styles/variables.scss';
+@use 'variables' as *;
 
 /* =========================
    PAGE LAYOUT
@@ -6,8 +6,9 @@
 
 .page-container {
   min-height: 100vh;
-  color: white;
+  color: $primary-white;
   display: flex;
+  justify-content: space-between;
   gap: 60px;
 }
 
@@ -19,6 +20,19 @@
   align-items: center;
   gap: 15px;
   font-size: 24px;
+}
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* =========================
@@ -35,7 +49,6 @@
 }
 
 .right-section {
-  width: 860px;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
@@ -106,24 +119,28 @@
    CHARACTERS BLOCK
 ========================= */
 
+.char-list {
+  display: flex;
+  justify-content: flex-start;
+  gap: 9.6px;
+}
 .characters-blocks {
   display: flex;
-  gap: 24px;
+  justify-content: space-between;
 
   .char-block {
     h3 {
       margin-bottom: 12px;
     }
   }
-
+}
+.user_characters_list {
   .char-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    align-items: flex-start;
+    gap: 9.6px;
   }
 }
-
 .char-mini-card {
   width: 70px;
   height: 70px;
@@ -136,6 +153,42 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 1;
+    position: relative;
+    animation: breathe 4s ease-in-out infinite;
+    // animation: jelly 3.5s ease-in-out infinite;
+    transform-origin: center bottom;
+  }
+  // @keyframes jelly {
+  //   0% {
+  //     transform: scale(1, 1) skewX(0deg);
+  //   }
+  //   30% {
+  //     transform: scale(1.02, 0.98) skewX(1deg);
+  //   }
+  //   60% {
+  //     transform: scale(0.99, 1.01) skewX(-1deg);
+  //   }
+  //   100% {
+  //     transform: scale(1, 1) skewX(0deg);
+  //   }
+  // }
+  @keyframes breathe {
+    0% {
+      transform: scale(1, 1) translateY(0);
+      transform: scale(1, 1) translateX(0);
+      filter: brightness(1);
+    }
+    50% {
+      transform: scale(1.02, 0.98) translateY(-5px);
+      transform: scale(1.02, 0.98) translateX(-2px);
+      filter: brightness(1.05);
+    }
+    100% {
+      transform: scale(1, 1) translateY(0);
+      transform: scale(1, 1) translateX(0);
+      filter: brightness(1);
+    }
   }
 
   .element-badge {
@@ -144,9 +197,25 @@
     left: 2px;
     width: 16px;
     height: 16px;
-
+    z-index: 3;
     img {
       filter: drop-shadow(0 1px 2px black);
+      animation: pulse 3s infinite ease-in-out;
+    }
+  }
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    50% {
+      transform: scale(1.2);
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
     }
   }
 
@@ -158,173 +227,277 @@
     height: 16px;
     display: flex;
     align-items: center;
+    z-index: 3;
+  }
+  &:before {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 24.74%, rgba(0, 0, 0, 0) 50.48%);
+    content: '';
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    border-radius: 10px;
   }
 }
 
 /* =========================
-   BOSS / ARCANA SECTION
+   ACT / CHAMBER SECTION
 ========================= */
 
-.boss-arcana {
+.right-section {
+  width: 860px;
+  margin-bottom: 20px;
   display: flex;
-  flex-direction: column;
-  gap: 40px;
+  flex-direction: column; // Acts 1-5, Acts 6-10, Arcana stacked vertically
+  gap: 16px;
+
+  h2 {
+    margin: 20px 0 0;
+  }
 }
 
-/* subsection — В ОДИН РЯД, НА ВСЮ ШИРИНУ */
-.subsection {
-  width: 100%;
+// Act / Chamber Section Wrapper
+.act-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px;
+}
+
+.act-left-column,
+.act-right-column {
+  flex: 1;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-
-  h3 {
-    font-size: 18px;
-    font-weight: 600;
-    opacity: 0.9;
-  }
 }
 
-/* =========================
-   ACTS GRID (FLEX!)
-========================= */
-
-.acts-grid {
+.act-arcana-row {
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+  padding-top: 10px;
+  gap: 60px;
+  margin-top: -40px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid $grey-color;
 }
 
-/* Картка акту */
-.act-card {
-  flex: 1 1 calc(50% - 12px); // дві рівні колонки
-  min-width: 380px;
-
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-  border-radius: 12px;
-  padding: 14px;
+// Act Item Layout
+.act-item {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* ARCANA варіант */
-.act-card.arcana {
-  background: linear-gradient(180deg, rgba(120, 120, 255, 0.08), rgba(120, 120, 255, 0.03));
-}
-
-/* =========================
-   ACT HEADER
-========================= */
-
-.act-header {
-  font-size: 14px;
-  font-weight: 600;
-  opacity: 0.8;
-}
-
-/* =========================
-   ENEMIES BLOCK
-========================= */
-
-.enemies-container-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.act-options-info {
-  font-size: 12px;
-  opacity: 0.6;
-}
-
-.enemies-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.enemy-inner {
-  display: flex;
-  gap: 6px;
-}
-
-.enemy-inner-wrap {
-  position: relative;
-  width: 36px;
-  height: 36px;
-}
-
-/* =========================
-   ENEMY ICON
-========================= */
-
-.enemy-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  gap: 20px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 100%; // Full width of parent column
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
+  // Normal acts (horizontal layout)
+  flex-direction: row; // Name left, content right
 
-/* =========================
-   BADGES
-========================= */
-
-.badge {
-  position: absolute;
-  z-index: 2;
-}
-
-.badge-amount {
-  top: -4px;
-  left: -4px;
-  font-size: 10px;
-  padding: 1px 4px;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 6px;
-}
-
-.badge-specialMark {
-  top: -4px;
-  right: -4px;
-
-  img {
-    width: 14px;
-    height: 14px;
-  }
-}
-
-.badge-element {
-  bottom: -2px;
-  left: -4px;
-  width: 15px;
-  height: 15px;
-
-  img {
-    width: 100%;
-    animation: pulse 1.6s ease-in-out infinite;
-  }
-}
-
-/* =========================
-   ACT HELPER
-========================= */
-
-.act {
-  &-section {
-    display: flex;
-  }
-
-  &-item {
+  .act-section-name {
+    width: 100px; // Fixed width for name section
     display: flex;
     align-items: center;
-    min-width: 400px;
+    justify-content: center;
+    border-bottom: none;
+    position: relative;
+    h5 {
+      top: 5px;
+      position: relative;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .act-section-inner {
+  }
+  .act-section-name {
+    text-align: center;
+    h5 {
+      margin: 0;
+    }
+  }
+
+  .act-section-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+}
+
+// Enemy Section in Act
+.act-section-enemy {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
+
+  justify-content: space-between;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #444;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.active {
+      filter: brightness(1.2);
+      transform: scale(1);
+      z-index: 1;
+    }
+
+    &.inactive {
+      filter: opacity(0.4);
+      transform: scale(0.9);
+    }
+  }
+}
+// Drop Zone
+.act-section-dragNdrop {
+  overflow: hidden;
+  flex: 1;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  width: 100%;
+  justify-content: space-around;
+  // Placed Characters
+  .placed-char {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    border: none;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &:hover::after {
+      content: '×'; // Close icon hint
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(189, 44, 44, 0.7);
+      color: $primary-white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      z-index: 5;
+    }
+  }
+  svg {
+    opacity: 0.8;
+  }
+}
+.svg_wrap {
+  background: rgba(0, 0, 0, 0.2);
+  flex: 1 1 auto; // 🔑 займає весь залишок
+  min-width: 0; // ❗ важливо для flex
+  min-height: 60px;
+  min-width: 60px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Drag States
+.char-mini-card {
+  flex: 0 0 auto;
+  cursor: grab;
+
+  &.tired {
+    filter: grayscale(100%);
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none; // Prevent dragging
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+/* =========================
+   UI CONTROLS
+========================= */
+
+.btn-cta {
+  background: $btn-primary-default;
+  color: $primary-white;
+  // width: 150px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  // margin-top: auto;
+  white-space: nowrap;
+}
+
+.mode_selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0 20px;
+
+  label {
+    font-weight: bold;
+    color: #ccc;
+  }
+
+  select {
+    display: flex;
+    align-items: center;
+    background: #262633;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #fff;
+    min-width: 220px;
+  }
+}
+
+.btn_wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-save {
+  background: $btn-primary-default;
+  color: $primary-white;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 16px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  gap: 5px;
+
+  &:hover {
+    background: $btn-primary-hover;
   }
 }

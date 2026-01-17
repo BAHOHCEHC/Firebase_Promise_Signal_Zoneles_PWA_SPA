@@ -3,7 +3,9 @@
   font-family: 'Genshin';
   src: url('/assets/fonts/zh-cn.ttf') format('truetype');
 }
-
+body {
+  margin: 0;
+}
 /* Глобально для всех элементов */
 *,
 *::before,
@@ -43,7 +45,7 @@
   -moz-appearance: textfield;
   appearance: none;
 }
-.tac{
+.tac {
   margin: 0;
   text-align: center;
 }
@@ -61,5 +63,5 @@ h6,
 }
 
 .material-symbols-outlined {
-    font-weight: 600;
+  font-weight: 600;
 }

@@ -1,15 +1,25 @@
 import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Season_details, Character, Act, Variation, Wave, ElementTypeName, ElementType, Act_options, Enemy, Wave_type, Enemy_options } from '../../../../models/models';
-import { SeasonAddEnemyModal } from '../../../core/components/season-add-enemy-modal/season-add-enemy-modal';
-import { SeasonAddVariationChamberModal } from '../../../core/components/season-add-variation-chamber-modal/season-add-variation-chamber-modal';
-import { SeasonCharactersModal } from '../../../core/components/season-characters-modal/season-characters-modal';
-import { SeasonElementTypeModal } from '../../../core/components/season-element-type-modal/season-element-type-modal';
-import { CharacterService } from '../../../shared/services/charater.service';
-import { EnemiesService } from '../../../shared/services/enemies.service';
-import { SeasonService } from '../../../shared/services/season.service';
-import { sanitizeChars } from '../../../../utils/sanitizeChars';
-
+import {
+  Season_details,
+  Character,
+  Act,
+  Variation,
+  Wave,
+  ElementTypeName,
+  ElementType,
+  Enemy,
+  Wave_type,
+  Enemy_options,
+} from '@models/models';
+import {
+  SeasonAddEnemyModal,
+  SeasonAddVariationChamberModal,
+  SeasonCharactersModal,
+  SeasonElementTypeModal
+} from '@core/components/_index';
+import { CharacterService, EnemiesService, SeasonService, ActModsService } from '@shared/services/_index';
+import { sanitizeChars } from '@utils/sanitizeChars';
 
 @Component({
   selector: 'app-seasons-editor',
@@ -19,15 +29,16 @@ import { sanitizeChars } from '../../../../utils/sanitizeChars';
     SeasonAddEnemyModal,
     SeasonAddVariationChamberModal,
     SeasonCharactersModal,
-    SeasonElementTypeModal
+    SeasonElementTypeModal,
   ],
   templateUrl: './seasons-editor.html',
-  styleUrl: './seasons-editor.scss'
+  styleUrl: './seasons-editor.scss',
 })
 export class SeasonsEditorComponent implements OnInit {
   private seasonService = inject(SeasonService);
   private characterService = inject(CharacterService);
-  public enemiesService = inject(EnemiesService); // Public to access signals in template if needed, or mapped
+  public enemiesService = inject(EnemiesService);
+  public modeService = inject(ActModsService);
 
   public readonly OPENING_CHARACTER_LIMIT = 6;
   public readonly SPECIAL_GUEST_LIMIT = 4;
@@ -37,11 +48,12 @@ export class SeasonsEditorComponent implements OnInit {
     elemental_type_limided: [],
     opening_characters: [],
     special_guests: [],
-    acts: []
+    acts: [],
   });
 
   public allCharacters = signal<Character[]>([]);
   public isEditMode = signal(false);
+  public loading = signal(true);
 
   // --- Modals State ---
   public showElementModal = signal(false);
@@ -72,58 +84,69 @@ export class SeasonsEditorComponent implements OnInit {
   public currentInitialVariation = computed(() => {
     const act = this.currentActForVariation();
     const idx = this.currentVariationIndex();
-    return (act && idx !== -1) ? act.variations?.[idx] ?? null : null;
+    return act && idx !== -1 ? (act.variations?.[idx] ?? null) : null;
   });
 
   public currentCharacterSelection = computed(() =>
     this.characterModalMode() === 'opening'
       ? this.seasonDetails().opening_characters
-      : this.seasonDetails().special_guests
+      : this.seasonDetails().special_guests,
   );
 
   public currentCharacterLimit = computed(() =>
-    this.characterModalMode() === 'opening' ? this.OPENING_CHARACTER_LIMIT : this.SPECIAL_GUEST_LIMIT
+    this.characterModalMode() === 'opening'
+      ? this.OPENING_CHARACTER_LIMIT
+      : this.SPECIAL_GUEST_LIMIT,
   );
 
   public currentCharacterTitle = computed(() =>
     this.characterModalMode() === 'opening'
       ? 'Select this season Opening characters'
-      : 'Select this season Special guests'
+      : 'Select this season Special guests',
   );
 
-  public currentActOptions = computed(() =>
-    (this.currentActForEnemy()?.options as any) || {}
-  );
+  public currentActOptions = computed(() => (this.currentActForEnemy()?.options as any) || {});
 
   // --- Filtered Acts ---
   public hasData = computed(() => {
     const d = this.seasonDetails();
-    return d.elemental_type_limided.length > 0 ||
+    return (
+      d.elemental_type_limided.length > 0 ||
       d.opening_characters.length > 0 ||
       d.special_guests.length > 0 ||
-      d.acts.some(a => a.enemy_selection.length > 0 || a.variations.length > 0);
+      d.acts.some((a) => a.enemy_selection.length > 0 || a.variations.length > 0)
+    );
   });
 
   public bossActs = computed(() =>
-    this.seasonDetails().acts.filter(a => a.type === 'Boss_fight')
+    this.seasonDetails().acts.filter((a) => a.type === 'Boss_fight'),
   );
 
   public arcanaActs = computed(() =>
-    this.seasonDetails().acts.filter(a => a.type === 'Arcana_fight')
+    this.seasonDetails().acts.filter((a) => a.type === 'Arcana_fight'),
   );
 
   public variationActs = computed(() =>
-    this.seasonDetails().acts.filter(a => a.type === 'Variation_fight')
+    this.seasonDetails().acts.filter((a) => a.type === 'Variation_fight'),
   );
 
-  public activeElements = computed(() =>
-    new Set(this.seasonDetails().elemental_type_limided.map(e => e.name))
+  public activeElements = computed(
+    () => new Set(this.seasonDetails().elemental_type_limided.map((e) => e.name)),
   );
 
   // Element helpers
-  public elementTypes: ElementTypeName[] = ["pyro", "hydro", "electro", "cryo", "dendro", "anemo", "geo"];
+  public elementTypes: ElementTypeName[] = [
+    'pyro',
+    'hydro',
+    'electro',
+    'cryo',
+    'dendro',
+    'anemo',
+    'geo',
+  ];
 
   async ngOnInit() {
+    this.loading.set(true);
     // Init services
     await this.enemiesService.initializeData();
 
@@ -153,8 +176,8 @@ export class SeasonsEditorComponent implements OnInit {
 
       if (details.acts && details.acts.length > 0) {
         // Ensure we have all acts from DB, maybe some new ones appeared
-        const mergedActs = allActs.map(dbAct => {
-          const savedAct = details.acts.find(a => a.id === dbAct.id);
+        const mergedActs = allActs.map((dbAct) => {
+          const savedAct = details.acts.find((a) => a.id === dbAct.id);
           if (savedAct) {
             return { ...dbAct, ...savedAct }; // Prefer saved details but keep ref
           }
@@ -162,13 +185,14 @@ export class SeasonsEditorComponent implements OnInit {
         });
         this.seasonDetails.set({ ...details, acts: mergedActs });
       } else {
-        this.seasonDetails.update(s => ({ ...s, acts: allActs }));
+        this.seasonDetails.update((s) => ({ ...s, acts: allActs }));
       }
     } else {
       // New season setup
       const allActs = await this.seasonService.getAllActs();
-      this.seasonDetails.update(s => ({ ...s, acts: allActs }));
+      this.seasonDetails.update((s) => ({ ...s, acts: allActs }));
     }
+    this.loading.set(false);
   }
 
   public getElementIconPath(type: ElementTypeName): string {
@@ -190,7 +214,7 @@ export class SeasonsEditorComponent implements OnInit {
         elemental_type_limided: [],
         opening_characters: [],
         special_guests: [],
-        acts
+        acts,
       });
     } catch (e) {
       console.error(e);
@@ -200,13 +224,12 @@ export class SeasonsEditorComponent implements OnInit {
     }
   }
 
-
-
   public onSavePage() {
     const sanitizedData = sanitizeChars(this.seasonDetails()) as Season_details;
     console.log(sanitizedData);
 
     this.seasonService.saveSeasonDetails(sanitizedData);
+    this.modeService.updateModesByEnemyOptions(sanitizedData);
   }
 
   // --- Element Modal ---
@@ -219,7 +242,7 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   public onSaveElements(elements: ElementType[]): void {
-    this.seasonDetails.update(prev => ({ ...prev, elemental_type_limided: elements }));
+    this.seasonDetails.update((prev) => ({ ...prev, elemental_type_limided: elements }));
     this.closeElementModal();
   }
 
@@ -234,9 +257,9 @@ export class SeasonsEditorComponent implements OnInit {
 
   public onSaveCharacters(chars: Character[]): void {
     const mode = this.characterModalMode();
-    this.seasonDetails.update(prev => ({
+    this.seasonDetails.update((prev) => ({
       ...prev,
-      [mode === 'opening' ? 'opening_characters' : 'special_guests']: chars
+      [mode === 'opening' ? 'opening_characters' : 'special_guests']: chars,
     }));
     this.closeCharacterModal();
   }
@@ -250,11 +273,13 @@ export class SeasonsEditorComponent implements OnInit {
     // For Boss/Arcana, we automatically target variation[0].wave[0] for initialization
     if (act.type !== 'Variation_fight') {
       if (!act.variations?.length) {
-        act.variations = [{
-          timer: act.enemy_options?.timer || '',
-          wave: '1',
-          waves: [{ waveCount: 0, included_enemy: [] }]
-        }];
+        act.variations = [
+          {
+            timer: act.enemy_options?.timer || '',
+            wave: '1',
+            waves: [{ waveCount: 0, included_enemy: [] }],
+          },
+        ];
       }
       this.currentVariationForEnemy.set(act.variations[0]);
       this.currentWaveForEnemy.set(act.variations[0].waves[0]);
@@ -271,15 +296,15 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   // public onSaveEnemy(data: { enemy: Enemy, options: any }) {
-  public onSaveEnemy(data: { enemies: Enemy[], options: Enemy_options }): void {
+  public onSaveEnemy(data: { enemies: Enemy[]; options: Enemy_options }): void {
     const act = this.currentActForEnemy();
-    debugger
+    debugger;
     if (!act) return;
 
-    const processedEnemies = data.enemies.map(e => ({
+    const processedEnemies = data.enemies.map((e) => ({
       ...e,
       quantity: data.options.amount ? parseInt(data.options.amount) : undefined,
-      specialMark: !!data.options.special_type
+      specialMark: !!data.options.special_type,
     }));
 
     if (act.type === 'Variation_fight') {
@@ -289,17 +314,22 @@ export class SeasonsEditorComponent implements OnInit {
       }
     } else {
       if (!act.variations?.length) {
-        act.variations = [{
-          timer: data.options.timer || '',
-          wave: '1',
-          waves: [{ waveCount: 0, included_enemy: [] }]
-        }];
+        act.variations = [
+          {
+            timer: data.options.timer || '',
+            wave: '1',
+            waves: [{ waveCount: 0, included_enemy: [] }],
+          },
+        ];
       }
 
       const variation = act.variations[0];
       if (!variation.waves) variation.waves = [{ waveCount: 0, included_enemy: [] }];
 
-      variation.waves[0].included_enemy = [...(variation.waves[0].included_enemy || []), ...processedEnemies];
+      variation.waves[0].included_enemy = [
+        ...(variation.waves[0].included_enemy || []),
+        ...processedEnemies,
+      ];
       variation.timer = data.options.timer || '';
       variation.defeat = data.options.defeat || '';
       act.enemy_selection = [...(act.enemy_selection || []), ...processedEnemies]; // Sync for legacy
@@ -322,8 +352,12 @@ export class SeasonsEditorComponent implements OnInit {
     this.currentVariationIndex.set(-1);
   }
 
-  public onSaveVariation(data: { wave: Wave_type, timer: string, name?: string, monolit?: boolean }): void {
-
+  public onSaveVariation(data: {
+    wave: Wave_type;
+    timer: string;
+    name?: string;
+    monolit?: boolean;
+  }): void {
     const act = this.currentActForVariation();
     if (!act) return;
 
@@ -339,7 +373,10 @@ export class SeasonsEditorComponent implements OnInit {
 
       const newWaveCount = data.wave === 'custom' ? 1 : parseInt(data.wave);
       if (variation.waves.length !== newWaveCount) {
-        variation.waves = Array.from({ length: newWaveCount }, (_, i) => ({ waveCount: i, included_enemy: [] }));
+        variation.waves = Array.from({ length: newWaveCount }, (_, i) => ({
+          waveCount: i,
+          included_enemy: [],
+        }));
       }
     } else {
       const waveCount = data.wave === 'custom' ? 1 : parseInt(data.wave);
@@ -348,7 +385,7 @@ export class SeasonsEditorComponent implements OnInit {
         wave: data.wave,
         waves: Array.from({ length: waveCount }, (_, i) => ({ waveCount: i, included_enemy: [] })),
         name: data.name,
-        monolit: data.monolit
+        monolit: data.monolit,
       });
     }
 
@@ -375,16 +412,14 @@ export class SeasonsEditorComponent implements OnInit {
     return `Wave ${s.wave}`; // Or just "Wave 1 - 2 - 3"? Prompt says: "Wave" + variation_fight_settings.wave
   }
 
-  private charactersMap = computed(() =>
-    new Map(this.allCharacters().map(c => [c.id, c.avatarUrl]))
+  private charactersMap = computed(
+    () => new Map(this.allCharacters().map((c) => [c.id, c.avatarUrl])),
   );
 
-  private enemiesMap = computed(() =>
-    new Map(this.enemiesService.enemies().map(e => [e.id, e.avatarUrl]))
+  private enemiesMap = computed(
+    () => new Map(this.enemiesService.enemies().map((e) => [e.id, e.avatarUrl])),
   );
-  public resolveAvatarUrl(
-    item: string | Character | Enemy | null | undefined
-  ): string {
+  public resolveAvatarUrl(item: string | Character | Enemy | null | undefined): string {
     if (!item) return 'assets/images/avatar_placeholder.png';
 
     const id = typeof item === 'string' ? item : item.id;
@@ -395,6 +430,4 @@ export class SeasonsEditorComponent implements OnInit {
       'assets/images/avatar_placeholder.png'
     );
   }
-
-
 }

@@ -7,19 +7,19 @@ import {
   AbstractControl,
   ValidatorFn
 } from '@angular/forms';
-import { Fight_type, Act, Enemy_options, Variation_fight } from '../../../../../../models/models';
-import { ActModsService } from '../../../../../shared/services/act-mods.service';
+import { Fight_type, Act, Enemy_options, Variation_fight } from '@models/models';
+import { ActModsService } from '@shared/services/_index';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { generateUUID } from '../../../../../shared/utils/uuid';
+import { generateUUID } from '@shared/utils/uuid';
 
 @Component({
   selector: 'app-act-modal',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './act-modal.component.html',
-  styleUrls: ['./act-modal.component.scss'],
+  templateUrl: './act-modal.html',
+  styleUrls: ['./act-modal.scss'],
 })
-export class ActModalComponent implements OnInit {
+export class ActModal implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() saved = new EventEmitter<void>();
 

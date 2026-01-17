@@ -7,89 +7,136 @@
       <p class="label">Category Selection</p>
       <div class="category-buttons">
         @for (cat of categories(); track cat.id) {
-        <button type="button" class="btn-category" [class.btn-category-active]="selectedCategoryId() === cat.id"
-          [class.btn-category-empty]="isCategoryEmpty(cat.id)" [disabled]="isCategoryEmpty(cat.id)"
-          (click)="!isCategoryEmpty(cat.id) && onSelectCategory(cat.id)">
-          {{ cat.title }}
-        </button>
+          <button
+            type="button"
+            class="btn-category"
+            [class.btn-category-active]="selectedCategoryId() === cat.id"
+            [class.btn-category-empty]="isCategoryEmpty(cat.id)"
+            [disabled]="isCategoryEmpty(cat.id)"
+            (click)="!isCategoryEmpty(cat.id) && onSelectCategory(cat.id)"
+          >
+            {{ cat.title }}
+          </button>
         }
       </div>
     </div>
 
     <!-- Group & Enemy Selection -->
     @if (selectedCategoryId()) {
-    <div class="groups-grid">
-      @for (group of filteredGroups(); track group.id) {
-      <div class="group-block">
-        <h4 class="group-title">{{ group.title }}</h4>
-        <div class="enemies-grid">
-          @for (enemy of enemiesByGroup(group.id); track enemy.id) {
-          <div class="enemy-card-wrapp" [class.enemy-dim]="hasSelectedEnemies() && !isEnemySelected(enemy)"
-            [class.enemy-selected]="isEnemySelected(enemy)" (click)="toggleEnemy(enemy)">
-            <div class="enemy-card">
-              <img [src]="enemy.avatarUrl" class="enemy-avatar" [alt]="enemy.name" />
+      <div class="groups-grid">
+        @for (group of filteredGroups(); track group.id) {
+          <div class="group-block">
+            <h4 class="group-title">{{ group.title }}</h4>
+            <div class="enemies-grid">
+              @for (enemy of enemiesByGroup(group.id); track enemy.id) {
+                <div
+                  class="enemy-card-wrapp"
+                  [class.enemy-dim]="hasSelectedEnemies() && !isEnemySelected(enemy)"
+                  [class.enemy-selected]="isEnemySelected(enemy)"
+                  (click)="toggleEnemy(enemy)"
+                >
+                  <div class="enemy-card">
+                    <img [src]="enemy.avatarUrl" class="enemy-avatar" [alt]="enemy.name" />
+                  </div>
+                  @if (enemy.element.name !== 'empty') {
+                    <img
+                      class="enemy-element"
+                      [src]="getElementIconPath(enemy.element.name)"
+                      [alt]="enemy.element.name"
+                    />
+                  }
+                </div>
+              }
             </div>
-            @if (enemy.element.name !== 'empty') {
-            <img class="enemy-element" [src]="getElementIconPath(enemy.element.name)" [alt]="enemy.element.name" />
-            }
           </div>
-          }
-        </div>
+        }
       </div>
-      }
-    </div>
     }
 
     <!-- Extra Options -->
     <div class="options-section">
       <form [formGroup]="form" class="modal-form">
-
         @if (actOptions().amount) {
-        <div class="form-control">
-          <label for="amount" class="label_control">Amount</label>
-          <input id="amount" type="number" formControlName="amount" placeholder="00" class="input" />
-        </div>
+          <div class="form-control">
+            <label for="amount" class="label_control">Amount</label>
+            <input
+              id="amount"
+              type="number"
+              formControlName="amount"
+              placeholder="00"
+              class="input"
+            />
+          </div>
         }
         <div class="form-control">
           @if (actOptions().timerEnable && !this.currentVariation()?.monolit) {
-          <label for="timer" class="label_control">Timer</label>
-          <input id="timer" type="number" formControlName="timer" placeholder="000" class="input" />
-          <button type="button" class="btn-icon edit-btn" (click)="enableEditTimer()" title="Edit Timer">
-            <svg class="color-green" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-          </button>
+            <label for="timer" class="label_control">Timer</label>
+            <input
+              id="timer"
+              type="number"
+              formControlName="timer"
+              placeholder="000"
+              class="input"
+            />
+            <button
+              type="button"
+              class="btn-icon edit-btn"
+              (click)="enableEditTimer()"
+              title="Edit Timer"
+            >
+              <svg
+                class="color-green"
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
           }
         </div>
 
         @if (actOptions().defeat) {
-        <div class="form-control">
-          <label for="defeat" class="label_control">Defeat</label>
-          <input id="defeat" type="number" formControlName="defeat" placeholder="00" class="input" />
-        </div>
+          <div class="form-control">
+            <label for="defeat" class="label_control">Defeat</label>
+            <input
+              id="defeat"
+              type="number"
+              formControlName="defeat"
+              placeholder="00"
+              class="input"
+            />
+          </div>
         }
 
         @if (actOptions().special_type) {
-        <div class="form-control checkbox-control">
-          <label class="checkbox-inline">
-            <span>Special type</span>
-            <input type="checkbox" formControlName="special_type" />
-            <i class="checkbox-ui"></i>
-          </label>
-        </div>
-
+          <div class="form-control checkbox-control">
+            <label class="checkbox-inline">
+              <span>Special type</span>
+              <input type="checkbox" formControlName="special_type" />
+              <i class="checkbox-ui"></i>
+            </label>
+          </div>
         }
-
       </form>
     </div>
-
 
     <!-- Footer -->
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="onClose()">Cancel</button>
-      <button type="button" class="btn btn-primary" [disabled]="!hasSelectedEnemies()" (click)="onSave()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="!hasSelectedEnemies()"
+        (click)="onSave()"
+      >
         Save
       </button>
     </div>

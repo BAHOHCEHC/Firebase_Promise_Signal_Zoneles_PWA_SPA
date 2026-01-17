@@ -1,5 +1,5 @@
 import { signal, computed } from '@angular/core';
-import { Character, ElementTypeName } from '../../models/models';
+import { Character, ElementTypeName } from '@models/models';
 
 
 class CharacterStore {
@@ -27,17 +27,17 @@ class CharacterStore {
     return list.filter(c => c.element && elements.has(c.element.name));
   });
 
+  constructor() {
+    this.loadFromLocalStorage();
+  }
+
   /** Сохранить выбранных персонажей в localStorage */
   saveToLocalStorage() {
+    const ids = this.selectedCharacters().map(c => c.id);
     localStorage.setItem(
       'UserCharacters',
-      JSON.stringify(this.selectedCharacters())
+      JSON.stringify(ids)
     );
-  // TO DO : store for tasks
-    // localStorage.setItem(
-    //   'UserTasks',
-    //   JSON.stringify(this.userTasks())
-    // );
   }
 
   /** Загрузить выбранных персонажей из localStorage */
@@ -45,16 +45,55 @@ class CharacterStore {
     try {
       const stored = localStorage.getItem('UserCharacters');
       if (stored) {
-        const chars = JSON.parse(stored) as Character[];
-        this.selectedCharacters.set(chars);
+        // Try parsing as IDs first (new format)
+        const parsed = JSON.parse(stored);
+        
+        if (Array.isArray(parsed)) {
+           // Якщо це масив рядків (IDs)
+           if (typeof parsed[0] === 'string') {
+               const all = this.allCharacters();
+               if (all.length > 0) {
+                   const ids = new Set(parsed);
+                   const chars = all.filter(c => ids.has(c.id));
+                   this.selectedCharacters.set(chars);
+               } else {
+                   // Якщо персонажі ще не завантажені, тимчасово зберігаємо IDs? 
+                   // Або просто нічого не робимо, бо setCharacters викличеться пізніше?
+                   // Найкраще: реактивно оновлювати selectedCharacters коли allCharacters змінюється,
+                   // але тут ми просто завантажимо IDs в тимчасову змінну або просто спробуємо ще раз пізніше.
+                   // АЛЕ! Оскільки allCharacters це сигнал, ми можемо використати computed?
+                   // Ні, selectedCharacters це writable signal.
+                   
+                   // Варіант: зберегти IDs і спробувати відновити пізніше.
+                   this._pendingSelectedIds = parsed; 
+               }
+           } else {
+               // Old format (array of objects), migrate or use as is
+               // Assuming it's objects, just set them (but IDs are smaller). 
+               // Better to rely on fresh data from allCharacters to ensure updates.
+               const ids = new Set(parsed.map((c: any) => c.id));
+               // Store as pending so setCharacters can hydrate them
+               this._pendingSelectedIds = Array.from(ids) as string[];
+           }
+        }
       }
     } catch (e) {
       console.error('Failed to load characters from localStorage', e);
     }
   }
+  
+  private _pendingSelectedIds: string[] = [];
 
   setCharacters(chars: Character[]) {
     this.allCharacters.set(chars);
+    // Rehydrate if we have pending IDs
+    if (this._pendingSelectedIds.length > 0) {
+        const ids = new Set(this._pendingSelectedIds);
+        const selected = chars.filter(c => ids.has(c.id));
+        this.selectedCharacters.set(selected);
+        // Clear pending? Maybe keep if we want to support additive loading? No.
+        this._pendingSelectedIds = [];
+    }
   }
 
   toggleElement(type: ElementTypeName) {

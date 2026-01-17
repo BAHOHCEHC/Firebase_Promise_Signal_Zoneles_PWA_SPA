@@ -1,10 +1,8 @@
 <div class="modal-overlay" (click)="onClose()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-
     <h2 class="modal-title">Add variation chamber</h2>
 
     <form [formGroup]="form" class="modal-form">
-
       <div class="form-row">
         <div class="form-group small">
           <label>Amount of waves</label>
@@ -17,10 +15,14 @@
         </div>
 
         <div class="form-group grow" [class.is-disabled]="form.get('wave')?.value !== 'custom'">
-
           <label for="customName">Custom wave name</label>
 
-          <input id="customName" type="text" placeholder="Add custom name" formControlName="customName" />
+          <input
+            id="customName"
+            type="text"
+            placeholder="Add custom name"
+            formControlName="customName"
+          />
         </div>
       </div>
 
@@ -28,26 +30,24 @@
         <div class="form-group inline" [class.is-disabled]="form.get('timer')?.disabled">
           <div class="timer-input">
             <label>Timer</label>
-            <input type="text" formControlName="timer" placeholder="000">
+            <input type="text" formControlName="timer" placeholder="000" />
             <span>sec</span>
           </div>
         </div>
 
         <div class="checkbox-group" [class.is-disabled]="form.get('monolit')?.disabled">
           <label class="checkbox">
-            <input type="checkbox" formControlName="monolit">
+            <input type="checkbox" formControlName="monolit" />
             <span></span>
             Monolit
           </label>
         </div>
       </div>
-
     </form>
 
     <div class="modal-footer">
       <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
       <button class="btn btn-primary" (click)="onSave()">Save</button>
     </div>
-
   </div>
 </div>

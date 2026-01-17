@@ -1,15 +1,14 @@
 import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EnemiesService } from '../../../shared/services/enemies.service';
-import { EnemyEditorModalComponent } from '../../../core/components/enemy-editor-modal/enemy-editor-modal.component';
-import { ConfirmModal } from '../../../core/components/confirm-modal/confirm-modal';
-import { Enemy, EnemyGroup, ModalType } from '../../../../models/models';
+import { EnemiesService } from '@shared/services/_index';
+import { EnemyEditorModal, ConfirmModal } from '@core/components/_index';
+import { Enemy, EnemyGroup, ModalType } from '@models/models';
 
 
 @Component({
   standalone: true,
   selector: 'app-enemy-editor',
-  imports: [CommonModule, EnemyEditorModalComponent, ConfirmModal],
+  imports: [CommonModule, EnemyEditorModal, ConfirmModal],
   templateUrl: './enemy-editor.html',
   styleUrl: './enemy-editor.scss',
 })

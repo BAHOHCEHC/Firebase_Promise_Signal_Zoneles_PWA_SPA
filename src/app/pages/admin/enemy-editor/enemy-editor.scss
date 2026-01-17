@@ -1,4 +1,4 @@
-@import '../../../../styles/_variables';
+@use 'variables' as *;
 
 .editor {
   color: $primary-white;
@@ -12,6 +12,29 @@
     gap: 30px;
     align-items: center;
     justify-content: flex-end;
+  }
+}
+
+.loading-state {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 24px;
+}
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }
 

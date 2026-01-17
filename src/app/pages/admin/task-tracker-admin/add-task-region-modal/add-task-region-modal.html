@@ -5,25 +5,35 @@
     <div class="form-container" [formGroup]="form">
       <div class="field-group">
         <label for="region">Region name</label>
-        <input type="text" formControlName="name" placeholder="Write Region Name" id="region"
-          [class.error]="form.get('name')?.invalid && form.get('name')?.touched" />
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Write Region Name"
+          id="region"
+          [class.error]="form.get('name')?.invalid && form.get('name')?.touched"
+        />
         @if (form.get('name')?.invalid && form.get('name')?.touched) {
-        <div class="error-message">
-          @if (form.get('name')?.errors?.['required']) {
-          <small>Region name is required</small>
-          }
-        </div>
+          <div class="error-message">
+            @if (form.get('name')?.errors?.['required']) {
+              <small>Region name is required</small>
+            }
+          </div>
         }
       </div>
     </div>
 
     <div class="actions">
       @if (regionToEdit) {
-      <button class="delete-btn" (click)="onDelete()">Delete</button>
+        <button class="delete-btn" (click)="onDelete()">Delete</button>
       }
 
       <button class="cancel-btn" (click)="close.emit()">Cancel</button>
-      <button class="save-btn" (click)="save()" [disabled]="isSaveDisabled()" [class.disabled]="isSaveDisabled()">
+      <button
+        class="save-btn"
+        (click)="save()"
+        [disabled]="isSaveDisabled()"
+        [class.disabled]="isSaveDisabled()"
+      >
         {{ regionToEdit ? 'Update' : 'Save' }}
       </button>
     </div>

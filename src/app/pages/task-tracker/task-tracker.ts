@@ -1,9 +1,9 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { TasksService } from '../../shared/services/tasks.service';
+import { TasksService } from '@shared/services/_index';
 import { TaskTable } from '../admin/task-tracker-admin/task-table/task-table';
-import { userTasksStore } from '../../store/user-tasks.store';
-import { Region_task } from '../../../models/models';
+import { userTasksStore } from '@store/_index';
+import { Region_task } from '@models/models';
 
 @Component({
   standalone: true,

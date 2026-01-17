@@ -1,17 +1,17 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { actModesStore } from '../../../../../store/act-modes.store';
+import { actModesStore } from '@store/_index';
 import { CommonModule } from '@angular/common';
-import { ActModsService } from '../../../../../shared/services/act-mods.service';
-import { Mode } from '../../../../../../models/models';
+import { ActModsService } from '@shared/services/_index';
+import { Mode } from '@models/models';
 
 @Component({
   selector: 'app-modes-table',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './modes-table.component.html',
-  styleUrl: './modes-table.component.scss'
+  templateUrl: './modes-table.html',
+  styleUrl: './modes-table.scss'
 })
-export class ModesTableComponent {
+export class ModesTable {
   actModsService = inject(ActModsService);
   store = actModesStore;
 

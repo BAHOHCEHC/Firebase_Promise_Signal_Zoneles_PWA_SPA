@@ -1,0 +1,171 @@
+@use 'variables' as *;
+
+.editor {
+  color: $primary-white;
+
+  &__header {
+    margin-bottom: 20px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+.loading-state {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 24px;
+}
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.no-groups-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+// Tabs
+.categories-tabs {
+  display: flex;
+  gap: 8px 26px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+
+  .btn-wrap {
+    display: flex;
+    flex: 0 0 calc((100% - (26px * 4)) / 5);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    .tab-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px solid $btn-primary-default;
+      color: $light-grey-color;
+      cursor: pointer;
+      height: 38px; /* або будь-яка висота, яка потрібна */
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      padding: 0 12px;
+      text-overflow: ellipsis;
+
+      /* Для центрування тексту */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        border-color: $btn-primary-hover;
+        color: $primary-white;
+      }
+
+      &.active {
+        background: $btn-primary-default;
+        border-color: $btn-primary-default;
+        color: $primary-white;
+      }
+    }
+  }
+}
+
+// Content
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // "Page divides by 2 groups in row"
+  gap: 24px;
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.group-title {
+  font-size: 16px;
+  color: $primary-white;
+}
+
+.enemies-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.enemy-card {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%; // Circular avatars
+  background: $enemy-bg;
+  cursor: pointer;
+
+  .enemy-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .enemy-element-icon {
+    position: absolute;
+    bottom: 0px;
+    right: -5px;
+    width: 16px;
+    height: 16px;
+    z-index: 4;
+    animation: pulse 1.6s ease-in-out infinite;
+    transform-origin: center;
+  }
+  /* === PULSE ANIMATION === */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    50% {
+      transform: scale(1.2);
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  &:hover {
+    & > img {
+      transform: scale(1.2);
+      transition: all 0.2s ease;
+    }
+    transform: scale(1);
+    transition: all 0.2s ease;
+    .delete-overlay {
+      display: flex;
+    }
+  }
+}

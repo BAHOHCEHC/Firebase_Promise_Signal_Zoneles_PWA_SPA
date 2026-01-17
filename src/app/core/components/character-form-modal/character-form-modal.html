@@ -9,9 +9,14 @@
       <p class="section-label fs_14">Select element</p>
       <div class="elements-row">
         @for (el of elementTypes; track el) {
-        <button type="button" class="element-btn" [class.active]="selectedElement() === el" (click)="selectElement(el)">
-          <img [src]="'/assets/images/ElementType_' + el + '.png'" [alt]="el" />
-        </button>
+          <button
+            type="button"
+            class="element-btn"
+            [class.active]="selectedElement() === el"
+            (click)="selectElement(el)"
+          >
+            <img [src]="'/assets/images/ElementType_' + el + '.png'" [alt]="el" />
+          </button>
         }
       </div>
     </div>
@@ -19,13 +24,23 @@
     <div class="middle-block">
       <div class="middle-block_left">
         <!-- Прев’ю + фон рідкості -->
-        <div class="preview-section" [style.background-image]="'url(' + selectedRarity().bgUrl + ')'">
+        <div
+          class="preview-section"
+          [style.background-image]="'url(' + selectedRarity().bgUrl + ')'"
+        >
           <div class="preview-section-element-image">
-            <img [src]="'/assets/images/ElementType_' + selectedElement() + '.png'" [alt]="selectedElement()" />
+            <img
+              [src]="'/assets/images/ElementType_' + selectedElement() + '.png'"
+              [alt]="selectedElement()"
+            />
           </div>
           <div class="preview-avatar-wrapper">
             @if (previewImage()) {
-            <img class="preview-avatar" [src]="previewImage()" [alt]="form.value.name || 'Character preview'" />
+              <img
+                class="preview-avatar"
+                [src]="previewImage()"
+                [alt]="form.value.name || 'Character preview'"
+              />
             }
           </div>
 
@@ -48,19 +63,24 @@
         <!-- Ім'я -->
         <div class="section">
           <label class="section-label fs_14" for="name">Name</label>
-          <input type="text" class="name-input" id="name" placeholder="Enter character name"
+          <input
+            type="text"
+            class="name-input"
+            id="name"
+            placeholder="Enter character name"
             [formControl]="form.controls.name"
-            [class.error]="form.controls.name.invalid && form.controls.name.touched" />
+            [class.error]="form.controls.name.invalid && form.controls.name.touched"
+          />
 
           <!-- Помилки валідації -->
           @if (form.controls.name.touched && form.controls.name.invalid) {
-          <div class="form-error">
-            @if (form.controls.name.errors?.['required']) {
-            Name is required
-            } @else if (form.controls.name.errors?.['minlength']) {
-            Name must be at least 3 characters
-            }
-          </div>
+            <div class="form-error">
+              @if (form.controls.name.errors?.['required']) {
+                Name is required
+              } @else if (form.controls.name.errors?.['minlength']) {
+                Name must be at least 3 characters
+              }
+            </div>
           }
         </div>
       </div>
@@ -70,19 +90,13 @@
     <div class="actions">
       <!-- КНОПКА ВИДАЛЕННЯ — ТІЛЬКИ ПРИ РЕДАГУВАННІ -->
       @if (isEditMode()) {
-        <button type="button" class="btn-delete" (click)="delete()">
-          Delete
-        </button>
+        <button type="button" class="btn-delete" (click)="delete()">Delete</button>
       }
 
-      <button type="button" class="btn-cancel" (click)="close.emit()">
-        Cancel
-      </button>
+      <button type="button" class="btn-cancel" (click)="close.emit()">Cancel</button>
       <button type="button" class="btn-save" [disabled]="form.invalid" (click)="save()">
         {{ isEditMode() ? 'Update' : 'Save' }}
       </button>
     </div>
-
-
   </div>
 </div>

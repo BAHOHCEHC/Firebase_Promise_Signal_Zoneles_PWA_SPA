@@ -5,7 +5,7 @@ import { EnemyList } from './pages/enemy-list/enemy-list';
 import { LineupSimulator } from './pages/lineup-simulator/lineup-simulator';
 import { YourCharacters } from './pages/your-characters/your-characters';
 import { CharacterListEditor } from './pages/admin/character-list-editor/character-list-editor';
-import { ActAndModesEditor } from './pages/admin/modes-editor/act-and-modes-editor.component';
+import { ActAndModesEditor } from './pages/admin/modes-editor/act-and-modes-editor';
 import { EnemyEditor } from './pages/admin/enemy-editor/enemy-editor';
 import { SeasonsEditorComponent } from './pages/admin/seasons-editor/seasons-editor';
 import { SeasonsDetails } from './pages/season-details/season-details';

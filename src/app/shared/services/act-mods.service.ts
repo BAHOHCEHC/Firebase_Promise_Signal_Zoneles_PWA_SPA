@@ -12,9 +12,10 @@ import {
   DocumentData,
   updateDoc,
   doc,
-  deleteDoc
+  deleteDoc,
+  writeBatch
 } from '@angular/fire/firestore';
-import { Act, Fight_type, Mode } from '../../../models/models';
+import { Act, Fight_type, Mode, Season_details } from '../../../models/models';
 
 @Injectable({
   providedIn: 'root',
@@ -490,6 +491,48 @@ export class ActModsService {
       });
     } catch (error) {
       console.error('Помилка при оновленні режиму:', error);
+      throw error;
+    }
+  }
+  async updateModesByEnemyOptions(seasonDetails: Season_details): Promise<void> {
+    try {
+      const modes = await this.getAllModes();
+      const seasonActsMap = new Map(seasonDetails.acts.map(act => [act.id, act]));
+      const batch = writeBatch(this.firestore);
+      let updatesCount = 0;
+
+      for (const mode of modes) {
+        let modeUpdated = false;
+        // Check if any chamber in this mode needs updating
+        const updatedChambers = mode.chambers.map(chamber => {
+          if (chamber.id && seasonActsMap.has(chamber.id)) {
+            const updatedAct = seasonActsMap.get(chamber.id)!;
+            // Check for actual changes to avoid unnecessary writes? 
+            // For now, assuming if it's in seasonDetails, we trust the sync request.
+            // But strict equality check might be complex for objects.
+            // Let's just update if ID matches as requested.
+            modeUpdated = true;
+            return { ...chamber, ...updatedAct };
+          }
+          return chamber;
+        });
+
+        if (modeUpdated) {
+          const modeRef = doc(this.firestore, 'modes', mode.id);
+          batch.update(modeRef, { 
+            chambers: updatedChambers,
+            updatedAt: new Date()
+           });
+          updatesCount++;
+        }
+      }
+
+      if (updatesCount > 0) {
+        await batch.commit();
+        console.log(`Updated ${updatesCount} modes with new act data.`);
+      }
+    } catch (error) {
+      console.error('Error updating modes by enemy options:', error);
       throw error;
     }
   }

@@ -5,8 +5,8 @@ import {
   Signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Character, ElementTypeName } from '../../../../models/models';
-import { characterStore } from '../../../store/character.store';
+import { Character, ElementTypeName } from '@models/models';
+import { characterStore } from '@store/_index';
 
 @Component({
   standalone: true,

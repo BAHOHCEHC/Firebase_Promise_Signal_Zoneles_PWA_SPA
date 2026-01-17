@@ -1,4 +1,5 @@
-@import '../../../../../styles/_variables';
+@use 'sass:color';
+@use 'variables' as *;
 
 .table-header {
   display: flex;
@@ -160,7 +161,6 @@
   }
 }
 
-.loading-state,
 .error-state {
   display: flex;
   flex-direction: column;
@@ -179,6 +179,15 @@
     margin: 0 0 16px;
     color: #666;
   }
+}
+.loading-state {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 24px;
 }
 
 .error-state .material-symbols-outlined {
@@ -297,7 +306,7 @@
 
   .part-name {
     font-size: 14px;
-    color: darken(white, 15%);
+    color: color.adjust(white, $lightness: -15%);
     padding-left: 26px;
     width: 93%;
   }
