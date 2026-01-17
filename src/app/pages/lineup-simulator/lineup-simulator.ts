@@ -211,6 +211,17 @@ export class LineupSimulator implements OnInit {
       return [];
     }
   }
+  
+  public isEnemyActive(actId: string, index: number): boolean {
+    const selectedIndices = this.store.selectedEnemyIndices();
+    // Default to index 0 if not set
+    const selectedIndex = selectedIndices[actId] ?? 0;
+    return selectedIndex === index;
+  }
+
+  public onSelectEnemy(actId: string, index: number) {
+    this.store.selectEnemy(actId, index);
+  }
 
   public getPlacedCharacters(actId: string): Character[] {
     const placements = this.store.placements();

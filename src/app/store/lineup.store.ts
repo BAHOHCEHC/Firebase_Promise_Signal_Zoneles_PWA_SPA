@@ -32,6 +32,11 @@ export class LineupStore {
         return this.currentConfig()?.energyState || {};
     });
 
+    /** Selected enemies in active mode (ActID -> Index) */
+    readonly selectedEnemyIndices = computed(() => {
+        return this.currentConfig()?.selectedEnemies || {};
+    });
+
     constructor() {
         this.loadFromLocalStorage();
 
@@ -45,7 +50,8 @@ export class LineupStore {
         return {
             selectedCharacters: [],
             placements: {},
-            energyState: {}
+            energyState: {},
+            selectedEnemies: {}
         };
     }
 
@@ -164,6 +170,29 @@ export class LineupStore {
      */
     getCharacterEnergy(charId: string): number {
         return this.energyState()[charId] || 0;
+    }
+
+    /**
+     * Select an enemy for a specific act
+     */
+    selectEnemy(actId: string, enemyIndex: number) {
+        const modeId = this.activeModeId();
+        if (!modeId) return;
+
+        this.configurations.update(configs => {
+            const config = configs[modeId] || this.createEmptyConfig();
+            const currentSelectedEnemies = { ...config.selectedEnemies };
+
+            currentSelectedEnemies[actId] = enemyIndex;
+
+            return {
+                ...configs,
+                [modeId]: {
+                    ...config,
+                    selectedEnemies: currentSelectedEnemies
+                }
+            };
+        });
     }
 
     // --- Persistence ---

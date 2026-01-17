@@ -191,6 +191,9 @@
                       [src]="resolveAvatarUrl(enemy)"
                       [alt]="enemy.name"
                       [title]="enemy.name"
+                      (click)="onSelectEnemy(act.id, $index)"
+                      [class.active]="isEnemyActive(act.id, $index)"
+                      [class.inactive]="!isEnemyActive(act.id, $index)"
                     />
                   }
                 </div>
@@ -258,6 +261,9 @@
                       [src]="resolveAvatarUrl(enemy)"
                       [alt]="enemy.name"
                       [title]="enemy.name"
+                      (click)="onSelectEnemy(act.id, $index)"
+                      [class.active]="isEnemyActive(act.id, $index)"
+                      [class.inactive]="!isEnemyActive(act.id, $index)"
                     />
                   }
                 </div>
@@ -328,6 +334,9 @@
                       [src]="resolveAvatarUrl(enemy)"
                       [alt]="enemy.name"
                       [title]="enemy.name"
+                      (click)="onSelectEnemy(act.id, $index)"
+                      [class.active]="isEnemyActive(act.id, $index)"
+                      [class.inactive]="!isEnemyActive(act.id, $index)"
                     />
                   }
                 </div>

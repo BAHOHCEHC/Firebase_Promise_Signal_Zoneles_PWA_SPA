@@ -213,4 +213,5 @@ export interface ModeConfiguration {
   selectedCharacters: string[]; // List of character IDs
   placements: Record<string, string[]>; // Act ID -> List of Character IDs
   energyState: Record<string, number>; // Character ID -> current energy
+  selectedEnemies?: Record<string, number>; // Act ID -> Selected Enemy Index
 }
