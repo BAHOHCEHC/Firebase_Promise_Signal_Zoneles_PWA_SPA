@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, Output, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Region_task } from '../../../../../models/models';
+import { HighlightPipe } from '@shared/pipes/highlight.pipe';
 
 @Component({
   standalone: true,
   selector: 'app-task-table',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HighlightPipe],
   templateUrl: './task-table.html',
   styleUrl: './task-table.scss',
 })
@@ -22,6 +23,12 @@ export class TaskTable {
   @Output() delete = new EventEmitter<Region_task>();
   @Output() toggleTask = new EventEmitter<Region_task>();
   @Output() togglePart = new EventEmitter<{ task: Region_task, partName: string }>();
+
+  public clearFilter(): void {
+    if (this.filterForm) {
+      this.filterForm.patchValue({ filtering: '' });
+    }
+  }
 
   public expandedTasks = new Set<string>();
 
