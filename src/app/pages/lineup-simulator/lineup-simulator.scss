@@ -147,7 +147,6 @@
   border-radius: 8px;
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 
   img {
     width: 100%;
@@ -155,9 +154,9 @@
     object-fit: cover;
     z-index: 1;
     position: relative;
-    animation: breathe 4s ease-in-out infinite;
-    // animation: jelly 3.5s ease-in-out infinite;
-    transform-origin: center bottom;
+    // animation: breathe 4s ease-in-out infinite;
+    // // animation: jelly 3.5s ease-in-out infinite;
+    // transform-origin: center bottom;
   }
   // @keyframes jelly {
   //   0% {
@@ -343,7 +342,6 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #444;
     cursor: pointer;
     transition: all 0.2s ease;
 
@@ -459,18 +457,17 @@
 
   label {
     font-weight: bold;
-    color: #ccc;
+    color: $grey-color;
   }
 
   select {
     display: flex;
     align-items: center;
-    background: #262633;
-    border: 1px solid #444;
+    background: $bg-input;
     border-radius: 8px;
     padding: 10px 12px;
     font-size: 14px;
-    color: #fff;
+    color: $primary-white;
     min-width: 220px;
   }
 }

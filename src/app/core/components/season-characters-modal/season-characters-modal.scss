@@ -118,8 +118,6 @@
 
 .character-grid-container {
   flex: 1;
-  overflow-y: auto;
-
   // Custom scrollbar
   &::-webkit-scrollbar {
     width: 6px;
@@ -286,4 +284,12 @@
 
 .pulse {
   animation: color-pulse 3s infinite ease-in-out;
+}
+
+.specialGuest {
+  border-top: 1px solid $grey-color;
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
 }

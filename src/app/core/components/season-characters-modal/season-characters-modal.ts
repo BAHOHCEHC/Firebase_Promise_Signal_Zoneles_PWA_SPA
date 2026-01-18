@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Character, ElementTypeName } from '../../../../models/models';
+import { Character, ElementTypeName, Enemy } from '../../../../models/models';
 import { sortCharacters } from '../../../../utils/sorting-characters';
+import { characterStore } from '@store/character.store';
 
 @Component({
   selector: 'app-season-characters-modal',
@@ -13,6 +14,7 @@ import { sortCharacters } from '../../../../utils/sorting-characters';
 export class SeasonCharactersModal {
   @Input() public title: string = 'Select this season Characters';
   @Input() public type: string = 'season';
+  @Input() public specialGuest: Character[] = [];
 
   // Dynamic limits
   @Input() public min: number = 0;
@@ -136,9 +138,32 @@ export class SeasonCharactersModal {
     return `assets/images/ElementType_${type}.png`;
   }
 
+  public resolveAvatarUrl(item: string | Character | Enemy | null | undefined): string {
+    if (!item) return 'assets/images/avatar_placeholder.png';
+
+    // Priority: 1. Direct URL on object, 2. Map lookup by ID
+    if (typeof item !== 'string' && item.avatarUrl) {
+      return item.avatarUrl;
+    }
+
+    const id = typeof item === 'string' ? item : item.id;
+
+    return (
+      this.charactersMap().get(id) ||
+      'assets/images/avatar_placeholder.png'
+    );
+  }
+  // --- Helpers ---
+  private charactersMap = computed(
+    () => new Map(characterStore.allCharacters().map((c) => [c.id, c.avatarUrl])),
+  );
+
   public onSave(): void {
     const selectedIds = this.currentSelection();
-    const charMap = new Map(this.allCharacters.map((c) => [c.id, c]));
+    const charMap = new Map([
+      ...this.allCharacters.map((c) => [c.id, c] as [string, Character]),
+      ...this.specialGuest.map((c) => [c.id, c] as [string, Character]),
+    ]);
     const selectedChars: Character[] = [];
 
     for (const id of selectedIds) {
