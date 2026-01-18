@@ -1,4 +1,4 @@
-import { CharacterGridComponent } from '@shared/components/character-grid.component/character-grid.component';
+import { CharacterGridComponent } from '@shared/components/character-grid.component/character-grid';
 import { Component, signal, computed, OnInit, inject } from '@angular/core';
 import { ElementTypeName } from '@models/models';
 import { sortCharacters } from '@utils/sorting-characters';

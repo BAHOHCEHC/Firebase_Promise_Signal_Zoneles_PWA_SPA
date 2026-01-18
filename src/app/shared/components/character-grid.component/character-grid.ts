@@ -12,8 +12,8 @@ import { characterStore } from '@store/_index';
   standalone: true,
   selector: 'app-character-grid',
   imports: [CommonModule],
-  templateUrl: './character-grid.component.html',
-  styleUrl: './character-grid.component.scss',
+  templateUrl: './character-grid.html',
+  styleUrl: './character-grid.scss',
 })
 export class CharacterGridComponent {
   readonly characterStore = characterStore;
