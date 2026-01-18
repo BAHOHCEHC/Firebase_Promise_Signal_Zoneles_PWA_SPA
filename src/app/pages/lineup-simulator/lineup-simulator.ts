@@ -1,4 +1,6 @@
 import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
+import html2canvas from 'html2canvas';
+import { ElementRef } from '@angular/core';
 import {
   CharacterService,
   EnemiesService,
@@ -25,6 +27,9 @@ export class LineupSimulator implements OnInit {
   public enemiesService = inject(EnemiesService);
   private actModsService = inject(ActModsService);
 
+  @ViewChild('screenshotRoot', { static: false })
+  screenshotRoot!: ElementRef<HTMLElement>;
+
   public store = inject(LineupStore);
 
   public loading = signal(true);
@@ -50,7 +55,9 @@ export class LineupSimulator implements OnInit {
 
     // Efficient lookup
     const charMap = new Map<string, Character>();
-    [...this.allCharacters(), ...this.specialGuestCharacters()].forEach((c) => charMap.set(c.id, c));
+    [...this.allCharacters(), ...this.specialGuestCharacters()].forEach((c) =>
+      charMap.set(c.id, c),
+    );
     const all = Array.from(charMap.values());
 
     if (all.length === 0) return [];
@@ -298,14 +305,35 @@ export class LineupSimulator implements OnInit {
     this.store.removeCharacter(actId, charId);
   }
 
-  saveConfiguration() {
-    this.loading.set(true);
-    // Auto-save logic handles persistence, but we can manually triggering it if needed
-    // or just simulate a save delay for feedback.
-    // The store effect auto-saves.
-    setTimeout(() => {
-      this.loading.set(false);
-    }, 500);
+  async saveConfiguration() {
+    try {
+      // Даємо Angular домалювати DOM
+      await new Promise((r) => setTimeout(r, 50));
+
+      const element = this.screenshotRoot.nativeElement;
+
+      const canvas = await html2canvas(element, {
+        backgroundColor: '#0b0e14', // або null для прозорого
+        scale: window.devicePixelRatio || 2, // якість
+        useCORS: true, // важливо для картинок
+        logging: false,
+      });
+
+      const modeName = this.activeMode()?.name;
+
+      const image = canvas.toDataURL('image/png');
+
+      this.downloadImage(image, `lineup-config[${modeName}].png`);
+    } catch (err) {
+      console.error('Screenshot failed', err);
+    }
+  }
+
+  private downloadImage(dataUrl: string, fileName: string) {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = fileName;
+    link.click();
   }
 
   public resolveAvatarUrl(item: string | Character | Enemy | null | undefined): string {

@@ -3,13 +3,16 @@
 /* =========================
    PAGE LAYOUT
 ========================= */
-
+.lineup_wrapper,
 .page-container {
   min-height: 100vh;
   color: $primary-white;
   display: flex;
   justify-content: space-between;
   gap: 60px;
+}
+.lineup_wrapper {
+  padding: 0 10px;
 }
 
 .loading-state {
@@ -256,6 +259,7 @@
 
   h2 {
     margin: 20px 0 0;
+    padding: 0 0 0 25px;
   }
 }
 
