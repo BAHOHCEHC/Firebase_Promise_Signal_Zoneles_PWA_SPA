@@ -1,5 +1,6 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { TasksService } from '@shared/services/_index';
 import { TaskTable } from '../admin/task-tracker-admin/task-table/task-table';
 import { userTasksStore } from '@store/_index';
@@ -12,7 +13,7 @@ import { Region_task } from '@models/models';
   templateUrl: './task-tracker.html',
   styleUrl: './task-tracker.scss',
 })
-export class TaskTracker implements OnInit {
+export class TaskTracker implements OnInit, OnDestroy {
   private tasksService = inject(TasksService);
   private fb = inject(FormBuilder);
 
@@ -21,9 +22,13 @@ export class TaskTracker implements OnInit {
 
   // Filter Form
   public filterForm = this.fb.group({
-    showUnfinished: [false]
+    showUnfinished: [false],
+    filtering: ['']
   });
   public showUnfinishedSignal = signal(false);
+  public filteringSignal = signal('');
+
+  private destroy$ = new Subject<void>();
 
   // Derived state with merging logic
   public tasks = computed(() => {
@@ -33,6 +38,7 @@ export class TaskTracker implements OnInit {
     const serverTasks = this.tasksService.tasks();
     const userTasks = userTasksStore.userTasks();
     const showUnfinished = this.showUnfinishedSignal();
+    const filterValue = this.filteringSignal().toLowerCase();
 
     const regionTasks = serverTasks.filter(t => t.regionId === activeId);
 
@@ -61,11 +67,20 @@ export class TaskTracker implements OnInit {
       return { ...task, finished: isFinished, parts };
     });
 
+    let filteredTasks = mergedTasks;
+
     if (showUnfinished) {
-      return mergedTasks.filter(t => !t.finished);
+      filteredTasks = filteredTasks.filter(t => !t.finished);
     }
 
-    return mergedTasks;
+    if (filterValue) {
+      filteredTasks = filteredTasks.filter(t =>
+        t.name?.toLowerCase().includes(filterValue) ||
+        t.achiviment?.toLowerCase().includes(filterValue)
+      );
+    }
+
+    return filteredTasks;
   });
 
   // Loading state
@@ -80,10 +95,28 @@ export class TaskTracker implements OnInit {
   public hasRegions = computed(() => this.regions().length > 0);
 
   public async ngOnInit(): Promise<void> {
-    this.filterForm.controls.showUnfinished.valueChanges.subscribe(val => {
-      this.showUnfinishedSignal.set(!!val);
-    });
+    this.filterForm.controls.showUnfinished.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(val => {
+        this.showUnfinishedSignal.set(!!val);
+      });
+
+    this.filterForm.controls.filtering.valueChanges
+      .pipe(
+        debounceTime(600),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(val => {
+        this.filteringSignal.set(val || '');
+      });
+
     await this.loadData();
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   public async loadData(): Promise<void> {
