@@ -1,11 +1,11 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
-import { LoginModalComponent } from '@core/components/_index';
+import { LoginModal } from '@core/components/_index';
 import { AdminToken } from './core/services/admin-token';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, LoginModalComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, LoginModal],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -13,7 +13,7 @@ export class App {
   protected readonly title = signal('gi-theatre-lineup-simulator');
   readonly adminToken = inject(AdminToken);
   private readonly router = inject(Router);
-  loginModal = viewChild(LoginModalComponent);
+  loginModal = viewChild(LoginModal);
 
   onLoginClick() {
     this.loginModal()?.open();

@@ -1,5 +1,4 @@
-import { Component, DestroyRef, inject, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,15 +10,14 @@ import { AdminToken } from '../../services/admin-token';
   selector: 'app-login-modal',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './login-modal.component.html',
-  styleUrl: './login-modal.component.scss',
+  templateUrl: './login-modal.html',
+  styleUrl: './login-modal.scss',
 })
-export class LoginModalComponent {
+export class LoginModal {
   private readonly fb = inject(FormBuilder);
   private readonly firebase = inject(Firebase);
   private readonly adminToken = inject(AdminToken);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
 
   readonly isOpen = signal(false);
   readonly isLoading = signal(false);
