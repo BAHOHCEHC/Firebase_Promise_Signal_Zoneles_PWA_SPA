@@ -1,5 +1,10 @@
 import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
-import { CharacterService, EnemiesService, SeasonService, ActModsService } from '@shared/services/_index';
+import {
+  CharacterService,
+  EnemiesService,
+  SeasonService,
+  ActModsService,
+} from '@shared/services/_index';
 import { Character, ElementTypeName, Enemy, Mode, Season_details } from '@models/models';
 import { characterStore, LineupStore } from '@store/_index';
 import { sortCharacters } from '@utils/sorting-characters';
@@ -29,9 +34,13 @@ export class LineupSimulator implements OnInit {
   // Filtered characters for the modal (only show allowed elements)
   public availableCharacters = computed(() => {
     const usersSelectedChars = this.allCharacters();
+    const openingIds = new Set(this.openingCharacters().map((c) => c.id));
     const allowed = this.activeElements();
-    if (allowed.size === 0) return usersSelectedChars;
-    return usersSelectedChars.filter((c) => c.element && allowed.has(c.element.name));
+
+    const filtered = usersSelectedChars.filter((c) => !openingIds.has(c.id));
+
+    if (allowed.size === 0) return filtered;
+    return filtered.filter((c) => c.element && allowed.has(c.element.name));
   });
 
   // Users characters for the ACTIVE mode
@@ -40,7 +49,10 @@ export class LineupSimulator implements OnInit {
     if (selectedIds.size === 0) return [];
 
     // Efficient lookup
-    const all = this.allCharacters();
+    const charMap = new Map<string, Character>();
+    [...this.allCharacters(), ...this.specialGuestCharacters()].forEach((c) => charMap.set(c.id, c));
+    const all = Array.from(charMap.values());
+
     if (all.length === 0) return [];
 
     const energyState = this.store.energyState();
@@ -80,6 +92,12 @@ export class LineupSimulator implements OnInit {
     opening_characters: [],
     special_guests: [],
     acts: [],
+  });
+
+  public specialGuestCharacters = computed(() => {
+    const guests = this.seasonDetails().special_guests || [];
+    const ownedIds = new Set(this.allCharacters().map((c) => c.id));
+    return guests.filter((c) => ownedIds.has(c.id));
   });
 
   // Element helpers

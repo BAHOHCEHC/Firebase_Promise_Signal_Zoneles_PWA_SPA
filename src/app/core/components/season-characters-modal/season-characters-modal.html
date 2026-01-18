@@ -1,5 +1,11 @@
-<div class="modal-overlay" (click)="onClose()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
+<div
+  class="modal-overlay"
+  (click)="onClose()"
+>
+  <div
+    class="modal-content"
+    (click)="$event.stopPropagation()"
+  >
     @if (type !== 'lineup') {
       <div class="modal-header">
         <h2 class="modal-title">{{ title }}</h2>
@@ -16,7 +22,10 @@
 
     <!-- Filters -->
     @if (type !== 'lineup') {
-      <div class="filters" [class.filters--dim-inactive]="shouldDimInactiveFilters()">
+      <div
+        class="filters"
+        [class.filters--dim-inactive]="shouldDimInactiveFilters()"
+      >
         @for (type of elementTypes; track type) {
           <button
             class="filter-button"
@@ -28,7 +37,11 @@
             "
             (click)="toggleElementFilter(type)"
           >
-            <img class="element-icon" [src]="getElementIconPath(type)" [alt]="type" />
+            <img
+              class="element-icon"
+              [src]="getElementIconPath(type)"
+              [alt]="type"
+            />
           </button>
         }
       </div>
@@ -52,10 +65,17 @@
               class="character-image-wrapper"
               [style.background-image]="'url(' + char.rarity.bgUrl + ')'"
             >
-              <img [src]="char.avatarUrl" [alt]="char.name" class="character-avatar" />
+              <img
+                [src]="char.avatarUrl"
+                [alt]="char.name"
+                class="character-avatar"
+              />
               @if (char.element) {
                 <div class="element-badge">
-                  <img [src]="getElementIconPath(char.element.name)" [alt]="char.element.name" />
+                  <img
+                    [src]="getElementIconPath(char.element.name)"
+                    [alt]="char.element.name"
+                  />
                 </div>
               }
             </div>
@@ -64,23 +84,84 @@
       </div>
     </div>
 
+    @if (type === 'lineup' && !!specialGuest.length) {
+      <div class="specialGuest">
+        <span class="title">Special Guest</span>
+
+        <!-- Special Guest Grid -->
+        <div class="character-grid-container">
+          <div
+            class="character-grid"
+            [class.character-grid--dim-inactive]="shouldDimInactiveCharacters()"
+          >
+            @for (char of specialGuest; track char.id) {
+              <div
+                class="character-card"
+                [class.character-card--selected]="isCharacterSelected(char.id)"
+                [class.character-card--dimmed]="
+                  !isCharacterSelected(char.id) && shouldDimInactiveCharacters()
+                "
+                (click)="toggleCharacter(char.id)"
+              >
+                <div
+                  class="character-image-wrapper"
+                  [style.background-image]="'url(' + char.rarity.bgUrl + ')'"
+                >
+                  <img
+                    [src]="resolveAvatarUrl(char.id)"
+                    [alt]="char.name"
+                    class="character-avatar"
+                  />
+                  @if (char.element) {
+                    <div class="element-badge">
+                      <img
+                        [src]="getElementIconPath(char.element.name)"
+                        [alt]="char.element.name"
+                      />
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
     <div class="modal-footer">
       @if (type === 'lineup') {
         <div class="limit_wrapper">
-          <span class="counter" [class.pulse]="isSaveDisabled()">{{ selectionCount() }}</span>
+          <span
+            class="counter"
+            [class.pulse]="isSaveDisabled()"
+            >{{ selectionCount() }}</span
+          >
           <span class="counter">/</span>
           <span class="counter">{{ max }}</span>
         </div>
         <div class="limit_wrapper">
-          <span class="counter" [class.pulse]="isSaveDisabled()">{{ min }} min </span>
+          <span
+            class="counter"
+            [class.pulse]="isSaveDisabled()"
+            >{{ min }} min
+          </span>
           <span class="counter">/ </span>
           <span class="counter"> {{ max }} max</span>
         </div>
       }
 
       <div class="actions">
-        <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
-        <button class="btn btn-primary" (click)="onSave()" [disabled]="isSaveDisabled()">
+        <button
+          class="btn btn-secondary"
+          (click)="onClose()"
+        >
+          Cancel
+        </button>
+        <button
+          class="btn btn-primary"
+          (click)="onSave()"
+          [disabled]="isSaveDisabled()"
+        >
           Save
         </button>
       </div>
