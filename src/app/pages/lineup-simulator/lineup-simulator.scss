@@ -125,7 +125,7 @@
 .char-list {
   display: flex;
   justify-content: flex-start;
-  gap: 9.6px;
+  gap: 12px;
 }
 .characters-blocks {
   display: flex;
@@ -141,7 +141,7 @@
   .char-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 9.6px;
+    gap: 12px;
   }
 }
 .char-mini-card {
