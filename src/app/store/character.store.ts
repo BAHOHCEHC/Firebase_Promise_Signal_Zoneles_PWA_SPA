@@ -1,7 +1,6 @@
 import { signal, computed, Injectable } from '@angular/core';
 import { Character, ElementTypeName } from '@models/models';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -16,9 +15,7 @@ export class CharacterStore {
   readonly selectedCharacters = signal<Character[]>([]);
 
   /** Є хоча б один обраний */
-  readonly hasSelection = computed(
-    () => this.selectedCharacters().length > 0
-  );
+  readonly hasSelection = computed(() => this.selectedCharacters().length > 0);
 
   /** Відфільтрований список */
   readonly filteredCharacters = computed(() => {
@@ -27,7 +24,7 @@ export class CharacterStore {
 
     if (elements.size === 0) return list;
 
-    return list.filter(c => c.element && elements.has(c.element.name));
+    return list.filter((c) => c.element && elements.has(c.element.name));
   });
 
   constructor() {
@@ -36,11 +33,8 @@ export class CharacterStore {
 
   /** Сохранить выбранных персонажей в localStorage */
   saveToLocalStorage() {
-    const ids = this.selectedCharacters().map(c => c.id);
-    localStorage.setItem(
-      'UserCharacters',
-      JSON.stringify(ids)
-    );
+    const ids = this.selectedCharacters().map((c) => c.id);
+    localStorage.setItem('UserCharacters', JSON.stringify(ids));
   }
 
   /** Загрузить выбранных персонажей из localStorage */
@@ -50,52 +44,51 @@ export class CharacterStore {
       if (stored) {
         // Try parsing as IDs first (new format)
         const parsed = JSON.parse(stored);
-        
+
         if (Array.isArray(parsed)) {
-           // Якщо це масив рядків (IDs)
-           if (typeof parsed[0] === 'string') {
-               const all = this.allCharacters();
-               if (all.length > 0) {
-                   const ids = new Set(parsed);
-                   const chars = all.filter(c => ids.has(c.id));
-                   this.selectedCharacters.set(chars);
-               } else {
-                   // Якщо персонажі ще не завантажені, тимчасово зберігаємо IDs? 
-                   // Або просто нічого не робимо, бо setCharacters викличеться пізніше?
-                   // Найкраще: реактивно оновлювати selectedCharacters коли allCharacters змінюється,
-                   // але тут ми просто завантажимо IDs в тимчасову змінну або просто спробуємо ще раз пізніше.
-                   // АЛЕ! Оскільки allCharacters це сигнал, ми можемо використати computed?
-                   // Ні, selectedCharacters це writable signal.
-                   
-                   // Варіант: зберегти IDs і спробувати відновити пізніше.
-                   this._pendingSelectedIds = parsed; 
-               }
-           } else {
-               // Old format (array of objects), migrate or use as is
-               // Assuming it's objects, just set them (but IDs are smaller). 
-               // Better to rely on fresh data from allCharacters to ensure updates.
-               const ids = new Set(parsed.map((c: any) => c.id));
-               // Store as pending so setCharacters can hydrate them
-               this._pendingSelectedIds = Array.from(ids) as string[];
-           }
+          // Якщо це масив рядків (IDs)
+          if (typeof parsed[0] === 'string') {
+            const all = this.allCharacters();
+            if (all.length > 0) {
+              const ids = new Set(parsed);
+              const chars = all.filter((c) => ids.has(c.id));
+              this.selectedCharacters.set(chars);
+            } else {
+              // Якщо персонажі ще не завантажені, тимчасово зберігаємо IDs?
+              // Або просто нічого не робимо, бо setCharacters викличеться пізніше?
+              // Найкраще: реактивно оновлювати selectedCharacters коли allCharacters змінюється,
+              // але тут ми просто завантажимо IDs в тимчасову змінну або просто спробуємо ще раз пізніше.
+              // АЛЕ! Оскільки allCharacters це сигнал, ми можемо використати computed?
+              // Ні, selectedCharacters це writable signal.
+              // Варіант: зберегти IDs і спробувати відновити пізніше.
+              this._pendingSelectedIds = parsed;
+            }
+          } else {
+            // Old format (array of objects), migrate or use as is
+            // Assuming it's objects, just set them (but IDs are smaller).
+            // Better to rely on fresh data from allCharacters to ensure updates.
+            const ids = new Set(parsed.map((c: any) => c.id));
+            // Store as pending so setCharacters can hydrate them
+            this._pendingSelectedIds = Array.from(ids) as string[];
+          }
         }
       }
     } catch (e) {
       console.error('Failed to load characters from localStorage', e);
     }
   }
-  
+
   private _pendingSelectedIds: string[] = [];
 
   setCharacters(chars: Character[]) {
     this.allCharacters.set(chars);
     // Rehydrate if we have pending IDs
     if (this._pendingSelectedIds.length > 0) {
-        const ids = new Set(this._pendingSelectedIds);
-        const selected = chars.filter(c => ids.has(c.id));
-        this.selectedCharacters.set(selected);
-        // Clear pending? Maybe keep if we want to support additive loading? No.
-        this._pendingSelectedIds = [];
+      const ids = new Set(this._pendingSelectedIds);
+      const selected = chars.filter((c) => ids.has(c.id));
+      this.selectedCharacters.set(selected);
+      // Clear pending? Maybe keep if we want to support additive loading? No.
+      this._pendingSelectedIds = [];
     }
   }
 
@@ -110,16 +103,16 @@ export class CharacterStore {
   }
 
   toggleCharacter(char: Character) {
-    const exists = this.selectedCharacters().some(c => c.id === char.id);
+    const exists = this.selectedCharacters().some((c) => c.id === char.id);
     this.selectedCharacters.set(
       exists
-        ? this.selectedCharacters().filter(c => c.id !== char.id)
-        : [...this.selectedCharacters(), char]
+        ? this.selectedCharacters().filter((c) => c.id !== char.id)
+        : [...this.selectedCharacters(), char],
     );
   }
 
   isSelected(char: Character) {
-    return this.selectedCharacters().some(c => c.id === char.id);
+    return this.selectedCharacters().some((c) => c.id === char.id);
   }
 
   /** Додати нового персонажа */
@@ -129,14 +122,10 @@ export class CharacterStore {
 
   /** Видалити персонажа за id */
   removeCharacter(id: string) {
-    this.allCharacters.set(
-      this.allCharacters().filter(c => c.id !== id)
-    );
+    this.allCharacters.set(this.allCharacters().filter((c) => c.id !== id));
 
     // Також видаляємо з обраних, якщо був
-    this.selectedCharacters.set(
-      this.selectedCharacters().filter(c => c.id !== id)
-    );
+    this.selectedCharacters.set(this.selectedCharacters().filter((c) => c.id !== id));
   }
 
   /** ОНОВИТИ існуючого персонажа */
@@ -147,14 +136,12 @@ export class CharacterStore {
     }
 
     this.allCharacters.set(
-      this.allCharacters().map(c =>
-        c.id === updatedChar.id ? updatedChar : c
-      )
+      this.allCharacters().map((c) => (c.id === updatedChar.id ? updatedChar : c)),
     );
 
     // Якщо персонаж був у обраних — оновлюємо і там
     const selected = this.selectedCharacters();
-    const index = selected.findIndex(c => c.id === updatedChar.id);
+    const index = selected.findIndex((c) => c.id === updatedChar.id);
     if (index !== -1) {
       const newSelected = [...selected];
       newSelected[index] = updatedChar;
