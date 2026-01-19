@@ -1,7 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
 @font-face {
   font-family: 'Genshin';
   src: url('/assets/fonts/zh-cn.ttf') format('truetype');
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
 }
 body {
   margin: 0;

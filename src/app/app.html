@@ -6,31 +6,58 @@
           src="assets/images/logo.png"
           alt="Genshin Theatre Planner"
           class="app-logo__img"
-        >
+          fetchpriority="high"
+          width="159"
+          height="62"
+        />
       </div>
     </div>
 
     <nav class="app-nav">
-      <a routerLink="/" routerLinkActive="app-nav__link--active" [routerLinkActiveOptions]="{ exact: true }"
-        class="app-nav__link">
+      <a
+        routerLink="/"
+        routerLinkActive="app-nav__link--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="app-nav__link"
+      >
         Lineup simulator
       </a>
-      <a routerLink="/season" routerLinkActive="app-nav__link--active" class="app-nav__link">
+      <a
+        routerLink="/season"
+        routerLinkActive="app-nav__link--active"
+        class="app-nav__link"
+      >
         Season Details
       </a>
-      <a routerLink="/characters" routerLinkActive="app-nav__link--active" class="app-nav__link">
+      <a
+        routerLink="/characters"
+        routerLinkActive="app-nav__link--active"
+        class="app-nav__link"
+      >
         Your Characters
       </a>
-      <a routerLink="/enemies" routerLinkActive="app-nav__link--active" class="app-nav__link">
+      <a
+        routerLink="/enemies"
+        routerLinkActive="app-nav__link--active"
+        class="app-nav__link"
+      >
         Enemy List
       </a>
-      <a routerLink="/task-tracker" routerLinkActive="app-nav__link--active" class="app-nav__link">
+      <a
+        routerLink="/task-tracker"
+        routerLinkActive="app-nav__link--active"
+        class="app-nav__link"
+      >
         Task tracker
       </a>
 
       <!-- Адмінське посилання — тільки якщо є токен -->
       @if (adminToken.hasToken()) {
-        <a routerLink="/admin" routerLinkActive="app-nav__link--active" class="app-nav__link">
+        <a
+          routerLink="/admin"
+          routerLinkActive="app-nav__link--active"
+          class="app-nav__link"
+        >
           Admin
         </a>
       }
@@ -39,12 +66,22 @@
     <div class="app-header__right">
       <!-- Кнопка логіну — тільки якщо токена НЕМАЄ -->
       @if (!adminToken.hasToken()) {
-        <button (click)="onLoginClick()" class="app-header__circle-button" type="button" aria-label="Login">
+        <button
+          (click)="onLoginClick()"
+          class="app-header__circle-button"
+          type="button"
+          aria-label="Login"
+        >
           <!-- Іконка або аватарка — можеш додати SVG або img -->
         </button>
       } @else {
         <!-- Якщо залогінений — можна додати аватар або логаут, але за завданням залишаємо порожньо або іконку -->
-        <button (click)="onLogout()" class="app-header__circle-button" type="button" aria-label="Logout">
+        <button
+          (click)="onLogout()"
+          class="app-header__circle-button"
+          type="button"
+          aria-label="Logout"
+        >
           <!-- Наприклад, іконка юзера або логаут -->
         </button>
       }
