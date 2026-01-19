@@ -125,18 +125,23 @@ export class LineupSimulator implements OnInit {
   );
 
   // Split acts for 2-column layout (Act 1-5 Left, Act 6-10 Right) + Arcana
-  public leftActs = computed(() => {
+  public nonArcanaActs = computed(() => {
     const acts = this.activeMode()?.chambers || [];
     return acts
-      .filter((a) => a.type !== 'Arcana_fight' && a.name <= 5)
+      .filter((a) => a.type !== 'Arcana_fight')
       .sort((a, b) => a.name - b.name);
   });
 
+  public leftActs = computed(() => {
+    const all = this.nonArcanaActs();
+    const mid = Math.ceil(all.length / 2);
+    return all.slice(0, mid);
+  });
+
   public rightActs = computed(() => {
-    const acts = this.activeMode()?.chambers || [];
-    return acts
-      .filter((a) => a.type !== 'Arcana_fight' && a.name > 5)
-      .sort((a, b) => a.name - b.name);
+    const all = this.nonArcanaActs();
+    const mid = Math.ceil(all.length / 2);
+    return all.slice(mid);
   });
 
   public arcanaActs = computed(() => {

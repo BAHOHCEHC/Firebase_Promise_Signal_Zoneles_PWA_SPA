@@ -187,7 +187,11 @@
             @for (act of leftActs(); track act.id) {
               <div class="act-item">
                 <div class="act-section-name">
-                  <h3>Act {{ act.name }}</h3>
+                  @if (act.name == 10 && activeMode()?.name === 'Hard mode') {
+                    <h3>Act 8</h3>
+                  } @else {
+                    <h3>Act {{ act.name }}</h3>
+                  }
                 </div>
                 <div class="act-section-inner">
                   <div class="act-section-enemy">
@@ -262,7 +266,11 @@
             @for (act of rightActs(); track act.id) {
               <div class="act-item">
                 <div class="act-section-name">
-                  <h3>Act {{ act.name }}</h3>
+                  @if (act.name == 10 && activeMode()?.name === 'Hard mode') {
+                    <h3>Act 8</h3>
+                  } @else {
+                    <h3>Act {{ act.name }}</h3>
+                  }
                 </div>
                 <div class="act-section-inner">
                   <div class="act-section-enemy">
