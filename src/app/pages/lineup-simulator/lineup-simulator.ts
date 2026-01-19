@@ -8,13 +8,14 @@ import {
   ActModsService,
 } from '@shared/services/_index';
 import { Character, ElementTypeName, Enemy, Mode, Season_details } from '@models/models';
-import { characterStore, LineupStore } from '@store/_index';
+import { CharacterStore, LineupStore } from '@store/_index';
 import { sortCharacters } from '@utils/sorting-characters';
 import { SeasonCharactersModal } from '@core/components/_index';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lineup-simulator',
-  imports: [SeasonCharactersModal],
+  imports: [SeasonCharactersModal, ReactiveFormsModule],
   standalone: true,
   templateUrl: './lineup-simulator.html',
   styleUrl: './lineup-simulator.scss',
@@ -30,11 +31,12 @@ export class LineupSimulator implements OnInit {
   @ViewChild('screenshotRoot', { static: false })
   screenshotRoot!: ElementRef<HTMLElement>;
 
-  public store = inject(LineupStore);
+  public readonly store = inject(LineupStore);
+  public readonly characterStore = inject(CharacterStore);
 
   public loading = signal(true);
 
-  public allCharacters = computed(() => characterStore.selectedCharacters());
+  public allCharacters = computed(() => this.characterStore.selectedCharacters());
 
   // Filtered characters for the modal (only show allowed elements)
   public availableCharacters = computed(() => {
@@ -147,9 +149,9 @@ export class LineupSimulator implements OnInit {
     // Init services
 
     // Load chars - Optimization: use store if available
-    if (characterStore.allCharacters().length === 0) {
+    if (this.characterStore.allCharacters().length === 0) {
       const chars = await this.characterService.getAllCharacters();
-      characterStore.setCharacters(chars);
+      this.characterStore.setCharacters(chars);
     }
     // Load modes
     const modes = await this.actModsService.getAllModes();
@@ -250,7 +252,7 @@ export class LineupSimulator implements OnInit {
     if (charIds.length === 0) return [];
 
     // Resolve chars from GLOBAL store to ensure we find Opening characters (who aren't in 'selected')
-    const all = characterStore.allCharacters();
+    const all = this.characterStore.allCharacters();
     return charIds.map((id) => all.find((c) => c.id === id)).filter((c) => !!c) as Character[];
   }
 
@@ -319,9 +321,8 @@ export class LineupSimulator implements OnInit {
         logging: false,
       });
 
-      const modeName = this.activeMode()?.name;
-
       const image = canvas.toDataURL('image/png');
+      const modeName = this.activeMode()?.name || 'Unknown';
 
       this.downloadImage(image, `lineup-config[${modeName}].png`);
     } catch (err) {
@@ -353,8 +354,8 @@ export class LineupSimulator implements OnInit {
     );
   }
   // --- Helpers ---
-  private charactersMap = computed(
-    () => new Map(characterStore.allCharacters().map((c) => [c.id, c.avatarUrl])),
+  private readonly charactersMap = computed(
+    () => new Map(this.characterStore.allCharacters().map((c) => [c.id, c.avatarUrl])),
   );
 
   private enemiesMap = computed(

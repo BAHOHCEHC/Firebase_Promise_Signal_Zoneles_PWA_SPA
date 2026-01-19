@@ -3,10 +3,11 @@ import {
   computed,
   Input,
   Signal,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Character, ElementTypeName } from '@models/models';
-import { characterStore } from '@store/_index';
+import { CharacterStore } from '@store/_index';
 
 @Component({
   standalone: true,
@@ -16,7 +17,7 @@ import { characterStore } from '@store/_index';
   styleUrl: './character-grid.scss',
 })
 export class CharacterGridComponent {
-  readonly characterStore = characterStore;
+  protected readonly characterStore = inject(CharacterStore);
 
   /** Вхідні дані */
   @Input({ required: true }) characters!: Signal<Character[]>;
@@ -32,15 +33,15 @@ export class CharacterGridComponent {
     return chars.filter(c => c.element && filters.has(c.element.name));
   });
 
-  readonly hasSelection = computed(() => characterStore.hasSelection());
+  readonly hasSelection = computed(() => this.characterStore.hasSelection());
 
   now = Date.now();
 
   toggle(char: Character) {
-    characterStore.toggleCharacter(char);
+    this.characterStore.toggleCharacter(char);
   }
 
   isSelected(char: Character) {
-    return characterStore.isSelected(char);
+    return this.characterStore.isSelected(char);
   }
 }

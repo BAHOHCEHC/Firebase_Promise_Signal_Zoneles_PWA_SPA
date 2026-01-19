@@ -3,7 +3,7 @@ import { Component, signal, computed, OnInit, inject } from '@angular/core';
 import { ElementTypeName } from '@models/models';
 import { sortCharacters } from '@utils/sorting-characters';
 // import { CHARACTERS_MOCK } from '../../../utils/characters.mock';
-import { characterStore } from '@store/_index';
+import { CharacterStore } from '@store/_index';
 import { CharacterService } from '@shared/services/_index';
 
 @Component({
@@ -15,23 +15,23 @@ import { CharacterService } from '@shared/services/_index';
 })
 export class YourCharacters implements OnInit {
   private characterService = inject(CharacterService);
+  public readonly characterStore = inject(CharacterStore);
+  
   public isLoading = signal(true);
 
   readonly elementTypes = [
     'pyro', 'hydro', 'electro', 'cryo', 'dendro', 'anemo', 'geo'
   ] as const;
 
-  readonly characterStore = characterStore;
-
   readonly charactersPanelOpened = signal(false);
   readonly filtersWereUsed = signal(false);
 
   readonly hasSelectedCharacters = computed(() =>
-    characterStore.selectedCharacters().length > 0
+    this.characterStore.selectedCharacters().length > 0
   );
 
   readonly charactersArrayEmpty = computed(() =>
-    characterStore.selectedCharacters().length === 0
+    this.characterStore.selectedCharacters().length === 0
   );
 
   readonly shouldShowCharacterGrid = computed(() =>
@@ -40,38 +40,32 @@ export class YourCharacters implements OnInit {
 
   readonly displayCharacters = computed(() => {
     if (this.charactersPanelOpened()) {
-      return characterStore.allCharacters();
+      return this.characterStore.allCharacters();
     }
-    return sortCharacters(characterStore.selectedCharacters());
+    return sortCharacters(this.characterStore.selectedCharacters());
   });
 
   readonly shouldDimInactive = computed(() =>
-    this.filtersWereUsed() && characterStore.activeElements().size > 0
+    this.filtersWereUsed() && this.characterStore.activeElements().size > 0
   );
 
   async ngOnInit(): Promise<void> {
     this.isLoading.set(true);
-    // ❌ стара mock-логіка
-    /*
-    if (characterStore.allCharacters().length === 0) {
-      characterStore.setCharacters(sortCharacters(CHARACTERS_MOCK));
-    }
-    */
 
     // ✅ нова логіка: Firestore → Store
-    if (characterStore.allCharacters().length === 0) {
+    if (this.characterStore.allCharacters().length === 0) {
       const characters = await this.characterService.getAllCharacters();
-      characterStore.setCharacters(sortCharacters(characters));
+      this.characterStore.setCharacters(sortCharacters(characters));
     }
 
     // localStorage — як і було
-    characterStore.loadFromLocalStorage();
+    this.characterStore.loadFromLocalStorage();
     this.isLoading.set(false);
   }
 
   toggleElement(type: ElementTypeName): void {
     this.filtersWereUsed.set(true);
-    characterStore.toggleElement(type);
+    this.characterStore.toggleElement(type);
   }
 
   onAddCharacters(): void {
@@ -79,7 +73,7 @@ export class YourCharacters implements OnInit {
   }
 
   onSaveAddCharacters(): void {
-    characterStore.saveToLocalStorage();
+    this.characterStore.saveToLocalStorage();
     this.charactersPanelOpened.set(false);
   }
 

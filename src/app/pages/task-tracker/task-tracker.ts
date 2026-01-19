@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { TasksService } from '@shared/services/_index';
 import { TaskTable } from '../admin/task-tracker-admin/task-table/task-table';
-import { userTasksStore } from '@store/_index';
+import { UserTasksStore } from '@store/_index';
 import { Region_task } from '@models/models';
 
 @Component({
@@ -16,6 +16,7 @@ import { Region_task } from '@models/models';
 export class TaskTracker implements OnInit, OnDestroy {
   private tasksService = inject(TasksService);
   private fb = inject(FormBuilder);
+  private userTasksStore = inject(UserTasksStore);
 
   public regions = this.tasksService.regions;
   public activeRegionId = signal<string | null>(null);
@@ -36,7 +37,7 @@ export class TaskTracker implements OnInit, OnDestroy {
     if (!activeId) return [];
 
     const serverTasks = this.tasksService.tasks();
-    const userTasks = userTasksStore.userTasks();
+    const userTasks = this.userTasksStore.userTasks();
     const showUnfinished = this.showUnfinishedSignal();
     const filterValue = this.filteringSignal().toLowerCase();
 
@@ -146,10 +147,10 @@ export class TaskTracker implements OnInit, OnDestroy {
   }
 
   onToggleTask(task: Region_task) {
-    if (task.id) userTasksStore.toggleTaskFinish(task.id, task.regionId);
+    if (task.id) this.userTasksStore.toggleTaskFinish(task.id, task.regionId);
   }
 
   onTogglePart(event: { task: Region_task, partName: string }) {
-    if (event.task.id) userTasksStore.togglePartFinish(event.task.id, event.partName, event.task.regionId);
+    if (event.task.id) this.userTasksStore.togglePartFinish(event.task.id, event.partName, event.task.regionId);
   }
 }

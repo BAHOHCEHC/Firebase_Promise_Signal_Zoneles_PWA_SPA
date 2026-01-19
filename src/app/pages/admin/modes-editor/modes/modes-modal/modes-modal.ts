@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, computed } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Act, Mode, Fight_type } from '@models/models';
-import { actModesStore } from '@store/_index';
+import { ActModesStore } from '@store/_index';
 import { CommonModule } from '@angular/common';
 import { ActModsService } from '@shared/services/_index';
 import { generateUUID } from '@shared/utils/uuid';
@@ -19,6 +19,7 @@ export class ModeModal implements OnInit {
 
   private fb = inject(FormBuilder);
   private actModsService = inject(ActModsService);
+  private actModesStore = inject(ActModesStore);
 
   form = this.fb.nonNullable.group({
     name: ['Hard mode', [Validators.required, Validators.minLength(2)]],
@@ -238,10 +239,10 @@ export class ModeModal implements OnInit {
     try {
       if (this.modeToEdit) {
         await this.actModsService.updateMode(modeData);
-        actModesStore.updateMode(modeData);
+        this.actModesStore.updateMode(modeData);
       } else {
         await this.actModsService.createMode(modeData);
-        actModesStore.addMode(modeData);
+        this.actModesStore.addMode(modeData);
       }
 
       this.close.emit();

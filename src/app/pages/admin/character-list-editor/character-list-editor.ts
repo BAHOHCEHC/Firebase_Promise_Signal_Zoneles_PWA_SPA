@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { CharacterFormModal } from '@core/components/_index';
 import { CharacterService } from '@shared/services/_index';
-import { characterStore } from '@store/_index';
+import { CharacterStore } from '@store/_index';
 import { Character } from '@models/models';
 import { sortCharacters } from '@utils/sorting-characters';
 
@@ -16,6 +16,8 @@ import { sortCharacters } from '@utils/sorting-characters';
 })
 export class CharacterListEditor {
   private service = inject(CharacterService);
+  public readonly characterStore = inject(CharacterStore);
+
   readonly isModalOpen = signal(false);
 
   public selectedCharacter = signal<Character | null>(null);
@@ -24,7 +26,7 @@ export class CharacterListEditor {
   readonly now = Date.now();
 
   // Список персонажів для відображення (з стора)
-  readonly visibleCharacters = characterStore.allCharacters;
+  readonly visibleCharacters = this.characterStore.allCharacters;
 
   constructor() {
     // Завантажуємо персонажів при старті
@@ -41,7 +43,7 @@ export class CharacterListEditor {
   async loadCharacters(): Promise<void> {
     try {
       const chars = await this.service.getAllCharacters();
-      characterStore.setCharacters(sortCharacters(chars));
+      this.characterStore.setCharacters(sortCharacters(chars));
     } catch (error) {
       console.error('Error loading characters:', error);
     }

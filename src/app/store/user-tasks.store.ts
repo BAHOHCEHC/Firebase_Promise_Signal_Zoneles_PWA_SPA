@@ -1,7 +1,10 @@
-import { signal } from '@angular/core';
+import { signal, Injectable } from '@angular/core';
 import { Region_task } from '../../models/models';
 
-class UserTasksStore {
+@Injectable({
+    providedIn: 'root',
+})
+export class UserTasksStore {
     /** Tasks with user state (finished status) loaded from localStorage */
     readonly userTasks = signal<Region_task[]>([]);
 
@@ -118,5 +121,3 @@ class UserTasksStore {
         return task?.parts?.find(p => p.name === partName)?.finished ?? false;
     }
 }
-
-export const userTasksStore = new UserTasksStore();

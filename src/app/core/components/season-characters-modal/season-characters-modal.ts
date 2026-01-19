@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, Output, signal, computed } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Character, ElementTypeName, Enemy } from '../../../../models/models';
 import { sortCharacters } from '../../../../utils/sorting-characters';
-import { characterStore } from '@store/character.store';
+import { CharacterStore } from '@store/_index';
 
 @Component({
   selector: 'app-season-characters-modal',
@@ -12,6 +12,7 @@ import { characterStore } from '@store/character.store';
   styleUrl: './season-characters-modal.scss',
 })
 export class SeasonCharactersModal {
+  private characterStore = inject(CharacterStore);
   @Input() public title: string = 'Select this season Characters';
   @Input() public type: string = 'season';
   @Input() public specialGuest: Character[] = [];
@@ -155,7 +156,7 @@ export class SeasonCharactersModal {
   }
   // --- Helpers ---
   private charactersMap = computed(
-    () => new Map(characterStore.allCharacters().map((c) => [c.id, c.avatarUrl])),
+    () => new Map(this.characterStore.allCharacters().map((c) => [c.id, c.avatarUrl])),
   );
 
   public onSave(): void {

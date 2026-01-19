@@ -1,7 +1,10 @@
-import { signal, computed } from '@angular/core';
+import { signal, computed, Injectable } from '@angular/core';
 import { Act, Mode } from '../../models/models';
 
-class ActModesStore {
+@Injectable({
+  providedIn: 'root',
+})
+export class ActModesStore {
   /** ACTS */
   readonly acts = signal<Act[]>([]);
 
@@ -36,9 +39,6 @@ class ActModesStore {
     );
   }
 
-  /** HELPERS */
   readonly hasActs = computed(() => this.acts().length > 0);
   readonly hasModes = computed(() => this.modes().length > 0);
 }
-
-export const actModesStore = new ActModesStore();

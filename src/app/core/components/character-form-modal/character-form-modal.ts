@@ -12,7 +12,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { CharacterService } from '@shared/services/_index';
-import { characterStore } from '@store/_index';
+import { CharacterStore } from '@store/_index';
 import { Character, ElementTypeName } from '@models/models';
 import { RARITY } from '@utils/characters.mock';
 
@@ -29,6 +29,7 @@ export class CharacterFormModal implements OnInit {
 
   private fb = inject(FormBuilder);
   private service = inject(CharacterService);
+  private characterStore = inject(CharacterStore);
 
   readonly elementTypes: ElementTypeName[] = [
     'pyro', 'hydro', 'electro', 'cryo', 'dendro', 'anemo', 'geo'
@@ -95,16 +96,8 @@ export class CharacterFormModal implements OnInit {
       await this.service.update(savedCharacter);
     } else {
       // Створюємо — отримуємо новий персонаж з реальним ID від Firestore
-
       await this.service.create(characterData);
     }
-
-    // Оновлюємо стор
-    // if (this.isEditMode()) {
-    //   characterStore.updateCharacter(savedCharacter);
-    // } else {
-    //   characterStore.addCharacter(savedCharacter);
-    // }
 
     this.close.emit();
   } catch (error) {
@@ -117,7 +110,7 @@ export class CharacterFormModal implements OnInit {
     if (!this.character) return;
     try {
       await this.service.delete(String(this.character.id));
-      characterStore.removeCharacter(String(this.character.id));
+      this.characterStore.removeCharacter(String(this.character.id));
 
       this.close.emit();
     } catch (error) {

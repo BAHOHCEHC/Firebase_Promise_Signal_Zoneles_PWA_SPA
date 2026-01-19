@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { actModesStore } from '@store/_index';
+import { ActModesStore } from '@store/_index';
 import { CommonModule } from '@angular/common';
 import { ActModsService } from '@shared/services/_index';
 import { Mode } from '@models/models';
@@ -13,7 +13,10 @@ import { Mode } from '@models/models';
 })
 export class ModesTable {
   actModsService = inject(ActModsService);
-  store = actModesStore;
+  protected readonly actModesStore = inject(ActModesStore);
+
+  // Keep for template backward compatibility if needed, or update template to use actModesStore
+  store = this.actModesStore;
 
   @Input() modes: Mode[] = [];
   @Input() loading = false;

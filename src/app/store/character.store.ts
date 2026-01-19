@@ -1,8 +1,11 @@
-import { signal, computed } from '@angular/core';
+import { signal, computed, Injectable } from '@angular/core';
 import { Character, ElementTypeName } from '@models/models';
 
 
-class CharacterStore {
+@Injectable({
+  providedIn: 'root',
+})
+export class CharacterStore {
   /** Всі персонажі (повний список, 1 раз) */
   readonly allCharacters = signal<Character[]>([]);
 
@@ -159,5 +162,3 @@ class CharacterStore {
     }
   }
 }
-
-export const characterStore = new CharacterStore();
