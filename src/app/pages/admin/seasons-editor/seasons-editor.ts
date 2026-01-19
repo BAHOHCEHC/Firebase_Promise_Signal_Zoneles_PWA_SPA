@@ -16,9 +16,14 @@ import {
   SeasonAddEnemyModal,
   SeasonAddVariationChamberModal,
   SeasonCharactersModal,
-  SeasonElementTypeModal
+  SeasonElementTypeModal,
 } from '@core/components/_index';
-import { CharacterService, EnemiesService, SeasonService, ActModsService } from '@shared/services/_index';
+import {
+  CharacterService,
+  EnemiesService,
+  SeasonService,
+  ActModsService,
+} from '@shared/services/_index';
 import { sanitizeChars } from '@utils/sanitizeChars';
 
 @Component({
@@ -298,7 +303,6 @@ export class SeasonsEditorComponent implements OnInit {
   // public onSaveEnemy(data: { enemy: Enemy, options: any }) {
   public onSaveEnemy(data: { enemies: Enemy[]; options: Enemy_options }): void {
     const act = this.currentActForEnemy();
-    debugger;
     if (!act) return;
 
     const processedEnemies = data.enemies.map((e) => ({
