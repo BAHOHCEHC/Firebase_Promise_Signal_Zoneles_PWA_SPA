@@ -147,10 +147,10 @@ export class TaskTracker implements OnInit, OnDestroy {
   }
 
   onToggleTask(task: Region_task) {
-    if (task.id) this.userTasksStore.toggleTaskFinish(task.id, task.regionId);
+    if (task.id) this.userTasksStore.toggleTaskFinish(task.id, task.regionId, task.name);
   }
 
   onTogglePart(event: { task: Region_task, partName: string }) {
-    if (event.task.id) this.userTasksStore.togglePartFinish(event.task.id, event.partName, event.task.regionId);
+    if (event.task.id) this.userTasksStore.togglePartFinish(event.task.id, event.partName, event.task.regionId,event.task.name);
   }
 }

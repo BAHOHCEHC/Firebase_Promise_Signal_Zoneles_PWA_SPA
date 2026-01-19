@@ -38,19 +38,20 @@ export class UserTasksStore {
     }
 
     /** Toggle finished state of a task */
-    toggleTaskFinish(taskId: string, regionId: string) {
+    toggleTaskFinish(taskId: string, regionId: string, name: string) {
         this.userTasks.update(tasks => {
             const existingTaskIndex = tasks.findIndex(t => t.id === taskId);
 
             if (existingTaskIndex !== -1) {
-                // Task exists, toggle finished
-                const updatedTasks = [...tasks];
-                const currentTask = updatedTasks[existingTaskIndex];
-                updatedTasks[existingTaskIndex] = {
-                    ...currentTask,
-                    finished: !currentTask.finished,
-                    regionId: regionId // Ensure regionId is up to date
-                };
+              // Task exists, toggle finished
+              const updatedTasks = [...tasks];
+              const currentTask = updatedTasks[existingTaskIndex];
+              updatedTasks[existingTaskIndex] = {
+                ...currentTask,
+                finished: !currentTask.finished,
+                regionId: regionId, // Ensure regionId is up to date
+                name: name || ''
+              };
                 // If task is unchecked, should we remove it if it has no other data?
                 // for now keep it to remember state.
                 return updatedTasks;
@@ -61,7 +62,7 @@ export class UserTasksStore {
                 // We can create a partial object. The merge logic will handle the rest.
                 const newTask: Region_task = {
                     id: taskId,
-                    name: '', // Name and other fields come from server data
+                    name: name || '', // Name and other fields come from server data
                     regionId: regionId,
                     finished: true
                 };
@@ -72,7 +73,7 @@ export class UserTasksStore {
     }
 
     /** Toggle finished state of a part within a task */
-    togglePartFinish(taskId: string, partName: string, regionId: string) {
+    togglePartFinish(taskId: string, partName: string, regionId: string, name: string) {
         this.userTasks.update(tasks => {
             const existingTaskIndex = tasks.findIndex(t => t.id === taskId);
 
@@ -93,6 +94,7 @@ export class UserTasksStore {
                 }
 
                 task.parts = parts;
+                task.name = name || '';
                 task.regionId = regionId; // Ensure regionId is up to date
                 updatedTasks[existingTaskIndex] = task;
                 return updatedTasks;
@@ -100,7 +102,7 @@ export class UserTasksStore {
                 // Task doesn't exist, create it with the part
                 const newTask: Region_task = {
                     id: taskId,
-                    name: '',
+                    name: name || '',
                     regionId: regionId,
                     parts: [{ name: partName, finished: true }]
                 };
