@@ -2,7 +2,6 @@ import { CharacterGridComponent } from '@shared/components/character-grid.compon
 import { Component, signal, computed, OnInit, inject } from '@angular/core';
 import { ElementTypeName } from '@models/models';
 import { sortCharacters } from '@utils/sorting-characters';
-// import { CHARACTERS_MOCK } from '../../../utils/characters.mock';
 import { CharacterStore } from '@store/_index';
 import { CharacterService } from '@shared/services/_index';
 
@@ -16,7 +15,7 @@ import { CharacterService } from '@shared/services/_index';
 export class YourCharacters implements OnInit {
   private characterService = inject(CharacterService);
   public readonly characterStore = inject(CharacterStore);
-  
+
   public isLoading = signal(true);
 
   readonly elementTypes = [

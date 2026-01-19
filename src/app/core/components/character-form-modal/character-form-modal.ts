@@ -6,16 +6,28 @@ import {
   signal,
   computed,
   inject,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { CharacterService } from '@shared/services/_index';
 import { CharacterStore } from '@store/_index';
-import { Character, ElementTypeName } from '@models/models';
-import { RARITY } from '@utils/characters.mock';
+import { Character, CharacterRarityID, ElementTypeName } from '@models/models';
 
+/* ===== Rarity ===== */
+const RARITY = {
+  legendary: {
+    id: 1,
+    name: 'legendary',
+    bgUrl: 'assets/images/bg_legendary.png',
+  } as CharacterRarityID,
+  epic: {
+    id: 2,
+    name: 'epic',
+    bgUrl: 'assets/images/bg_epic.png',
+  } as CharacterRarityID,
+};
 @Component({
   standalone: true,
   selector: 'app-character-form-modal',
@@ -32,7 +44,13 @@ export class CharacterFormModal implements OnInit {
   private characterStore = inject(CharacterStore);
 
   readonly elementTypes: ElementTypeName[] = [
-    'pyro', 'hydro', 'electro', 'cryo', 'dendro', 'anemo', 'geo'
+    'pyro',
+    'hydro',
+    'electro',
+    'cryo',
+    'dendro',
+    'anemo',
+    'geo',
   ];
 
   readonly selectedElement = signal<ElementTypeName>('pyro');
@@ -73,38 +91,38 @@ export class CharacterFormModal implements OnInit {
   }
 
   async save(): Promise<void> {
-  if (this.form.invalid) return;
+    if (this.form.invalid) return;
 
-  const characterData: Omit<Character, 'id'> = {
-    name: this.form.value.name!,
-    avatarUrl: this.previewImage() ?? this.character?.avatarUrl ?? '',
-    rarity: this.selectedRarity(),
-    element: { name: this.selectedElement() },
-    energy: 2,
-    newIndex: {
-      value: this.character?.newIndex?.value ?? Date.now(),
-      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000
+    const characterData: Omit<Character, 'id'> = {
+      name: this.form.value.name!,
+      avatarUrl: this.previewImage() ?? this.character?.avatarUrl ?? '',
+      rarity: this.selectedRarity(),
+      element: { name: this.selectedElement() },
+      energy: 2,
+      newIndex: {
+        value: this.character?.newIndex?.value ?? Date.now(),
+        expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
+      },
+    };
+
+    try {
+      let savedCharacter: Character;
+
+      if (this.isEditMode()) {
+        // Редагуємо — оновлюємо з існуючим ID
+        savedCharacter = { ...characterData, id: this.character!.id };
+        await this.service.update(savedCharacter);
+      } else {
+        // Створюємо — отримуємо новий персонаж з реальним ID від Firestore
+        await this.service.create(characterData);
+      }
+
+      this.close.emit();
+    } catch (error) {
+      console.error('Error saving character:', error);
+      alert('Помилка збереження');
     }
-  };
-
-  try {
-    let savedCharacter: Character;
-
-    if (this.isEditMode()) {
-      // Редагуємо — оновлюємо з існуючим ID
-      savedCharacter = { ...characterData, id: this.character!.id };
-      await this.service.update(savedCharacter);
-    } else {
-      // Створюємо — отримуємо новий персонаж з реальним ID від Firestore
-      await this.service.create(characterData);
-    }
-
-    this.close.emit();
-  } catch (error) {
-    console.error('Error saving character:', error);
-    alert('Помилка збереження');
   }
-}
 
   async delete(): Promise<void> {
     if (!this.character) return;
