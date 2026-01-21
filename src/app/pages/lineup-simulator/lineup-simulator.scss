@@ -45,9 +45,6 @@
 .left-section {
   width: 480px;
   margin-bottom: 20px;
-
-  h2 {
-  }
 }
 
 .right-section {
@@ -55,9 +52,6 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
-
-  h2 {
-  }
 }
 
 /* =========================
@@ -73,20 +67,6 @@
     align-items: center;
     gap: 12px;
   }
-
-  .btn-icon {
-    background: $dark-bg;
-    border: none;
-    color: $light-grey-color;
-    border-radius: 4px;
-    padding: 2px 8px;
-    cursor: pointer;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-  }
-
   .selected-elements {
     display: flex;
     gap: 8px;

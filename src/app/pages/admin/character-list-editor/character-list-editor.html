@@ -7,22 +7,46 @@
   } @else {
     <div class="characters-grid">
       <!-- Кнопка + як перший елемент сітки -->
-      <button type="button" class="admin__add" (click)="open()">+</button>
+      <button
+        type="button"
+        class="admin__add"
+        (click)="open()"
+      >
+        +
+      </button>
 
       <!-- Персонажі -->
       @for (c of visibleCharacters(); track c.id) {
-        <button type="button" class="char" (click)="toggle(c)">
-          <img class="bg" [src]="c.rarity.bgUrl" alt="" />
-          <img class="avatar" [src]="c.avatarUrl" [alt]="c.name" />
+        <button
+          type="button"
+          class="char"
+          (click)="toggle(c)"
+        >
+          <img
+            class="bg"
+            [src]="c.rarity.bgUrl"
+            alt=""
+          />
+          <img
+            class="avatar"
+            [src]="c.avatarUrl"
+            [alt]="c.name"
+            [title]="c.name"
+          />
           @if (c.element) {
             <img
               class="element"
               [src]="'/assets/images/ElementType_' + c.element.name + '.png'"
               [alt]="c.element.name"
+              [title]="c.element.name"
             />
           }
           @if ((c.newIndex?.expiresAt ?? 0) > now) {
-            <img class="new" src="assets/images/new.svg" alt="New" />
+            <img
+              class="new"
+              src="assets/images/new.svg"
+              alt="New"
+            />
           }
         </button>
       } @empty {
@@ -34,5 +58,8 @@
 
 <!-- Модалка -->
 @if (isModalOpen()) {
-  <app-character-form-modal (close)="close()" [character]="selectedCharacter() ?? undefined" />
+  <app-character-form-modal
+    (close)="close()"
+    [character]="selectedCharacter() ?? undefined"
+  />
 }

@@ -19,7 +19,11 @@
             <div class="selected-elements">
               @for (el of elementTypes; track el) {
                 @if (activeElements().has(el)) {
-                  <img [src]="getElementIconPath(el)" [alt]="el" />
+                  <img
+                    [src]="getElementIconPath(el)"
+                    [alt]="el"
+                    [title]="el"
+                  />
                 }
               }
             </div>
@@ -38,6 +42,7 @@
                 <img
                   [src]="resolveAvatarUrl(char.id)"
                   [alt]="char.name"
+                  [title]="char.name"
                   [style.background-image]="'url(' + char.rarity.bgUrl + ')'"
                 />
 
@@ -61,6 +66,7 @@
                 <img
                   [src]="resolveAvatarUrl(char.id)"
                   [alt]="char.name"
+                  [title]="char.name"
                   [style.background-image]="'url(' + char.rarity.bgUrl + ')'"
                 />
                 @if (char.element) {
@@ -116,7 +122,11 @@
                                   /></span>
                                 }
                                 <div class="enemy-circle">
-                                  <img [src]="resolveAvatarUrl(enemy.id)" />
+                                  <img
+                                    [src]="resolveAvatarUrl(enemy.id)"
+                                    [alt]="enemy.name"
+                                    [title]="enemy.name"
+                                  />
                                 </div>
                               </div>
                             }
@@ -164,7 +174,11 @@
                                   /></span>
                                 }
                                 <div class="enemy-circle">
-                                  <img [src]="resolveAvatarUrl(enemy.id)" />
+                                  <img
+                                    [src]="resolveAvatarUrl(enemy.id)"
+                                    [alt]="enemy.name"
+                                    [title]="enemy.name"
+                                  />
                                 </div>
                               </div>
                             }
@@ -246,6 +260,7 @@
                                           <img
                                             [src]="resolveAvatarUrl(enemy.id)"
                                             [alt]="enemy.name"
+                                            [title]="enemy.name"
                                           />
                                         </div>
                                       </div>
