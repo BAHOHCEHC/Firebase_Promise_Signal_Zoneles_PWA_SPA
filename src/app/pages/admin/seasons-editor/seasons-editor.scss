@@ -27,25 +27,9 @@
     transform: rotate(360deg);
   }
 }
-.header-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-
-  h1 {
-    font-size: 1.8rem;
-    margin: 0;
-  }
-
-  .actions-right {
-    display: flex;
-    gap: 12px;
-  }
-}
 .editor__header {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -84,12 +68,6 @@
 
 .content-section {
   margin-bottom: 32px;
-
-  h2 {
-    font-size: 1.4rem;
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-  }
 }
 
 .element-req-section {
@@ -265,11 +243,6 @@
 .act-header,
 .var-header {
   margin-bottom: 8px;
-}
-
-.act-label {
-  // maybe duplicate of header? prompt image shows "Act 3" above circle
-  display: none; // hides redundant label if header is used
 }
 
 .enemies-container {

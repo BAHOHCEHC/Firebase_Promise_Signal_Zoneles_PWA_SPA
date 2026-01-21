@@ -2,11 +2,6 @@
 
 .editor {
     color: $primary-white;
-
-    &__header {
-        margin-bottom: 20px;
-    }
-
     &__actions {
         display: flex;
         gap: 30px;
@@ -19,49 +14,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    &-title {
-        margin: 20px 0 0;
-    }
-}
-
-.editor__actions {
-    min-width: 30%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: $primary-white;
-    background: none;
-
-    &:hover {
-        color: $btn-primary-hover;
-    }
-
-    &-secondary-disabled {
-        background: $btn-secondary-disabled;
-        color: $grey-color; // Greyed out text
-        cursor: not-allowed;
-
-        &:hover {
-            color: $grey-color;
-        }
-    }
-}
-
-.no-groups-message {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
 }
 
 // Tabs

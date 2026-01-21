@@ -7,10 +7,10 @@
   } @else {
     <header class="yc__header-row">
       @if (!charactersPanelOpened()) {
-        <h1 class="yc__title">Your Characters</h1>
+        <h2 class="yc__title">Your Characters</h2>
         <button class="yc__add-button fs_24" (click)="onAddCharacters()">Add Characters +</button>
       } @else {
-        <h1 class="yc__title color-green">Select Characters you have</h1>
+        <h2 class="yc__title color-green">Select Characters you have</h2>
         <button class="yc__save-button fs_24" (click)="onSaveAddCharacters()">
           Save
           <span class="material-symbols-outlined color-green"> bookmark_check </span>

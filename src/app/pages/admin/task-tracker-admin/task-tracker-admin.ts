@@ -8,7 +8,7 @@ import { ConfirmModal } from '@core/components/_index';
 
 @Component({
   standalone: true,
-  selector: 'app-task-tracker',
+  selector: 'app-task-tracker-admin',
   imports: [AddTaskRegionModal, TaskTable, AddTaskModal, ConfirmModal],
   templateUrl: './task-tracker-admin.html',
   styleUrl: './task-tracker-admin.scss',
