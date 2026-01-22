@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ActModesStore } from '@store/_index';
 import { CommonModule } from '@angular/common';
 import { ActModsService } from '@shared/services/_index';
@@ -9,7 +9,8 @@ import { Mode } from '@models/models';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './modes-table.html',
-  styleUrl: './modes-table.scss'
+  styleUrl: './modes-table.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModesTable {
   actModsService = inject(ActModsService);

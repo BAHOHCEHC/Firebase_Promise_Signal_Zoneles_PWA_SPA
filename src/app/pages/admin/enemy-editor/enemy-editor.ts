@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EnemiesService } from '@shared/services/_index';
 import { EnemyEditorModal, ConfirmModal } from '@core/components/_index';
@@ -11,6 +11,7 @@ import { Enemy, EnemyGroup, ModalType } from '@models/models';
   imports: [CommonModule, EnemyEditorModal, ConfirmModal],
   templateUrl: './enemy-editor.html',
   styleUrl: './enemy-editor.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnemyEditor implements OnInit {
   private enemiesService = inject(EnemiesService);

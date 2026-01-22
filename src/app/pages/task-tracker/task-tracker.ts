@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { TasksService } from '@shared/services/_index';
@@ -12,6 +12,7 @@ import { Region_task } from '@models/models';
   imports: [TaskTable, ReactiveFormsModule],
   templateUrl: './task-tracker.html',
   styleUrl: './task-tracker.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskTracker implements OnInit, OnDestroy {
   private tasksService = inject(TasksService);

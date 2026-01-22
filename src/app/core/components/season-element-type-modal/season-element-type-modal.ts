@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ElementTypeName, ElementType } from '../../../../models/models';
 
@@ -8,6 +8,7 @@ import { ElementTypeName, ElementType } from '../../../../models/models';
   imports: [CommonModule],
   templateUrl: './season-element-type-modal.html',
   styleUrl: './season-element-type-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeasonElementTypeModal {
   @Input() public set selectedElements(value: ElementType[]) {

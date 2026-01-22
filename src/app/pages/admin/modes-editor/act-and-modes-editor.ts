@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActModal } from './acts/act-modal/act-modal';
 import { ActsTable } from './acts/acts-table/acts-table';
@@ -22,6 +22,7 @@ import { ConfirmModal } from '@core/components/_index';
   ],
   templateUrl: './act-and-modes-editor.html',
   styleUrls: ['./act-and-modes-editor.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActAndModesEditor implements OnInit {
   private service = inject(ActModsService);

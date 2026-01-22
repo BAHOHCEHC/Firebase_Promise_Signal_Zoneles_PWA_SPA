@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -23,7 +24,8 @@ import { ElementTypeName, EnemyCategory, EnemyGroup, ModalType } from '@models/m
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './enemy-editor-modal.html',
-  styleUrl: './enemy-editor-modal.scss'
+  styleUrl: './enemy-editor-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnemyEditorModal implements OnInit {
 

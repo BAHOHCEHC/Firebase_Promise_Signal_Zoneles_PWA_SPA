@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Region_task } from '../../../../../models/models';
@@ -10,6 +10,7 @@ import { HighlightPipe } from '@shared/pipes/highlight.pipe';
   imports: [CommonModule, FormsModule, ReactiveFormsModule, HighlightPipe],
   templateUrl: './task-table.html',
   styleUrl: './task-table.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskTable {
   @Input() tasks: Region_task[] = [];

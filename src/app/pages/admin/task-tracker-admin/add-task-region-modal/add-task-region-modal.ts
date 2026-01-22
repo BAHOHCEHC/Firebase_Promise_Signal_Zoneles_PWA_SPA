@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, Input, Output, EventEmitter, signal, inject, computed } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter, signal, inject, computed } from "@angular/core";
 import { ReactiveFormsModule, FormBuilder, Validators } from "@angular/forms";
 import { Region, Region_task } from "@models/models";
 import { TasksService } from "@shared/services/_index";
@@ -12,6 +12,7 @@ import { generateUUID } from "@shared/utils/uuid";
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './add-task-region-modal.html',
   styleUrl: './add-task-region-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddTaskRegionModal implements OnInit {
   @Input() regionToEdit: Region | null = null;

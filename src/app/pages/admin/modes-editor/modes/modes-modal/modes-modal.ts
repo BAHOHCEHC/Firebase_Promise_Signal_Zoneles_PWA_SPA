@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output, signal, computed } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Act, Mode, Fight_type } from '@models/models';
 import { ActModesStore } from '@store/_index';
@@ -11,7 +11,8 @@ import { generateUUID } from '@shared/utils/uuid';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './modes-modal.html',
-  styleUrl: './modes-modal.scss'
+  styleUrl: './modes-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModeModal implements OnInit {
   @Input() modeToEdit: Mode | null = null;

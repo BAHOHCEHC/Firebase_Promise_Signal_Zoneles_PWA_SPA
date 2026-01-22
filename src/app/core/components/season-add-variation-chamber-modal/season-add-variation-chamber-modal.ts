@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, effect, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, inject, effect, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Wave_type, Variation } from '../../../../models/models';
@@ -15,7 +15,8 @@ interface VariationModalData {
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './season-add-variation-chamber-modal.html',
-    styleUrl: './season-add-variation-chamber-modal.scss'
+    styleUrl: './season-add-variation-chamber-modal.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SeasonAddVariationChamberModal {
     public initialData = input<VariationModalData | null>(null);

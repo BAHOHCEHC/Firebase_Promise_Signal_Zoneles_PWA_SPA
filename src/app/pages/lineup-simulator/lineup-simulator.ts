@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
 import html2canvas from 'html2canvas';
 import { ElementRef } from '@angular/core';
 import {
@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   templateUrl: './lineup-simulator.html',
   styleUrl: './lineup-simulator.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineupSimulator implements OnInit {
   @ViewChild(SeasonCharactersModal) seasonCharactersModal!: SeasonCharactersModal;

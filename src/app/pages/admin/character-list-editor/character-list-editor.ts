@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CharacterFormModal } from '@core/components/_index';
@@ -13,6 +13,7 @@ import { sortCharacters } from '@utils/sorting-characters';
   imports: [CommonModule, CharacterFormModal],
   templateUrl: './character-list-editor.html',
   styleUrl: './character-list-editor.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharacterListEditor {
   private service = inject(CharacterService);

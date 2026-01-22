@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   Season_details,
@@ -38,6 +38,7 @@ import { sanitizeChars } from '@utils/sanitizeChars';
   ],
   templateUrl: './seasons-editor.html',
   styleUrl: './seasons-editor.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeasonsEditorComponent implements OnInit {
   private seasonService = inject(SeasonService);

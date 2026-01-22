@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, signal, inject, computed, effect, OnInit, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, signal, inject, computed, effect, OnInit, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_options, Wave, Act, Variation } from '../../../../models/models';
@@ -9,6 +9,7 @@ import { Act_options, Enemy, EnemyCategory, EnemyGroup, ElementTypeName, Enemy_o
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './season-add-enemy-modal.html',
   styleUrl: './season-add-enemy-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeasonAddEnemyModal implements OnInit {
   public actOptions = input<Act_options>({});

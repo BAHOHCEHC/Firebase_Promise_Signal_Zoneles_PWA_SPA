@@ -1,4 +1,4 @@
-import { Component, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { LoginModal } from '@core/components/_index';
 import { AdminToken } from './core/services/admin-token';
@@ -7,7 +7,8 @@ import { AdminToken } from './core/services/admin-token';
   selector: 'app-root',
   imports: [RouterOutlet, RouterLink, RouterLinkActive, LoginModal],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class App {
   protected readonly title = signal('gi-theatre-lineup-simulator');

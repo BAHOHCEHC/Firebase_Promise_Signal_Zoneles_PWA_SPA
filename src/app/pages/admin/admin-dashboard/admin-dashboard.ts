@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, map } from 'rxjs';
@@ -9,6 +9,7 @@ import { filter, map } from 'rxjs';
   imports: [RouterModule],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboard {
   private router = inject(Router);

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TasksService } from '@shared/services/_index';
 import { AddTaskRegionModal } from './add-task-region-modal/add-task-region-modal';
 import { TaskTable } from './task-table/task-table';
@@ -12,6 +12,7 @@ import { ConfirmModal } from '@core/components/_index';
   imports: [AddTaskRegionModal, TaskTable, AddTaskModal, ConfirmModal],
   templateUrl: './task-tracker-admin.html',
   styleUrl: './task-tracker-admin.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskTrackerAdmin implements OnInit {
   private tasksService = inject(TasksService);

@@ -1,5 +1,5 @@
 import { CharacterGridComponent } from '@shared/components/character-grid.component/character-grid';
-import { Component, signal, computed, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, OnInit, inject } from '@angular/core';
 import { ElementTypeName } from '@models/models';
 import { sortCharacters } from '@utils/sorting-characters';
 import { CharacterStore } from '@store/_index';
@@ -11,6 +11,7 @@ import { CharacterService } from '@shared/services/_index';
   imports: [CharacterGridComponent],
   templateUrl: './your-characters.html',
   styleUrls: ['./your-characters.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YourCharacters implements OnInit {
   private characterService = inject(CharacterService);

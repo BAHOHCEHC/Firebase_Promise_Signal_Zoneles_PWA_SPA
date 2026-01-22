@@ -4,6 +4,7 @@ import {
   Input,
   Signal,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Character, ElementTypeName } from '@models/models';
@@ -15,6 +16,7 @@ import { CharacterStore } from '@store/_index';
   imports: [CommonModule],
   templateUrl: './character-grid.html',
   styleUrl: './character-grid.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharacterGridComponent {
   protected readonly characterStore = inject(CharacterStore);

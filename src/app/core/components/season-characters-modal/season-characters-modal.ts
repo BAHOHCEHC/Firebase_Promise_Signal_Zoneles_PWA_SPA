@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Character, ElementTypeName, Enemy } from '../../../../models/models';
 import { sortCharacters } from '../../../../utils/sorting-characters';
@@ -10,6 +10,7 @@ import { CharacterStore } from '@store/_index';
   imports: [CommonModule],
   templateUrl: './season-characters-modal.html',
   styleUrl: './season-characters-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeasonCharactersModal {
   private characterStore = inject(CharacterStore);

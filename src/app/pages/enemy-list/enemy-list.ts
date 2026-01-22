@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { EnemiesService } from '@shared/services/_index';
 import { Enemy } from '@models/models';
 
@@ -7,6 +7,7 @@ import { Enemy } from '@models/models';
   imports: [],
   templateUrl: './enemy-list.html',
   styleUrl: './enemy-list.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnemyList implements OnInit {
   private enemiesService = inject(EnemiesService);

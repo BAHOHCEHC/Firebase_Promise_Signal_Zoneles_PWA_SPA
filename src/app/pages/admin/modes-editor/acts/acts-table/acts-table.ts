@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Act } from '@models/models';
 
@@ -7,7 +7,8 @@ import { Act } from '@models/models';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './acts-table.html',
-  styleUrls: ['./acts-table.scss']
+  styleUrls: ['./acts-table.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActsTable {
   private _acts = signal<Act[]>([]);

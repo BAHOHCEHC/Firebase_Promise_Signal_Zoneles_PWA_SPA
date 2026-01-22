@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Season_details, Character, Act, Wave, Variation, ElementTypeName, Enemy } from '@models/models';
 import { CharacterService, EnemiesService, SeasonService } from '@shared/services/_index';
@@ -9,7 +9,8 @@ import { CharacterService, EnemiesService, SeasonService } from '@shared/service
     CommonModule
   ],
   templateUrl: './season-details.html',
-  styleUrl: './season-details.scss'
+  styleUrl: './season-details.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SeasonsDetails implements OnInit {
   private seasonService = inject(SeasonService);

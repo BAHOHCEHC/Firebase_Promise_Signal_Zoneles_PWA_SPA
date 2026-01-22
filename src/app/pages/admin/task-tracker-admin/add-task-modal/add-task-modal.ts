@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { Region, Region_task } from '../../../../../models/models';
@@ -11,6 +11,7 @@ import { generateUUID } from '../../../../shared/utils/uuid';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './add-task-modal.html',
   styleUrl: './add-task-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddTaskModal implements OnInit {
   @Input() data: Region_task | null = null;

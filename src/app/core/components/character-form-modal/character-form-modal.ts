@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   Input,
   Output,
@@ -34,6 +35,7 @@ const RARITY = {
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './character-form-modal.html',
   styleUrls: ['./character-form-modal.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharacterFormModal implements OnInit {
   @Input() character?: Character; // Якщо передано — редагуємо, інакше — створюємо

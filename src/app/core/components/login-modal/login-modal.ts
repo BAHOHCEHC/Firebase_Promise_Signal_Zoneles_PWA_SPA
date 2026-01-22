@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { AdminToken } from '../../services/admin-token';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login-modal.html',
   styleUrl: './login-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginModal {
   private readonly fb = inject(FormBuilder);
