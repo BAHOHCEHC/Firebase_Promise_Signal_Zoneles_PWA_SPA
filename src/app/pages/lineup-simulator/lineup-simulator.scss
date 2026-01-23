@@ -389,7 +389,7 @@
   flex: 1 1 auto; // 🔑 займає весь залишок
   min-width: 0; // ❗ важливо для flex
   min-height: 60px;
-  max-width: 60px;
+  min-width: 60px;
   pointer-events: none;
   display: flex;
   align-items: center;
