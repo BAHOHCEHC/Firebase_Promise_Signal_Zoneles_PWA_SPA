@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } 
 import { CommonModule } from '@angular/common';
 import { Season_details, Character, Act, Wave, Variation, ElementTypeName, Enemy } from '@models/models';
 import { CharacterService, EnemiesService, SeasonService } from '@shared/services/_index';
+import { SeasonDetailsStore } from '@store/season-details.store'; // Or _index if preferred
 @Component({
   selector: 'app-seasons-details',
   standalone: true,
@@ -13,12 +14,13 @@ import { CharacterService, EnemiesService, SeasonService } from '@shared/service
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SeasonsDetails implements OnInit {
-  private seasonService = inject(SeasonService);
-  private characterService = inject(CharacterService);
+   private characterService = inject(CharacterService);
   public enemiesService = inject(EnemiesService); // Public to access signals in template if needed, or mapped
 
+  private seasonStore = inject(SeasonDetailsStore);
+
   // --- State Signals ---
-  public seasonDetails = signal<Season_details>({
+  public seasonDetails = computed<Season_details>(() => this.seasonStore.seasonDetails() || {
     elemental_type_limided: [],
     opening_characters: [],
     special_guests: [],
@@ -114,30 +116,8 @@ export class SeasonsDetails implements OnInit {
     const chars = await this.characterService.getAllCharacters();
     this.allCharacters.set(chars);
 
-    // Load Season Details
-    const details = await this.seasonService.loadSeasonDetails();
-    // Fetch generic Acts structure to ensure we have all acts (e.g. name, type)
-    const allActs = await this.seasonService.getAllActs();
-
-    if (details) {
-      if (details.acts && details.acts.length > 0) {
-        // Merge saved details with fresh Act definitions
-        const mergedActs = allActs.map(dbAct => {
-          const savedAct = details.acts.find(a => a.id === dbAct.id);
-          if (savedAct) {
-            return { ...dbAct, ...savedAct };
-          }
-          return dbAct;
-        });
-        this.seasonDetails.set({ ...details, acts: mergedActs });
-      } else {
-        // Details exist but no acts saved, use allActs
-        this.seasonDetails.update(s => ({ ...details, acts: allActs }));
-      }
-    } else {
-      // New season setup
-      this.seasonDetails.update(s => ({ ...s, acts: allActs }));
-    }
+    // Load Season Details via Store
+    await this.seasonStore.loadDetailsIfNeeded();
 
     this.loading.set(false);
   }

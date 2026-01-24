@@ -37,13 +37,69 @@ export class ActModesStore {
     }
   }
 
-  setActs(acts: Act[]) {
-    this.acts.set(acts);
+  /** Process acts to cache enemy images */
+  private async processActImages(acts: Act[]): Promise<Act[]> {
+    return Promise.all(acts.map(async (act) => {
+      const processedAct = { ...act };
+
+      // Helper to process enemies
+      const processEnemies = async (enemies: any[]) => {
+        return Promise.all(enemies.map(async (enemy) => {
+          const e = { ...enemy };
+          if (e.avatarUrl && !e.avatarUrl.startsWith('data:')) {
+            try {
+              e.avatarUrl = await IndexedDbUtil.loadImageAndCache(e.avatarUrl, e.avatarUrl);
+            } catch (err) {
+              console.error(`Failed to cache avatar for enemy ${e.name}`, err);
+            }
+          }
+          if (e.element?.iconUrl && !e.element.iconUrl.startsWith('data:')) {
+             try {
+               const newUrl = await IndexedDbUtil.loadImageAndCache(e.element.iconUrl, e.element.iconUrl);
+               e.element = { ...e.element, iconUrl: newUrl };
+             } catch (err) {
+               console.error(`Failed to cache element for enemy ${e.name}`, err);
+             }
+          }
+           return e;
+        }));
+      };
+
+      // 1. Enemy Selection
+      if (processedAct.enemy_selection?.length) {
+         processedAct.enemy_selection = await processEnemies(processedAct.enemy_selection);
+      }
+
+      // 2. Variations -> Waves -> Included Enemy
+      if (processedAct.variations?.length) {
+        processedAct.variations = await Promise.all(processedAct.variations.map(async (v) => {
+           const processedVar = { ...v };
+           if (processedVar.waves?.length) {
+              processedVar.waves = await Promise.all(processedVar.waves.map(async (w) => {
+                 const processedWave = { ...w };
+                 if (processedWave.included_enemy?.length) {
+                    processedWave.included_enemy = await processEnemies(processedWave.included_enemy);
+                 }
+                 return processedWave;
+              }));
+           }
+           return processedVar;
+        }));
+      }
+
+      return processedAct;
+    }));
+  }
+
+  async setActs(acts: Act[]) {
+    const processed = await this.processActImages(acts);
+    this.acts.set(processed);
     this.saveToIndexedDb();
   }
 
-  addAct(act: Act) {
-    this.acts.set([...this.acts(), act]);
+  async addAct(act: Act) {
+    const [processed] = await this.processActImages([act]);
+    this.acts.set([...this.acts(), processed]);
     this.saveToIndexedDb();
   }
 
@@ -52,9 +108,10 @@ export class ActModesStore {
     this.saveToIndexedDb();
   }
 
-  updateAct(act: Act) {
+  async updateAct(act: Act) {
+    const [processed] = await this.processActImages([act]);
     this.acts.set(
-      this.acts().map(a => a.id === act.id ? act : a)
+      this.acts().map(a => a.id === processed.id ? processed : a)
     );
     this.saveToIndexedDb();
   }
@@ -62,13 +119,26 @@ export class ActModesStore {
   /** MODES */
   readonly modes = signal<Mode[]>([]);
 
-  setModes(modes: Mode[]) {
-    this.modes.set(modes);
+  /** Process modes to ensure their chambers (acts) have cached images */
+  private async processModeImages(modes: Mode[]): Promise<Mode[]> {
+      return Promise.all(modes.map(async (mode) => {
+          const m = { ...mode };
+          if (m.chambers?.length) {
+              m.chambers = await this.processActImages(m.chambers);
+          }
+          return m;
+      }));
+  }
+
+  async setModes(modes: Mode[]) {
+    const processed = await this.processModeImages(modes);
+    this.modes.set(processed);
     this.saveToIndexedDb();
   }
 
-  addMode(mode: Mode) {
-    this.modes.set([...this.modes(), mode]);
+  async addMode(mode: Mode) {
+    const [processed] = await this.processModeImages([mode]);
+    this.modes.set([...this.modes(), processed]);
     this.saveToIndexedDb();
   }
 
@@ -77,9 +147,10 @@ export class ActModesStore {
     this.saveToIndexedDb();
   }
 
-  updateMode(mode: Mode) {
+  async updateMode(mode: Mode) {
+    const [processed] = await this.processModeImages([mode]);
     this.modes.set(
-      this.modes().map(m => m.id === mode.id ? mode : m)
+      this.modes().map(m => m.id === processed.id ? processed : m)
     );
     this.saveToIndexedDb();
   }
