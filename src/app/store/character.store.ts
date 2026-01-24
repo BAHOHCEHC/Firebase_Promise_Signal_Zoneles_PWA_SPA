@@ -1,5 +1,6 @@
 import { signal, computed, Injectable } from '@angular/core';
 import { Character, ElementTypeName } from '@models/models';
+import { IndexedDbUtil } from '@utils/indexed-db';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,39 @@ export class CharacterStore {
 
   constructor() {
     this.loadFromLocalStorage();
+    this.loadAllCharactersFromIndexedDb();
+  }
+
+  /** Сохранить список всех персонажей в IndexedDB */
+  private async saveAllCharactersToIndexedDb() {
+    try {
+      await IndexedDbUtil.set('AllCharacters', this.allCharacters());
+    } catch (e) {
+      console.error('Failed to save all characters to IndexedDB', e);
+    }
+  }
+
+  /** Загрузить список всех персонажей из IndexedDB */
+  private async loadAllCharactersFromIndexedDb() {
+    try {
+      const chars = await IndexedDbUtil.get<Character[]>('AllCharacters');
+      if (chars && Array.isArray(chars)) {
+        this.allCharacters.set(chars);
+        // Гидрация выбранных персонажей, если они были загружены ранее как IDs
+        this.rehydrateSelectedCharacters(chars);
+      }
+    } catch (e) {
+      console.error('Failed to load all characters from IndexedDB', e);
+    }
+  }
+
+  private rehydrateSelectedCharacters(chars: Character[]) {
+    if (this._pendingSelectedIds.length > 0) {
+      const ids = new Set(this._pendingSelectedIds);
+      const selected = chars.filter((c) => ids.has(c.id));
+      this.selectedCharacters.set(selected);
+      this._pendingSelectedIds = [];
+    }
   }
 
   /** Сохранить выбранных персонажей в localStorage */
@@ -82,14 +116,9 @@ export class CharacterStore {
 
   setCharacters(chars: Character[]) {
     this.allCharacters.set(chars);
+    this.saveAllCharactersToIndexedDb();
     // Rehydrate if we have pending IDs
-    if (this._pendingSelectedIds.length > 0) {
-      const ids = new Set(this._pendingSelectedIds);
-      const selected = chars.filter((c) => ids.has(c.id));
-      this.selectedCharacters.set(selected);
-      // Clear pending? Maybe keep if we want to support additive loading? No.
-      this._pendingSelectedIds = [];
-    }
+    this.rehydrateSelectedCharacters(chars);
   }
 
   toggleElement(type: ElementTypeName) {
@@ -118,14 +147,17 @@ export class CharacterStore {
   /** Додати нового персонажа */
   addCharacter(char: Character) {
     this.allCharacters.set([...this.allCharacters(), char]);
+    this.saveAllCharactersToIndexedDb();
   }
 
   /** Видалити персонажа за id */
   removeCharacter(id: string) {
     this.allCharacters.set(this.allCharacters().filter((c) => c.id !== id));
+    this.saveAllCharactersToIndexedDb();
 
     // Також видаляємо з обраних, якщо був
     this.selectedCharacters.set(this.selectedCharacters().filter((c) => c.id !== id));
+    this.saveToLocalStorage();
   }
 
   /** ОНОВИТИ існуючого персонажа */
@@ -138,6 +170,7 @@ export class CharacterStore {
     this.allCharacters.set(
       this.allCharacters().map((c) => (c.id === updatedChar.id ? updatedChar : c)),
     );
+    this.saveAllCharactersToIndexedDb();
 
     // Якщо персонаж був у обраних — оновлюємо і там
     const selected = this.selectedCharacters();
@@ -146,6 +179,7 @@ export class CharacterStore {
       const newSelected = [...selected];
       newSelected[index] = updatedChar;
       this.selectedCharacters.set(newSelected);
+      this.saveToLocalStorage();
     }
   }
 }

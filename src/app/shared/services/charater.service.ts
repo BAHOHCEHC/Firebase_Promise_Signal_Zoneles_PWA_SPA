@@ -1,5 +1,15 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, addDoc, deleteDoc, doc, updateDoc, getDocs, CollectionReference, DocumentData } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+  updateDoc,
+  getDocs,
+  CollectionReference,
+  DocumentData,
+} from '@angular/fire/firestore';
 import { Character } from '@models/models';
 
 @Injectable({ providedIn: 'root' })
@@ -38,7 +48,7 @@ export class CharacterService {
   /** Отримати ВСІХ персонажів */
   async getAllCharacters(): Promise<Character[]> {
     const snapshot = await getDocs(this.collectionRef);
-    return snapshot.docs.map(doc => {
+    return snapshot.docs.map((doc) => {
       const data = doc.data() as Omit<Character, 'id'>;
       return { id: String(doc.id), ...data };
     });

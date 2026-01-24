@@ -1,5 +1,6 @@
 import { signal, Injectable } from '@angular/core';
 import { Region_task } from '../../models/models';
+import { IndexedDbUtil } from '@utils/indexed-db';
 
 @Injectable({
     providedIn: 'root',
@@ -9,31 +10,27 @@ export class UserTasksStore {
     readonly userTasks = signal<Region_task[]>([]);
 
     constructor() {
-        this.loadFromLocalStorage();
+        this.loadFromIndexedDb();
     }
 
-    /** Save tasks to localStorage */
-    saveToLocalStorage() {
+    /** Save tasks to IndexedDB */
+    private async saveToIndexedDb() {
         try {
-            localStorage.setItem(
-                'UserTasks',
-                JSON.stringify(this.userTasks())
-            );
+            await IndexedDbUtil.set('UserTasks', this.userTasks());
         } catch (e) {
-            console.error('Failed to save tasks to localStorage', e);
+            console.error('Failed to save tasks to IndexedDB', e);
         }
     }
 
-    /** Load tasks from localStorage */
-    loadFromLocalStorage() {
+    /** Load tasks from IndexedDB */
+    private async loadFromIndexedDb() {
         try {
-            const stored = localStorage.getItem('UserTasks');
-            if (stored) {
-                const tasks = JSON.parse(stored) as Region_task[];
+            const tasks = await IndexedDbUtil.get<Region_task[]>('UserTasks');
+            if (tasks && Array.isArray(tasks)) {
                 this.userTasks.set(tasks);
             }
         } catch (e) {
-            console.error('Failed to load tasks from localStorage', e);
+            console.error('Failed to load tasks from IndexedDB', e);
         }
     }
 
@@ -69,7 +66,7 @@ export class UserTasksStore {
                 return [...tasks, newTask];
             }
         });
-        this.saveToLocalStorage();
+        this.saveToIndexedDb();
     }
 
     /** Toggle finished state of a part within a task */
@@ -109,7 +106,7 @@ export class UserTasksStore {
                 return [...tasks, newTask];
             }
         });
-        this.saveToLocalStorage();
+        this.saveToIndexedDb();
     }
 
     /** Check if a task is finished */
