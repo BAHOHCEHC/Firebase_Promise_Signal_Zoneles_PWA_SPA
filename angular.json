@@ -39,17 +39,20 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/gi-theatre-lineup-simulator",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              "src/manifest.webmanifest",
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
+            "serviceWorker": "ngsw-config.json",
             "styles": [
               "src/styles.scss"
             ],

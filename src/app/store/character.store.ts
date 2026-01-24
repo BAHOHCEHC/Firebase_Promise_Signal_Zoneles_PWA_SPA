@@ -1,5 +1,6 @@
 import { signal, computed, Injectable } from '@angular/core';
 import { Character, ElementTypeName } from '@models/models';
+import { IndexedDbUtil } from '@utils/indexed-db';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,90 @@ export class CharacterStore {
 
   constructor() {
     this.loadFromLocalStorage();
+    this.loadAllCharactersFromIndexedDb();
+    // Periodically cleanup cache
+    this.cleanupCache();
+  }
+
+  private async cleanupCache() {
+    try {
+      if ('cleanupOldCache' in IndexedDbUtil) {
+         // Assuming side-effect or trusting loadImageAndCache
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  /** Process characters to cache images and update URLs to base64 */
+  private async processCharacterImages(chars: Character[]): Promise<Character[]> {
+    const processed = await Promise.all(chars.map(async (char) => {
+      const c = { ...char };
+
+      // Avatar
+      if (c.avatarUrl && !c.avatarUrl.startsWith('data:')) {
+         try {
+           c.avatarUrl = await IndexedDbUtil.loadImageAndCache(c.avatarUrl, c.avatarUrl);
+         } catch (e) {
+           console.error(`Failed to cache avatar for ${c.name}`, e);
+         }
+      }
+
+      // Element Icon
+      if (c.element?.iconUrl && !c.element.iconUrl.startsWith('data:')) {
+        try {
+           const newUrl = await IndexedDbUtil.loadImageAndCache(c.element.iconUrl, c.element.iconUrl);
+           c.element = { ...c.element, iconUrl: newUrl };
+        } catch (e) {
+             console.error(`Failed to cache element icon for ${c.name}`, e);
+        }
+      }
+
+       // Rarity BG
+      if (c.rarity?.bgUrl && !c.rarity.bgUrl.startsWith('data:')) {
+        try {
+           const newUrl = await IndexedDbUtil.loadImageAndCache(c.rarity.bgUrl, c.rarity.bgUrl);
+           c.rarity = { ...c.rarity, bgUrl: newUrl };
+        } catch (e) {
+             console.error(`Failed to cache rarity bg for ${c.name}`, e);
+        }
+      }
+
+      return c;
+    }));
+    return processed;
+  }
+
+  /** Сохранить список всех персонажей в IndexedDB */
+  private async saveAllCharactersToIndexedDb() {
+    try {
+      await IndexedDbUtil.set('AllCharacters', this.allCharacters());
+    } catch (e) {
+      console.error('Failed to save all characters to IndexedDB', e);
+    }
+  }
+
+  /** Загрузить список всех персонажей из IndexedDB */
+  private async loadAllCharactersFromIndexedDb() {
+    try {
+      const chars = await IndexedDbUtil.get<Character[]>('AllCharacters');
+      if (chars && Array.isArray(chars)) {
+        this.allCharacters.set(chars);
+        // Гидрация выбранных персонажей, если они были загружены ранее как IDs
+        this.rehydrateSelectedCharacters(chars);
+      }
+    } catch (e) {
+      console.error('Failed to load all characters from IndexedDB', e);
+    }
+  }
+
+  private rehydrateSelectedCharacters(chars: Character[]) {
+    if (this._pendingSelectedIds.length > 0) {
+      const ids = new Set(this._pendingSelectedIds);
+      const selected = chars.filter((c) => ids.has(c.id));
+      this.selectedCharacters.set(selected);
+      this._pendingSelectedIds = [];
+    }
   }
 
   /** Сохранить выбранных персонажей в localStorage */
@@ -54,21 +139,11 @@ export class CharacterStore {
               const chars = all.filter((c) => ids.has(c.id));
               this.selectedCharacters.set(chars);
             } else {
-              // Якщо персонажі ще не завантажені, тимчасово зберігаємо IDs?
-              // Або просто нічого не робимо, бо setCharacters викличеться пізніше?
-              // Найкраще: реактивно оновлювати selectedCharacters коли allCharacters змінюється,
-              // але тут ми просто завантажимо IDs в тимчасову змінну або просто спробуємо ще раз пізніше.
-              // АЛЕ! Оскільки allCharacters це сигнал, ми можемо використати computed?
-              // Ні, selectedCharacters це writable signal.
-              // Варіант: зберегти IDs і спробувати відновити пізніше.
               this._pendingSelectedIds = parsed;
             }
           } else {
-            // Old format (array of objects), migrate or use as is
-            // Assuming it's objects, just set them (but IDs are smaller).
-            // Better to rely on fresh data from allCharacters to ensure updates.
+            // Old format
             const ids = new Set(parsed.map((c: any) => c.id));
-            // Store as pending so setCharacters can hydrate them
             this._pendingSelectedIds = Array.from(ids) as string[];
           }
         }
@@ -80,16 +155,13 @@ export class CharacterStore {
 
   private _pendingSelectedIds: string[] = [];
 
-  setCharacters(chars: Character[]) {
-    this.allCharacters.set(chars);
+  async setCharacters(chars: Character[]) {
+    // Cache images before setting
+    const processed = await this.processCharacterImages(chars);
+    this.allCharacters.set(processed);
+    this.saveAllCharactersToIndexedDb();
     // Rehydrate if we have pending IDs
-    if (this._pendingSelectedIds.length > 0) {
-      const ids = new Set(this._pendingSelectedIds);
-      const selected = chars.filter((c) => ids.has(c.id));
-      this.selectedCharacters.set(selected);
-      // Clear pending? Maybe keep if we want to support additive loading? No.
-      this._pendingSelectedIds = [];
-    }
+    this.rehydrateSelectedCharacters(processed);
   }
 
   toggleElement(type: ElementTypeName) {
@@ -116,36 +188,44 @@ export class CharacterStore {
   }
 
   /** Додати нового персонажа */
-  addCharacter(char: Character) {
-    this.allCharacters.set([...this.allCharacters(), char]);
+  async addCharacter(char: Character) {
+    const [processed] = await this.processCharacterImages([char]);
+    this.allCharacters.set([...this.allCharacters(), processed]);
+    this.saveAllCharactersToIndexedDb();
   }
 
   /** Видалити персонажа за id */
   removeCharacter(id: string) {
     this.allCharacters.set(this.allCharacters().filter((c) => c.id !== id));
+    this.saveAllCharactersToIndexedDb();
 
     // Також видаляємо з обраних, якщо був
     this.selectedCharacters.set(this.selectedCharacters().filter((c) => c.id !== id));
+    this.saveToLocalStorage();
   }
 
   /** ОНОВИТИ існуючого персонажа */
-  updateCharacter(updatedChar: Character) {
+  async updateCharacter(updatedChar: Character) {
     if (!updatedChar.id) {
       console.warn('Cannot update character without id');
       return;
     }
 
+    const [processed] = await this.processCharacterImages([updatedChar]);
+
     this.allCharacters.set(
-      this.allCharacters().map((c) => (c.id === updatedChar.id ? updatedChar : c)),
+      this.allCharacters().map((c) => (c.id === processed.id ? processed : c)),
     );
+    this.saveAllCharactersToIndexedDb();
 
     // Якщо персонаж був у обраних — оновлюємо і там
     const selected = this.selectedCharacters();
-    const index = selected.findIndex((c) => c.id === updatedChar.id);
+    const index = selected.findIndex((c) => c.id === processed.id);
     if (index !== -1) {
       const newSelected = [...selected];
-      newSelected[index] = updatedChar;
+      newSelected[index] = processed;
       this.selectedCharacters.set(newSelected);
+      this.saveToLocalStorage();
     }
   }
 }
