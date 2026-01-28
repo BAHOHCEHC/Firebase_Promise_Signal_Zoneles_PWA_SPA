@@ -25,16 +25,16 @@ import {
 export class TasksService {
   private firestore = inject(Firestore);
 
-  // State signals
+  // Сигнали стану
   private _regions = signal<Region[]>([]);
   private _tasks = signal<Region_task[]>([]);
 
-  // Public readonly signals
+  // Публічні сигнали тільки для читання
   public regions = this._regions.asReadonly();
   public tasks = this._tasks.asReadonly();
 
 
-  // ========== LOAD ALL DATA ==========
+  // ========== ЗАВАНТАЖЕННЯ ВСІХ ДАНИХ ==========
   async loadAllData(): Promise<void> {
     try {
       await Promise.all([
@@ -47,7 +47,7 @@ export class TasksService {
     }
   }
 
-  // ========== REGIONS ==========
+  // ========== РЕГІОНИ ==========
   async loadRegions(): Promise<void> {
     try {
       const regionsRef = collection(this.firestore, 'regions');
@@ -65,7 +65,7 @@ export class TasksService {
     }
   }
 
-  // ========== TASKS ==========
+  // ========== ЗАВДАННЯ ==========
   async loadRegionTasks(): Promise<void> {
     try {
       const groupsRef = collection(this.firestore, 'region_tasks');
@@ -98,7 +98,7 @@ export class TasksService {
   }
 
 
-  // Helper methods to convert Firestore documents
+  // Допоміжні методи для конвертації документів Firestore
   private convertToRegion(doc: any): Region {
     const data = doc.data();
     return {
@@ -108,7 +108,7 @@ export class TasksService {
     };
   }
 
-  // ========== REGION CRUD ==========
+  // ========== CRUD РЕГІОНІВ ==========
   async createRegion(region: Region): Promise<void> {
     try {
       const regionData = {
@@ -148,11 +148,11 @@ export class TasksService {
     try {
       const batch = writeBatch(this.firestore);
 
-      // Delete region
+      // Видаляємо регіон
       const regionRef = doc(this.firestore, 'regions', id);
       batch.delete(regionRef);
 
-      // Delete all tasks in this region
+      // Видаляємо всі завдання в цьому регіоні
       const tasksRef = collection(this.firestore, 'region_tasks');
       const q = query(tasksRef, where('categoryId', '==', id));
       const snapshot = await getDocs(q);
@@ -173,7 +173,7 @@ export class TasksService {
     }
   }
 
-  // ========== TASK CRUD ==========
+  // ========== CRUD ЗАВДАНЬ ==========
   async createTask(task: Region_task): Promise<void> {
     try {
       const taskData = {

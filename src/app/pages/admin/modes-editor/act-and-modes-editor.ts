@@ -5,7 +5,7 @@ import { ActsTable } from './acts/acts-table/acts-table';
 import { ModesTable } from './modes/modes-table/modes-table';
 import { ModeModal } from './modes/modes-modal/modes-modal';
 import { ActModsService } from '@shared/services/_index';
-// Update imports to include Mode
+// Оновити імпорти, щоб включити Mode
 import { Act, Mode } from '@models/models';
 import { ConfirmModal } from '@core/components/_index';
 
@@ -28,11 +28,11 @@ export class ActAndModesEditor implements OnInit {
   private service = inject(ActModsService);
 
   loading = signal(false);
-  loadingModes = signal(false); // New signal for modes loading state
+  loadingModes = signal(false); // Новий сигнал для стану завантаження режимів
   acts: Act[] = [];
-  modes: Mode[] = []; // Property to hold modes
+  modes: Mode[] = []; // Властивість для зберігання режимів
   error: string | null = null;
-  errorModes: string | null = null; // Property for modes error
+  errorModes: string | null = null; // Властивість для помилки режимів
 
   readonly showActModal = signal(false);
   readonly showModeModal = signal(false);
@@ -55,7 +55,7 @@ export class ActAndModesEditor implements OnInit {
       }
     });
 
-    // Effect for Mode modal
+    // Ефект для модального вікна режиму
     effect(() => {
       const showModeModalValue = this.showModeModal();
       if (!showModeModalValue) {

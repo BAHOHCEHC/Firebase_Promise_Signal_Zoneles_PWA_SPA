@@ -16,7 +16,7 @@ export class ModesTable {
   actModsService = inject(ActModsService);
   protected readonly actModesStore = inject(ActModesStore);
 
-  // Keep for template backward compatibility if needed, or update template to use actModesStore
+  // Зберегти для зворотної сумісності шаблону, якщо потрібно, або оновити шаблон для використання actModesStore
   store = this.actModesStore;
 
   @Input() modes: Mode[] = [];

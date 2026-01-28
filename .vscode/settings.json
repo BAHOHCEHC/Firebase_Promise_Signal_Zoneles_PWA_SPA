@@ -6,9 +6,12 @@
   },
 
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
 
   "editor.formatOnSave": false,
-  "prettier.htmlWhitespaceSensitivity": "ignore"
+  "prettier.htmlWhitespaceSensitivity": "ignore",
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  }
 }

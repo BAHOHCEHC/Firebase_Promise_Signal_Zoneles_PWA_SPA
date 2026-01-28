@@ -45,12 +45,12 @@ export class CharacterStore {
     }
   }
 
-  /** Process characters to cache images and update URLs to base64 */
+  /** Обробка персонажів для кешування зображень та оновлення URL у base64 */
   private async processCharacterImages(chars: Character[]): Promise<Character[]> {
     const processed = await Promise.all(chars.map(async (char) => {
       const c = { ...char };
 
-      // Avatar
+      // Аватар
       if (c.avatarUrl && !c.avatarUrl.startsWith('data:')) {
          try {
            c.avatarUrl = await IndexedDbUtil.loadImageAndCache(c.avatarUrl, c.avatarUrl);
@@ -59,7 +59,7 @@ export class CharacterStore {
          }
       }
 
-      // Element Icon
+      // Іконка елемента
       if (c.element?.iconUrl && !c.element.iconUrl.startsWith('data:')) {
         try {
            const newUrl = await IndexedDbUtil.loadImageAndCache(c.element.iconUrl, c.element.iconUrl);
@@ -69,7 +69,7 @@ export class CharacterStore {
         }
       }
 
-       // Rarity BG
+       // Фон рідкісності
       if (c.rarity?.bgUrl && !c.rarity.bgUrl.startsWith('data:')) {
         try {
            const newUrl = await IndexedDbUtil.loadImageAndCache(c.rarity.bgUrl, c.rarity.bgUrl);
@@ -84,7 +84,7 @@ export class CharacterStore {
     return processed;
   }
 
-  /** Сохранить список всех персонажей в IndexedDB */
+  /** Зберегти список всіх персонажів в IndexedDB */
   private async saveAllCharactersToIndexedDb() {
     try {
       await IndexedDbUtil.set('AllCharacters', this.allCharacters());
@@ -93,13 +93,13 @@ export class CharacterStore {
     }
   }
 
-  /** Загрузить список всех персонажей из IndexedDB */
+  /** Завантажити список всіх персонажів з IndexedDB */
   private async loadAllCharactersFromIndexedDb() {
     try {
       const chars = await IndexedDbUtil.get<Character[]>('AllCharacters');
       if (chars && Array.isArray(chars)) {
         this.allCharacters.set(chars);
-        // Гидрация выбранных персонажей, если они были загружены ранее как IDs
+        // Гідратація обраних персонажів, якщо вони були завантажені раніше як ID
         this.rehydrateSelectedCharacters(chars);
       }
     } catch (e) {
@@ -116,18 +116,18 @@ export class CharacterStore {
     }
   }
 
-  /** Сохранить выбранных персонажей в localStorage */
+  /** Зберегти обраних персонажів у localStorage */
   saveToLocalStorage() {
     const ids = this.selectedCharacters().map((c) => c.id);
     localStorage.setItem('UserCharacters', JSON.stringify(ids));
   }
 
-  /** Загрузить выбранных персонажей из localStorage */
+  /** Завантажити обраних персонажів з localStorage */
   loadFromLocalStorage() {
     try {
       const stored = localStorage.getItem('UserCharacters');
       if (stored) {
-        // Try parsing as IDs first (new format)
+        // Спробувати спочатку розпарсити як IDs (новий формат)
         const parsed = JSON.parse(stored);
 
         if (Array.isArray(parsed)) {
@@ -142,7 +142,7 @@ export class CharacterStore {
               this._pendingSelectedIds = parsed;
             }
           } else {
-            // Old format
+            // Старий формат
             const ids = new Set(parsed.map((c: any) => c.id));
             this._pendingSelectedIds = Array.from(ids) as string[];
           }
@@ -156,11 +156,11 @@ export class CharacterStore {
   private _pendingSelectedIds: string[] = [];
 
   async setCharacters(chars: Character[]) {
-    // Cache images before setting
+    // Кешувати зображення перед встановленням
     const processed = await this.processCharacterImages(chars);
     this.allCharacters.set(processed);
     this.saveAllCharactersToIndexedDb();
-    // Rehydrate if we have pending IDs
+    // Регідратація, якщо є очікувані ID
     this.rehydrateSelectedCharacters(processed);
   }
 

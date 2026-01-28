@@ -25,11 +25,11 @@ export class TaskTrackerAdmin implements OnInit {
 
   public activeRegionId = signal<string | null>(null);
 
-  // Loading state
+  // Стан завантаження
   public isLoading = signal(true);
   public error = signal<string | null>(null);
 
-  // Modal State
+  // Стан модального вікна
   public isEditorModalOpen = signal(false);
   public editorModalType = signal<'region' | 'task'>('region');
   public editorModalData = signal<any>(null);
@@ -37,7 +37,7 @@ export class TaskTrackerAdmin implements OnInit {
   public isConfirmModalOpen = signal(false);
   public deletingItem = signal<{ type: 'region' | 'task', data: any } | null>(null);
 
-  // Derived state
+  // Похідний стан
   public activeRegion = computed(() =>
     this.regions().find(c => c.id === this.activeRegionId())
   );
@@ -45,8 +45,8 @@ export class TaskTrackerAdmin implements OnInit {
   public hasRegions = computed(() => this.regions().length > 0);
 
   public canAddTask = computed(() => {
-    // Can only add task if we have regions.
-    // And ideally if a region is selected, though we can force select in modal.
+    // Можна додати завдання тільки якщо є регіони.
+    // І в ідеалі, якщо обрано регіон, хоча ми можемо примусово вибрати в модальному вікні.
     return this.regions().length > 0;
   });
 
@@ -67,7 +67,7 @@ export class TaskTrackerAdmin implements OnInit {
     try {
       await this.tasksService.loadAllData();
 
-      // Auto-select first category if none is selected
+      // Автоматичний вибір першої категорії, якщо жодна не обрана
       if (this.hasRegions() && !this.activeRegionId()) {
         const firstId = this.regions()[0].id;
         if (firstId) this.activeRegionId.set(firstId);
@@ -80,7 +80,7 @@ export class TaskTrackerAdmin implements OnInit {
     }
   }
 
-  // ===== Modals =====
+  // ===== Модальні вікна =====
 
   openAddRegionModal() {
     this.editorModalType.set('region');
@@ -113,16 +113,16 @@ export class TaskTrackerAdmin implements OnInit {
   }
 
   onSaveEditor(data: any) {
-    // The modals currently call service directly (except AddTaskModal I implemented to call service too).
-    // So here we probably just close the modal and maybe refresh?
-    // But modals update service state, and signals update automatically.
-    // So we just close.
+    // Модальні вікна наразі викликають сервіс безпосередньо (крім AddTaskModal, який я реалізував, щоб теж викликати сервіс).
+    // Тому тут ми, ймовірно, просто закриваємо модальне вікно і, можливо, оновлюємо?
+    // Але модальні вікна оновлюють стан сервісу, а сигнали оновлюються автоматично.
+    // Тому ми просто закриваємо.
     this.isEditorModalOpen.set(false);
   }
 
   onDeleteFromModal() {
-    // Triggered from Edit Modal (delete button)
-    // We need to switch to confirm modal
+    // Викликано з модального вікна редагування (кнопка видалення)
+    // Нам потрібно переключитися на модальне вікно підтвердження
     this.isEditorModalOpen.set(false);
 
     const data = this.editorModalData();
@@ -133,7 +133,7 @@ export class TaskTrackerAdmin implements OnInit {
     }
   }
 
-  // ===== Deletion =====
+  // ===== Видалення =====
 
   onDeleteTask(task: any) {
     this.confirmDeletePrompt('task', task);
@@ -151,7 +151,7 @@ export class TaskTrackerAdmin implements OnInit {
     try {
       if (item.type === 'region') {
         await this.tasksService.deleteRegion(item.data.id);
-        // If we deleted active region, select first or null
+        // Якщо ми видалили активний регіон, вибираємо перший або null
         if (this.activeRegionId() === item.data.id) {
           const remaining = this.regions();
           this.activeRegionId.set(remaining.length > 0 ? remaining[0].id! : null);

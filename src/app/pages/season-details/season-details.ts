@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } 
 import { CommonModule } from '@angular/common';
 import { Season_details, Character, Act, Wave, Variation, ElementTypeName, Enemy } from '@models/models';
 import { CharacterService, EnemiesService, SeasonService } from '@shared/services/_index';
-import { SeasonDetailsStore } from '@store/season-details.store'; // Or _index if preferred
+import { SeasonDetailsStore } from '@store/season-details.store'; // Або _index, якщо бажано
 @Component({
   selector: 'app-seasons-details',
   standalone: true,
@@ -15,11 +15,11 @@ import { SeasonDetailsStore } from '@store/season-details.store'; // Or _index i
 })
 export class SeasonsDetails implements OnInit {
    private characterService = inject(CharacterService);
-  public enemiesService = inject(EnemiesService); // Public to access signals in template if needed, or mapped
+  public enemiesService = inject(EnemiesService); // Public для доступу до сигналів у шаблоні, якщо потрібно, або відображено
 
   private seasonStore = inject(SeasonDetailsStore);
 
-  // --- State Signals ---
+  // --- Сигнали стану ---
   public seasonDetails = computed<Season_details>(() => this.seasonStore.seasonDetails() || {
     elemental_type_limided: [],
     opening_characters: [],
@@ -29,14 +29,14 @@ export class SeasonsDetails implements OnInit {
 
   public allCharacters = signal<Character[]>([]);
 
-  // --- Modals State ---
+  // --- Стан модальних вікон ---
   public showElementModal = signal(false);
   public showCharactersModal = signal(false);
   public showAddEnemyModal = signal(false);
   public showVariationModal = signal(false);
   public resetInProgress = signal(false);
 
-  // --- Modal Context Signals ---
+  // --- Сигнали контексту модальних вікон ---
   public characterModalMode = signal<'opening' | 'special'>('opening');
   public currentActForEnemy = signal<Act | null>(null);
   public currentWaveForEnemy = signal<Wave | null>(null);
@@ -46,7 +46,7 @@ export class SeasonsDetails implements OnInit {
 
   public loading = signal(true);
 
-  // --- Computed Selections ---
+  // --- Обчислені вибори ---
   public currentInitialEnemies = computed(() => this.currentWaveForEnemy()?.included_enemy ?? []);
 
   public currentInitialOptions = computed(() => {
@@ -79,7 +79,7 @@ export class SeasonsDetails implements OnInit {
     (this.currentActForEnemy()?.options as any) || {}
   );
 
-  // --- Filtered Acts ---
+  // --- Відфільтровані акти ---
   public hasData = computed(() => {
     const d = this.seasonDetails();
     return d.elemental_type_limided.length > 0 ||
@@ -104,28 +104,28 @@ export class SeasonsDetails implements OnInit {
     new Set(this.seasonDetails().elemental_type_limided.map(e => e.name))
   );
 
-  // Element helpers
+  // Допоміжні елементи
   public elementTypes: ElementTypeName[] = ["pyro", "hydro", "electro", "cryo", "dendro", "anemo", "geo"];
 
   async ngOnInit() {
     this.loading.set(true);
-    // Init services
+    // Ініціалізація сервісів
     await this.enemiesService.initializeData();
 
-    // Load chars
+    // Завантаження персонажів
     const chars = await this.characterService.getAllCharacters();
     this.allCharacters.set(chars);
 
-    // Load Season Details via Store
+    // Завантаження деталей сезону через сховище
     await this.seasonStore.loadDetailsIfNeeded();
 
     this.loading.set(false);
   }
 
   public getElementIconPath(type: ElementTypeName): string {
-    return `assets/images/ElementType_${type}.png`; // Assuming path
+    return `assets/images/ElementType_${type}.png`; // Припускаємо шлях
   }
-  // --- Helpers ---
+  // --- Допоміжні методи ---
   private charactersMap = computed(() =>
     new Map(this.allCharacters().map(c => [c.id, c.avatarUrl]))
   );

@@ -52,7 +52,7 @@ export class SeasonAddEnemyModal implements OnInit {
   public ngOnInit(): void {
     console.log('--- SeasonAddEnemyModal Opened (Clean State) ---');
 
-    // Always start fresh, just select the first valid category
+    // Завжди починати заново, просто вибрати першу валідну категорію
     if (this.categories()?.length > 0) {
       const firstValid = this.categories().find(cat => !this.isCategoryEmpty(cat.id));
       if (firstValid) {
@@ -61,7 +61,7 @@ export class SeasonAddEnemyModal implements OnInit {
       }
     }
 
-    // Lock timer if it exists in current variation
+    // Заблокувати таймер, якщо він існує в поточній варіації
     const currentVar = this.currentVariation();
     const timerControl = this.form.get('timer');
     const defeatControl = this.form.get('defeat');

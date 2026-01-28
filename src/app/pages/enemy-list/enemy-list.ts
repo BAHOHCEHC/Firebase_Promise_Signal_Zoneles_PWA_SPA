@@ -15,10 +15,10 @@ export class EnemyList implements OnInit {
   public categories = this.enemiesService.categories;
   public activeCategoryId = signal<string | null>(null);
 
-  // Loading state
+  // Стан завантаження
   public isLoading = signal(true);
   public error = signal<string | null>(null);
-  // Derived state
+  // Похідний стан
   public activeCategory = computed(() =>
     this.categories().find((c) => c.id === this.activeCategoryId()),
   );
@@ -35,7 +35,7 @@ export class EnemyList implements OnInit {
     try {
       await this.enemiesService.loadAllData();
 
-      // Auto-select first category if none is selected
+      // Автоматичний вибір першої категорії, якщо жодна не обрана
       if (this.hasCategories() && !this.activeCategoryId()) {
         this.activeCategoryId.set(this.categories()[0].id);
       }

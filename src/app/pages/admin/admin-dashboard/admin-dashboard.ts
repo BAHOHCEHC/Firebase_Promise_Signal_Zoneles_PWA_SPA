@@ -14,7 +14,7 @@ import { filter, map } from 'rxjs';
 export class AdminDashboard {
   private router = inject(Router);
 
-  // 🔥 reactive URL signal
+  // 🔥 реактивний сигнал URL
   private currentUrl = toSignal(
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
@@ -23,7 +23,7 @@ export class AdminDashboard {
     { initialValue: this.router.url }
   );
 
-  // role-based
+  // на основі ролі
   userRole = signal<'admin' | 'user'>('admin');
 
   tabs = computed(() => {

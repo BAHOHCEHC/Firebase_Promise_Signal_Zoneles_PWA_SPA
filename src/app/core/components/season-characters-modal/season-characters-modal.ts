@@ -18,13 +18,13 @@ export class SeasonCharactersModal {
   @Input() public type: string = 'season';
   @Input() public specialGuest: Character[] = [];
 
-  // Dynamic limits
+  // Динамічні ліміти
   @Input() public min: number = 0;
   @Input() public max: number = 0;
 
   @Input() public allCharacters: Character[] = [];
 
-  // Forced filters (e.g. from Season settings)
+  // Примусові фільтри (наприклад, з налаштувань сезону)
   @Input() public forcedElements: ElementTypeName[] = [];
 
   @Input() public set startSelection(value: Character[]) {
@@ -64,12 +64,12 @@ export class SeasonCharactersModal {
   public filteredCharacters = computed(() => {
     let filters = this.activeElementFilters();
 
-    // Merge with forced filters if any
+    // Об'єднати з примусовими фільтрами, якщо вони є
     if (this.forcedElements.length > 0) {
-      // If user filters are empty, show only forced? Or intersect?
-      // Logic: User can select subsets of forced elements, or if no user filter, show all forced.
-      // Usually forced means "Only these allowed".
-      // Let's assume forcedElements restricts the pool.
+      // Якщо фільтри користувача порожні, показувати тільки примусові? Або перетин?
+      // Логіка: Користувач може вибирати підмножини примусових елементів, або якщо фільтр користувача відсутній, показати всі примусові.
+      // Зазвичай forced означає "Дозволено тільки ці".
+      // Припустимо, forcedElements обмежує пул.
 
       const forcedSet = new Set(this.forcedElements);
       if (filters.size === 0) {
@@ -109,8 +109,8 @@ export class SeasonCharactersModal {
   });
 
   public toggleElementFilter(type: ElementTypeName): void {
-    // If forced elements exist, only allow toggling those?
-    // For now, let's just let the computed property handle the actual filtering of characters.
+    // Якщо існують примусові елементи, дозволяти перемикати тільки їх?
+    // Наразі просто дозволимо обчисленій властивості обробляти фактичну фільтрацію персонажів.
     const filters = new Set(this.activeElementFilters());
     if (filters.has(type)) {
       filters.delete(type);
@@ -143,7 +143,7 @@ export class SeasonCharactersModal {
   public resolveAvatarUrl(item: string | Character | Enemy | null | undefined): string {
     if (!item) return 'assets/images/avatar_placeholder.png';
 
-    // Priority: 1. Direct URL on object, 2. Map lookup by ID
+    // Пріоритет: 1. Прямий URL на об'єкті, 2. Пошук у мапі за ID
     if (typeof item !== 'string' && item.avatarUrl) {
       return item.avatarUrl;
     }
@@ -155,7 +155,7 @@ export class SeasonCharactersModal {
       'assets/images/avatar_placeholder.png'
     );
   }
-  // --- Helpers ---
+  // --- Допоміжні методи ---
   private charactersMap = computed(
     () => new Map(this.characterStore.allCharacters().map((c) => [c.id, c.avatarUrl])),
   );

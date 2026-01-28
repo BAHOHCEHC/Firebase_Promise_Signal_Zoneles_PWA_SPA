@@ -43,11 +43,11 @@ export class AddTaskRegionModal implements OnInit {
 
   @Output() delete = new EventEmitter<void>();
 
-  // Use service signal directly if needed or sync
-  // actually for uniqueness check we might want to check against service.regions()
+  // Використовувати сигнал сервісу безпосередньо, якщо потрібно, або синхронізувати
+  // насправді для перевірки унікальності ми можемо захотіти перевірити проти service.regions()
 
   ngOnInit() {
-    // If we are editing, we are provided with regionToEdit
+    // Якщо ми редагуємо, нам надається regionToEdit
     if (this.regionToEdit) {
       this.patchFormWithRegion(this.regionToEdit);
     }
@@ -59,7 +59,7 @@ export class AddTaskRegionModal implements OnInit {
     });
   }
 
-  // Helper validation getter
+  // Допоміжний гетер валідації
   getValidationErrors(): string[] {
     const errors: string[] = [];
     const nameControl = this.form.get('name');

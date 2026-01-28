@@ -22,7 +22,7 @@ export class TaskTracker implements OnInit, OnDestroy {
   public regions = this.tasksService.regions;
   public activeRegionId = signal<string | null>(null);
 
-  // Filter Form
+  // Форма фільтрації
   public filterForm = this.fb.group({
     showUnfinished: [false],
     filtering: ['']
@@ -32,7 +32,7 @@ export class TaskTracker implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  // Derived state with merging logic
+  // Похідний стан з логікою злиття
   public tasks = computed(() => {
     const activeId = this.activeRegionId();
     if (!activeId) return [];
@@ -47,7 +47,7 @@ export class TaskTracker implements OnInit, OnDestroy {
     const mergedTasks = regionTasks.map(task => {
       const userTask = userTasks.find(ut => ut.id === task.id);
 
-      // Merge parts
+      // Об'єднання частин
       let parts = task.parts;
       if (task.parts) {
         parts = task.parts.map(p => {
@@ -56,10 +56,10 @@ export class TaskTracker implements OnInit, OnDestroy {
         });
       }
 
-      // Merge finished state
+      // Об'єднання стану завершення
       let isFinished = userTask ? (userTask.finished ?? false) : false;
 
-      // Auto-finish logic for Series Tasks
+      // Логіка автозавершення для серій завдань
       if (task.taskSeries && parts && parts.length > 0) {
         if (parts.every(p => p.finished)) {
           isFinished = true;
@@ -85,11 +85,11 @@ export class TaskTracker implements OnInit, OnDestroy {
     return filteredTasks;
   });
 
-  // Loading state
+  // Стан завантаження
   public isLoading = signal(true);
   public error = signal<string | null>(null);
 
-  // Derived state
+  // Похідний стан
   public activeRegion = computed(() =>
     this.regions().find(c => c.id === this.activeRegionId())
   );
@@ -128,7 +128,7 @@ export class TaskTracker implements OnInit, OnDestroy {
     try {
       await this.tasksService.loadAllData();
 
-      // Auto-select first category if none is selected
+      // Автоматичний вибір першої категорії, якщо жодна не обрана
       if (this.hasRegions() && !this.activeRegionId()) {
         const firstId = this.regions()[0].id;
         if (firstId) this.activeRegionId.set(firstId);

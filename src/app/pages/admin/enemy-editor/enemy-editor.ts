@@ -19,7 +19,7 @@ export class EnemyEditor implements OnInit {
   public categories = this.enemiesService.categories;
   public activeCategoryId = signal<string | null>(null);
 
-  // Modal State
+  // Стан модального вікна
   public isEditorModalOpen = signal(false);
   public readonly editorModalType = signal<ModalType>('categories');
   public editorModalData = signal<any>(null);
@@ -30,11 +30,11 @@ export class EnemyEditor implements OnInit {
   public categoryToDeleteId = signal<string | null>(null);
   public deleteContext = signal<'enemy' | 'group' | 'category' | null>(null);
 
-  // Loading state
+  // Стан завантаження
   public isLoading = signal(true);
   public error = signal<string | null>(null);
 
-  // Derived state
+  // Похідний стан
   public activeCategory = computed(() =>
     this.categories().find(c => c.id === this.activeCategoryId())
   );
@@ -59,7 +59,7 @@ export class EnemyEditor implements OnInit {
     try {
       await this.enemiesService.loadAllData();
 
-      // Auto-select first category if none is selected
+      // Автоматичний вибір першої категорії, якщо жодна не обрана
       if (this.hasCategories() && !this.activeCategoryId()) {
         this.activeCategoryId.set(this.categories()[0].id);
       }
@@ -97,22 +97,22 @@ export class EnemyEditor implements OnInit {
       const type = this.editorModalType();
       if (type === 'categories') {
         if (data.id) {
-          // Edit existing category
+          // Редагувати існуючу категорію
           await this.enemiesService.updateCategory(data.id, { title: data.title });
         } else {
-          // Create new category
+          // Створити нову категорію
           await this.enemiesService.addCategory(data.title);
-          // Auto-select if first one
+          // Автоматичний вибір, якщо це перша категорія
           if (this.categories().length === 1) {
             this.activeCategoryId.set(this.categories()[0].id);
           }
         }
       } else if (type === 'group') {
         if (data.id) {
-          // Editing existing group
+          // Редагування існуючої групи
           await this.enemiesService.updateGroup(data.id, { title: data.title });
         } else {
-          // Creating new group
+          // Створення нової групи
           await this.enemiesService.addGroup(data.title, data.categoryId);
         }
       } else if (type === 'enemy') {
@@ -126,7 +126,7 @@ export class EnemyEditor implements OnInit {
       }
 
       this.isEditorModalOpen.set(false);
-      await this.loadData(); // Refresh data
+      await this.loadData(); // Оновлення даних
     } catch (error) {
       console.error('Error saving data:', error);
       this.error.set('Failed to save data');
@@ -137,7 +137,7 @@ export class EnemyEditor implements OnInit {
     this.activeCategoryId.set(id);
   }
 
-  // Edit Category
+  // Редагувати категорію
   public onEditCategory(catId: string): void {
     const category = this.categories().find(c => c.id === catId);
     if (category) {
@@ -149,31 +149,31 @@ export class EnemyEditor implements OnInit {
       this.isEditorModalOpen.set(true);
     }
   }
-  // Edit Group
+  // Редагувати групу
   public onEditGroup(group: EnemyGroup, categoryId: string): void {
     this.editorModalType.set('group');
     this.editorModalData.set({
-      id: group.id, // Include ID for update
+      id: group.id, // Включити ID для оновлення
       title: group.title,
       categoryId: categoryId
     });
     this.isEditorModalOpen.set(true);
   }
 
-  // Delete Enemy
+  // Видалити ворога
   public onDeleteEnemy(enemyId: string): void {
     this.deleteContext.set('enemy');
     this.enemyToDeleteId.set(enemyId);
     this.isConfirmModalOpen.set(true);
   }
 
-  // Generic Delete Handler from Modal
+  // Загальний обробник видалення з модального вікна
   public onDeleteFromModal(): void {
     const data = this.editorModalData();
     const type = this.editorModalType();
 
     if (data && data.id) {
-      this.isEditorModalOpen.set(false); // Close editor modal
+      this.isEditorModalOpen.set(false); // Закрити модальне вікно редактора
 
       if (type === 'group') {
         this.deleteContext.set('group');
@@ -205,7 +205,7 @@ export class EnemyEditor implements OnInit {
         const id = this.categoryToDeleteId();
         if (id) {
           await this.enemiesService.deleteCategory(id);
-          // Reset active category if deleted
+          // Скинути активну категорію, якщо її видалено
           if (this.activeCategoryId() === id) {
             this.activeCategoryId.set(null);
           }
@@ -216,7 +216,7 @@ export class EnemyEditor implements OnInit {
       this.enemyToDeleteId.set(null);
       this.groupToDeleteId.set(null);
       this.deleteContext.set(null);
-      await this.loadData(); // Refresh data
+      await this.loadData(); // Оновлення даних
     } catch (error) {
       console.error(`Error deleting ${context}:`, error);
       this.error.set(`Failed to delete ${context}`);
@@ -227,12 +227,12 @@ export class EnemyEditor implements OnInit {
     return this.enemiesService.getEnemiesForGroup(groupId);
   }
 
-  // Helper method for template
+  // Допоміжний метод для шаблону
   public getCategoryGroups(categoryId: string): EnemyGroup[] {
     return this.enemiesService.getGroupsForCategory(categoryId);
   }
 
-  // Refresh data
+  // Оновлення даних
   public async refresh(): Promise<void> {
     await this.loadData();
   }

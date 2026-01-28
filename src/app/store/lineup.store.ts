@@ -3,13 +3,13 @@ import { LineUpConfig, ModeConfiguration } from '@models/models';
 
 @Injectable({ providedIn: 'root' })
 export class LineupStore {
-    /** Map of Mode ID -> Configuration */
+    /** Мапа ID режиму -> Конфігурація */
     readonly configurations = signal<LineUpConfig>({});
 
-    /** Id active mode */
+    /** ID активного режиму */
     readonly activeModeId = signal<string | null>(null);
 
-    /** Active config */
+    /** Активна конфігурація */
     readonly currentConfig = computed(() => {
         const modeId = this.activeModeId();
         const configs = this.configurations();
@@ -17,22 +17,22 @@ export class LineupStore {
         return configs[modeId] || this.createEmptyConfig();
     });
 
-    /** Selected characters in active mode */
+    /** Вибрані персонажі в активному режимі */
     readonly selectedCharacterIds = computed(() => {
         return this.currentConfig()?.selectedCharacters || [];
     });
 
-    /** Placemenets in active mode (ActID -> CharIDs[]) */
+    /** Розміщення в активному режимі (ActID -> CharIDs[]) */
     readonly placements = computed(() => {
         return this.currentConfig()?.placements || {};
     });
 
-    /** Energy in active mode (CharID -> Energy) */
+    /** Енергія в активному режимі (CharID -> Energy) */
     readonly energyState = computed(() => {
         return this.currentConfig()?.energyState || {};
     });
 
-    /** Selected enemies in active mode (ActID -> Index) */
+    /** Вибрані вороги в активному режимі (ActID -> Index) */
     readonly selectedEnemyIndices = computed(() => {
         return this.currentConfig()?.selectedEnemies || {};
     });
@@ -40,7 +40,7 @@ export class LineupStore {
     constructor() {
         this.loadFromLocalStorage();
 
-        // Auto-save on change
+        // Автозбереження при зміні
         effect(() => {
             this.saveToLocalStorage();
         });
@@ -55,11 +55,11 @@ export class LineupStore {
         };
     }
 
-    // --- Actions ---
+    // --- Дії ---
 
     setActiveMode(modeId: string) {
         this.activeModeId.set(modeId);
-        // Init config if missing
+        // Ініціалізація конфігурації, якщо відсутня
         this.configurations.update(current => {
             if (!current[modeId]) {
                 return {
@@ -71,15 +71,15 @@ export class LineupStore {
         });
     }
 
-    /** Update selected characters for current mode */
+    /** Оновити вибраних персонажів для поточного режиму */
     updateSelectedCharacters(charIds: string[]) {
         const modeId = this.activeModeId();
         if (!modeId) return;
 
         this.configurations.update(configs => {
             const modeConfig = configs[modeId] || this.createEmptyConfig();
-            // Only keep energy for characters that remain selected or are defaults?
-            // For now, simpler: just update the list.
+            // Зберігати енергію лише для персонажів, які залишаються вибраними, або є стандартними?
+            // Наразі простіше: просто оновити список.
             return {
                 ...configs,
                 [modeId]: {
@@ -91,10 +91,10 @@ export class LineupStore {
     }
 
     /**
-     * Register a character placement in an act
-     * @param actId Act ID
-     * @param charId Character ID
-     * @param maxEnergy Max energy for this character (usually 2)
+     * Реєстрація розміщення персонажа в акті
+     * @param actId ID акту
+     * @param charId ID персонажа
+     * @param maxEnergy Максимальна енергія для цього персонажа (зазвичай 2)
      */
     placeCharacter(actId: string, charId: string, maxEnergy: number = 2) {
         const modeId = this.activeModeId();
@@ -105,15 +105,15 @@ export class LineupStore {
             const currentPlacements = { ...config.placements };
             const currentEnergy = { ...config.energyState };
 
-            // 1. Check if already in this act (prevent double place if needed, though drag logic handles it)
+            // 1. Перевірити, чи вже є в цьому акті (запобігти подвійному розміщенню, якщо потрібно, хоча логіка перетягування це обробляє)
             const actList = currentPlacements[actId] || [];
             if (actList.includes(charId)) return configs; // Already here
 
-            // 2. Consume energy
+            // 2. Споживати енергію
             const usedEnergy = currentEnergy[charId] || 0;
             if (usedEnergy >= maxEnergy) return configs; // No energy
 
-            // 3. Update
+            // 3. Оновити
             currentPlacements[actId] = [...actList, charId];
             currentEnergy[charId] = usedEnergy + 1;
 
@@ -129,7 +129,7 @@ export class LineupStore {
     }
 
     /**
-     * Remove character from an act
+     * Видалити персонажа з акту
      */
     removeCharacter(actId: string, charId: string) {
         const modeId = this.activeModeId();
@@ -142,13 +142,13 @@ export class LineupStore {
             const currentPlacements = { ...config.placements };
             const currentEnergy = { ...config.energyState };
 
-            // 1. Remove from act
+            // 1. Видалити з акту
             const actList = currentPlacements[actId] || [];
             if (!actList.includes(charId)) return configs;
 
             currentPlacements[actId] = actList.filter(id => id !== charId);
 
-            // 2. Restore energy
+            // 2. Відновити енергію
             const usedEnergy = currentEnergy[charId] || 0;
             if (usedEnergy > 0) {
                 currentEnergy[charId] = usedEnergy - 1;
@@ -166,14 +166,14 @@ export class LineupStore {
     }
 
     /**
-     * Get current energy for a specific character (0 if unset)
+     * Отримати поточну енергію для конкретного персонажа (0, якщо не задано)
      */
     getCharacterEnergy(charId: string): number {
         return this.energyState()[charId] || 0;
     }
 
     /**
-     * Select an enemy for a specific act
+     * Вибрати ворога для конкретного акту
      */
     selectEnemy(actId: string, enemyIndex: number) {
         const modeId = this.activeModeId();
@@ -195,7 +195,7 @@ export class LineupStore {
         });
     }
 
-    // --- Persistence ---
+    // --- Збереження даних ---
 
     private saveToLocalStorage() {
         const data = this.configurations();

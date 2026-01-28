@@ -39,7 +39,7 @@ export class LineupSimulator implements OnInit {
 
   public allCharacters = computed(() => this.characterStore.selectedCharacters());
 
-  // Filtered characters for the modal (only show allowed elements)
+  // Відфільтровані персонажі для модального вікна (показувати тільки дозволені елементи)
   public availableCharacters = computed(() => {
     const usersSelectedChars = this.allCharacters();
     const openingIds = new Set(this.openingCharacters().map((c) => c.id));
@@ -51,12 +51,12 @@ export class LineupSimulator implements OnInit {
     return filtered.filter((c) => c.element && allowed.has(c.element.name));
   });
 
-  // Users characters for the ACTIVE mode
+  // Персонажі користувача для АКТИВНОГО режиму
   readonly usersCharacter = computed(() => {
     const selectedIds = new Set(this.store.selectedCharacterIds());
     if (selectedIds.size === 0) return [];
 
-    // Efficient lookup
+    // Ефективний пошук
     const charMap = new Map<string, Character>();
     [...this.allCharacters(), ...this.specialGuestCharacters()].forEach((c) =>
       charMap.set(c.id, c),
@@ -76,7 +76,7 @@ export class LineupSimulator implements OnInit {
     return sortCharacters(chars);
   });
 
-  // Opening characters with energy state
+  // Відкриваючі персонажі зі станом енергії
   readonly openingCharacters = computed(() => {
     const opening = this.seasonDetails().opening_characters || [];
     if (opening.length === 0) return [];
@@ -96,7 +96,7 @@ export class LineupSimulator implements OnInit {
     return this.modes().find((m) => m.id === id) || null;
   });
 
-  // --- State Signals ---
+  // --- Сигнали стану ---
   public seasonDetails = signal<Season_details>({
     elemental_type_limided: [],
     opening_characters: [],
@@ -110,7 +110,7 @@ export class LineupSimulator implements OnInit {
     return guests.filter((c) => ownedIds.has(c.id));
   });
 
-  // Element helpers
+  // Допоміжні елементи
   public elementTypes: ElementTypeName[] = [
     'pyro',
     'hydro',
@@ -125,7 +125,7 @@ export class LineupSimulator implements OnInit {
     () => new Set(this.seasonDetails().elemental_type_limided.map((e) => e.name)),
   );
 
-  // Split acts for 2-column layout (Act 1-5 Left, Act 6-10 Right) + Arcana
+  // Розділення актів для макету з 2 стовпців (Акт 1-5 зліва, Акт 6-10 справа) + Arcana
   public nonArcanaActs = computed(() => {
     const acts = this.activeMode()?.chambers || [];
     return acts
@@ -152,34 +152,34 @@ export class LineupSimulator implements OnInit {
 
   async ngOnInit() {
     this.loading.set(true);
-    // Init services
+    // Ініціалізація сервісів
 
-    // Load chars - Optimization: use store if available
+    // Завантаження персонажів - Оптимізація: використовувати магазин, якщо доступно
     if (this.characterStore.allCharacters().length === 0) {
       const chars = await this.characterService.getAllCharacters();
       this.characterStore.setCharacters(chars);
     }
-    // Load modes
+    // Завантаження режимів
     const modes = await this.actModsService.getAllModes();
     this.modes.set(modes);
 
-    // Initial Active Mode
+    // Початковий активний режим
     if (modes.length > 0 && !this.store.activeModeId()) {
       this.store.setActiveMode(modes[0].id);
     } else if (modes.length > 0 && this.store.activeModeId()) {
-      // Ensure active mode is valid
+      // Переконатися, що активний режим дійсний
       const exists = modes.some((m) => m.id === this.store.activeModeId());
       if (!exists) this.store.setActiveMode(modes[0].id);
       else this.store.setActiveMode(this.store.activeModeId()!);
     }
 
-    // Load Season Details
+    // Завантаження деталей сезону
     const details = await this.seasonService.loadSeasonDetails();
-    // Fetch generic Acts structure to ensure we have all acts (e.g. name, type)
+    // Отримання загальної структури актів, щоб переконатися, що ми маємо всі акти (наприклад, ім'я, тип)
     const allActs = await this.seasonService.getAllActs();
     if (details) {
       if (details.acts && details.acts.length > 0) {
-        // Merge saved details with fresh Act definitions
+        // Об'єднання збережених деталей зі свіжими визначеннями актів
         const mergedActs = allActs.map((dbAct) => {
           const savedAct = details.acts.find((a) => a.id === dbAct.id);
           if (savedAct) {
@@ -189,15 +189,15 @@ export class LineupSimulator implements OnInit {
         });
         this.seasonDetails.set({ ...details, acts: mergedActs });
       } else {
-        // Details exist but no acts saved, use allActs
+        // Деталі існують, але акти не збережені, використовуємо allActs
         this.seasonDetails.update((s) => ({ ...details, acts: allActs }));
       }
     } else {
-      // New season setup
+      // Налаштування нового сезону
       this.seasonDetails.update((s) => ({ ...s, acts: allActs }));
     }
 
-    // Load enemies for lookups
+    // Завантаження ворогів для пошуку
     await this.enemiesService.loadEnemies();
 
     this.loading.set(false);
@@ -214,11 +214,11 @@ export class LineupSimulator implements OnInit {
   }
 
   public getActEnemies(act: any): Enemy[] {
-    // using any for Act temporarily if import needed or use Act type
+    // тимчасово використовуємо any для Act, якщо потрібен імпорт або використовуйте тип Act
     if (!act) return [];
 
-    // Logic: if Variation_fight -> show first monster from variations -> waves -> included_enemy
-    // If it's Variation_fight, we look at variations.
+    // Логіка: якщо Variation_fight -> показати першого монстра з variations -> waves -> included_enemy
+    // Якщо це Variation_fight, ми дивимось на variations.
     if (act.type === 'Variation_fight') {
       const enemies: Enemy[] = [];
       if (act.variations) {
@@ -233,7 +233,7 @@ export class LineupSimulator implements OnInit {
       }
       return enemies;
     } else {
-      // For others, use enemy_selection?
+      // Для інших, використовувати enemy_selection?
       if (act.enemy_selection && act.enemy_selection.length > 0) {
         return act.enemy_selection;
       }
@@ -243,7 +243,7 @@ export class LineupSimulator implements OnInit {
 
   public isEnemyActive(actId: string, index: number): boolean {
     const selectedIndices = this.store.selectedEnemyIndices();
-    // Default to index 0 if not set
+    // За замовчуванням індекс 0, якщо не встановлено
     const selectedIndex = selectedIndices[actId] ?? 0;
     return selectedIndex === index;
   }
@@ -257,12 +257,12 @@ export class LineupSimulator implements OnInit {
     const charIds = placements[actId] || [];
     if (charIds.length === 0) return [];
 
-    // Resolve chars from GLOBAL store to ensure we find Opening characters (who aren't in 'selected')
+    // Вирішити персонажів з ГЛОБАЛЬНОГО магазину, щоб переконатися, що ми знаходимо відкриваючих персонажів (яких немає в 'selected')
     const all = this.characterStore.allCharacters();
     return charIds.map((id) => all.find((c) => c.id === id)).filter((c) => !!c) as Character[];
   }
 
-  // --- Modal Logic ---
+  // --- Логіка модального вікна ---
   isModalOpen = signal(false);
 
   openAlternateCastModal() {
@@ -285,15 +285,14 @@ export class LineupSimulator implements OnInit {
       event.dataTransfer.setData('text/plain', char.id);
       event.dataTransfer.effectAllowed = 'copy';
 
-      // Set custom drag image using the card element itself
-      // event.currentTarget is the div.char-mini-card which contains the img and background
-      const dragElement = event.currentTarget as HTMLElement;
-      event.dataTransfer.setDragImage(dragElement, 35, 35); // Center cursor roughly (70x70 card)
+      // Встановити власне зображення перетягування, використовуючи сам елемент картки
+      // event.currentTarget - це div.char-mini-card, який містить img і фон
+      // Центрувати курсор приблизно (картка 70x70)
     }
   }
 
   onDragOver(event: DragEvent) {
-    event.preventDefault(); // Allow drop
+    event.preventDefault(); // Дозволити скидання
     if (event.dataTransfer) {
       event.dataTransfer.dropEffect = 'copy';
     }
@@ -346,7 +345,7 @@ export class LineupSimulator implements OnInit {
   public resolveAvatarUrl(item: string | Character | Enemy | null | undefined): string {
     if (!item) return 'assets/images/avatar_placeholder.png';
 
-    // Priority: 1. Direct URL on object, 2. Map lookup by ID
+    // Пріоритет: 1. Пряма URL на об'єкті, 2. Пошук у карті за ID
     if (typeof item !== 'string' && item.avatarUrl) {
       return item.avatarUrl;
     }
@@ -359,7 +358,7 @@ export class LineupSimulator implements OnInit {
       'assets/images/avatar_placeholder.png'
     );
   }
-  // --- Helpers ---
+  // --- Допоміжні методи ---
   private readonly charactersMap = computed(
     () => new Map(this.characterStore.allCharacters().map((c) => [c.id, c.avatarUrl])),
   );

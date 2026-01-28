@@ -25,15 +25,15 @@ import {
 export class EnemiesService {
   private firestore = inject(Firestore);
 
-  // State signals
+  // Сигнали стану
   private _categories = signal<EnemyCategory[]>([]);
   private _enemies = signal<Enemy[]>([]);
 
-  // Public readonly signals
+  // Публічні сигнали тільки для читання
   public categories = this._categories.asReadonly();
   public enemies = this._enemies.asReadonly();
 
-  // Helper methods to convert Firestore documents
+  // Допоміжні методи для конвертації документів Firestore
   private convertToCategory(doc: any): EnemyCategory {
     const data = doc.data();
     return {
@@ -41,7 +41,7 @@ export class EnemiesService {
       title: data.title || '',
       // createdAt: data.createdAt?.toDate() || new Date(),
       // updatedAt: data.updatedAt?.toDate() || new Date(),
-      groups: [] // Groups will be loaded separately
+      groups: [] // Групи будуть завантажені окремо
     };
   }
 
@@ -75,7 +75,7 @@ export class EnemiesService {
     };
   }
 
-  // ========== LOAD ALL DATA ==========
+  // ========== ЗАВАНТАЖЕННЯ ВСІХ ДАНИХ ==========
   async loadAllData(): Promise<void> {
     try {
       await Promise.all([
@@ -89,7 +89,7 @@ export class EnemiesService {
     }
   }
 
-  // ========== CATEGORIES ==========
+  // ========== КАТЕГОРІЇ ==========
   async loadCategories(): Promise<void> {
     try {
       const categoriesRef = collection(this.firestore, 'categories');
@@ -144,28 +144,28 @@ export class EnemiesService {
 
   async deleteCategory(categoryId: string): Promise<void> {
     try {
-      // 1. Get all groups for this category
+      // 1. Отримуємо всі групи для цієї категорії
       const groupsRef = collection(this.firestore, 'groups');
       const qGroups = query(groupsRef, where('categoryId', '==', categoryId));
       const groupsSnapshot = await getDocs(qGroups);
 
       const batch = writeBatch(this.firestore);
 
-      // 2. Delete the category itself
+      // 2. Видаляємо саму категорію
       const categoryRef = doc(this.firestore, 'categories', categoryId);
       batch.delete(categoryRef);
 
-      // 3. Delete groups and their enemies
+      // 3. Видаляємо групи та їхніх ворогів
       for (const groupDoc of groupsSnapshot.docs) {
-        // Delete group
+        // Видаляємо групу
         batch.delete(groupDoc.ref);
 
-        // Find enemies for this group
+        // Знаходимо ворогів для цієї групи
         const enemiesRef = collection(this.firestore, 'enemies');
         const qEnemies = query(enemiesRef, where('groupId', '==', groupDoc.id));
         const enemiesSnapshot = await getDocs(qEnemies);
 
-        // Delete enemies
+        // Видаляємо ворогів
         enemiesSnapshot.forEach(enemyDoc => {
           batch.delete(enemyDoc.ref);
         });
@@ -173,7 +173,7 @@ export class EnemiesService {
 
       await batch.commit();
 
-      // Refresh data
+      // Оновлюємо дані
       await this.loadCategories();
       await this.loadGroups();
       await this.loadEnemies();
@@ -183,7 +183,7 @@ export class EnemiesService {
     }
   }
 
-  // ========== GROUPS ==========
+  // ========== ГРУПИ ==========
   async loadGroups(): Promise<void> {
     try {
       const groupsRef = collection(this.firestore, 'groups');
@@ -194,7 +194,7 @@ export class EnemiesService {
         this.convertToGroup(doc)
       );
 
-      // Update categories with their groups
+      // Оновлюємо категорії з їх групами
       const updatedCategories = this._categories().map(category => ({
         ...category,
         groups: groups.filter(group => group.categoryId === category.id)
@@ -245,11 +245,11 @@ export class EnemiesService {
 
   async deleteGroup(groupId: string): Promise<void> {
     try {
-      // Delete group
+      // Видаляємо групу
       const groupRef = doc(this.firestore, 'groups', groupId);
       await deleteDoc(groupRef);
 
-      // Delete associated enemies
+      // Видаляємо пов'язаних ворогів
       const enemies = this._enemies().filter(enemy => enemy.groupId === groupId);
       const batch = writeBatch(this.firestore);
 
@@ -260,7 +260,7 @@ export class EnemiesService {
 
       await batch.commit();
 
-      // Refresh data
+      // Оновлюємо дані
       await this.loadGroups();
       await this.loadEnemies();
     } catch (error) {
@@ -269,7 +269,7 @@ export class EnemiesService {
     }
   }
 
-  // ========== ENEMIES ==========
+  // ========== ВОРОГИ ==========
   async loadEnemies(): Promise<void> {
     try {
       const enemiesRef = collection(this.firestore, 'enemies');
@@ -347,7 +347,7 @@ export class EnemiesService {
     }
   }
 
-  // ========== COMPUTED GETTERS ==========
+  // ========== ОБЧИСЛЮВАНІ ГЕТТЕРИ ==========
   getEnemiesForGroup(groupId: string): Enemy[] {
     // Виправлено: порівнюємо string з string
     return this._enemies().filter(enemy => enemy.groupId === groupId);
@@ -367,12 +367,12 @@ export class EnemiesService {
     return this._categories().find(c => c.id === categoryId);
   }
 
-  // ========== HELPER METHODS ==========
+  // ========== ДОПОМІЖНІ МЕТОДИ ==========
   async initializeData(): Promise<void> {
     await this.loadAllData();
   }
 
-  // ========== FIREBASE QUERIES ==========
+  // ========== ЗАПИТИ FIREBASE ==========
   async getGroupsByCategoryFirestore(categoryId: string): Promise<EnemyGroup[]> {
     try {
       const groupsRef = collection(this.firestore, 'groups');

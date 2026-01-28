@@ -56,7 +56,7 @@ export class SeasonAddVariationChamberModal {
                     this.form.get('customName')?.disable();
                 }
 
-                // Timer/Monolit mutual exclusion
+                // Взаємне виключення Таймера/Моноліту
                 if (data.timer) {
                     this.form.get('monolit')?.disable();
                     this.form.get('timer')?.enable();
@@ -80,7 +80,7 @@ export class SeasonAddVariationChamberModal {
             }
         });
 
-        // Listen for wave changes to toggle customName disabled state
+        // Слухати зміни хвилі, щоб перемикати стан customName
         this.form.get('wave')?.valueChanges.subscribe(value => {
             if (value === 'custom') {
                 this.form.get('customName')?.enable();
@@ -90,7 +90,7 @@ export class SeasonAddVariationChamberModal {
             }
         });
 
-        // Timer mutual exclusion
+        // Взаємне виключення таймера
         this.form.get('timer')?.valueChanges.subscribe(value => {
             if (value && value.trim() !== '') {
                 this.form.get('monolit')?.disable({ emitEvent: false });
@@ -100,7 +100,7 @@ export class SeasonAddVariationChamberModal {
             }
         });
 
-        // Monolit mutual exclusion
+        // Взаємне виключення моноліту
         this.form.get('monolit')?.valueChanges.subscribe(value => {
             if (value) {
                 this.form.get('timer')?.disable({ emitEvent: false });

@@ -48,12 +48,12 @@ export class SeasonService {
     // 2. Перезапис або створення
     if (!querySnapshot.empty) {
       const docRef = querySnapshot.docs[0].ref;
-      await setDoc(docRef, payload, { merge: false }); // 🔥 повний overwrite
+      await setDoc(docRef, payload, { merge: false }); // 🔥 повний перезапис
     } else {
       await addDoc(this.seasonCollection, payload);
     }
 
-    // 3. Оновлюємо локальний state
+    // 3. Оновлюємо локальний стан
     this.seasonDetails.set(payload);
 
     // 4. Синхронізація acts (окрема колекція)
@@ -101,9 +101,9 @@ async resetSeasonDetails(): Promise<void> {
 }
 
 
-  // Method to get all acts from the 'acts' collection to populate the editor initially if season_details is empty
+  // Метод для отримання всіх актів з колекції 'acts' для початкового заповнення редактора, якщо season_details порожній
   async getAllActs(): Promise<Act[]> {
-    const q = query(this.actsCollection, orderBy('name')); // Assuming 'name' or some order
+    const q = query(this.actsCollection, orderBy('name')); // Припускаємо 'name' або якийсь порядок
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Act));
   }

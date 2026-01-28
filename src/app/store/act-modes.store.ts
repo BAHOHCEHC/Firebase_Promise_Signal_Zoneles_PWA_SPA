@@ -6,7 +6,7 @@ import { IndexedDbUtil } from '@utils/indexed-db';
   providedIn: 'root',
 })
 export class ActModesStore {
-  /** ACTS */
+  /** АКТИ */
   readonly acts = signal<Act[]>([]);
 
   constructor() {
@@ -37,12 +37,12 @@ export class ActModesStore {
     }
   }
 
-  /** Process acts to cache enemy images */
+  /** Обробка актів для кешування зображень ворогів */
   private async processActImages(acts: Act[]): Promise<Act[]> {
     return Promise.all(acts.map(async (act) => {
       const processedAct = { ...act };
 
-      // Helper to process enemies
+      // Допоміжна функція для обробки ворогів
       const processEnemies = async (enemies: any[]) => {
         return Promise.all(enemies.map(async (enemy) => {
           const e = { ...enemy };
@@ -65,12 +65,12 @@ export class ActModesStore {
         }));
       };
 
-      // 1. Enemy Selection
+      // 1. Вибір ворогів
       if (processedAct.enemy_selection?.length) {
          processedAct.enemy_selection = await processEnemies(processedAct.enemy_selection);
       }
 
-      // 2. Variations -> Waves -> Included Enemy
+      // 2. Варіації -> Хвилі -> Включені вороги
       if (processedAct.variations?.length) {
         processedAct.variations = await Promise.all(processedAct.variations.map(async (v) => {
            const processedVar = { ...v };
@@ -116,10 +116,10 @@ export class ActModesStore {
     this.saveToIndexedDb();
   }
 
-  /** MODES */
+  /** РЕЖИМИ */
   readonly modes = signal<Mode[]>([]);
 
-  /** Process modes to ensure their chambers (acts) have cached images */
+  /** Обробка режимів для забезпечення кешування зображень їх кімнат (актів) */
   private async processModeImages(modes: Mode[]): Promise<Mode[]> {
       return Promise.all(modes.map(async (mode) => {
           const m = { ...mode };

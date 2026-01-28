@@ -6,14 +6,14 @@ import { IndexedDbUtil } from '@utils/indexed-db';
     providedIn: 'root',
 })
 export class UserTasksStore {
-    /** Tasks with user state (finished status) loaded from localStorage */
+    /** Завдання зі станом користувача (статус завершення), завантажені з localStorage */
     readonly userTasks = signal<Region_task[]>([]);
 
     constructor() {
         this.loadFromIndexedDb();
     }
 
-    /** Save tasks to IndexedDB */
+    /** Збереження завдань в IndexedDB */
     private async saveToIndexedDb() {
         try {
             await IndexedDbUtil.set('UserTasks', this.userTasks());
@@ -22,7 +22,7 @@ export class UserTasksStore {
         }
     }
 
-    /** Load tasks from IndexedDB */
+    /** Завантаження завдань з IndexedDB */
     private async loadFromIndexedDb() {
         try {
             const tasks = await IndexedDbUtil.get<Region_task[]>('UserTasks');
@@ -34,32 +34,32 @@ export class UserTasksStore {
         }
     }
 
-    /** Toggle finished state of a task */
+    /** Перемикання стану завершення завдання */
     toggleTaskFinish(taskId: string, regionId: string, name: string) {
         this.userTasks.update(tasks => {
             const existingTaskIndex = tasks.findIndex(t => t.id === taskId);
 
             if (existingTaskIndex !== -1) {
-              // Task exists, toggle finished
+              // Завдання існує, перемикаємо завершення
               const updatedTasks = [...tasks];
               const currentTask = updatedTasks[existingTaskIndex];
               updatedTasks[existingTaskIndex] = {
                 ...currentTask,
                 finished: !currentTask.finished,
-                regionId: regionId, // Ensure regionId is up to date
+                regionId: regionId, // Переконатися, що regionId актуальний
                 name: name || ''
               };
-                // If task is unchecked, should we remove it if it has no other data?
-                // for now keep it to remember state.
+                // Якщо завдання знято, чи варто його видаляти, якщо немає інших даних?
+                // наразі залишаємо для збереження стану.
                 return updatedTasks;
             } else {
-                // Task not in store, add it as finished
-                // We only store the ID and finished state, merging happens in the component
-                // But we need to conform to Region_task interface.
-                // We can create a partial object. The merge logic will handle the rest.
+                // Завдання немає в сховищі, додаємо як завершене
+                // Ми зберігаємо лише ID та стан завершення, об'єднання відбувається в компоненті
+                // Але ми повинні відповідати інтерфейсу Region_task.
+                // Ми можемо створити частковий об'єкт. Логіка об'єднання зробить решту.
                 const newTask: Region_task = {
                     id: taskId,
-                    name: name || '', // Name and other fields come from server data
+                    name: name || '', // Ім'я та інші поля надходять з даних сервера
                     regionId: regionId,
                     finished: true
                 };
@@ -69,7 +69,7 @@ export class UserTasksStore {
         this.saveToIndexedDb();
     }
 
-    /** Toggle finished state of a part within a task */
+    /** Перемикання стану завершення частини в межах завдання */
     togglePartFinish(taskId: string, partName: string, regionId: string, name: string) {
         this.userTasks.update(tasks => {
             const existingTaskIndex = tasks.findIndex(t => t.id === taskId);
@@ -78,25 +78,25 @@ export class UserTasksStore {
                 const updatedTasks = [...tasks];
                 const task = { ...updatedTasks[existingTaskIndex] };
 
-                // Ensure parts array exists
+                // Переконатися, що масив частин існує
                 const parts = task.parts ? [...task.parts] : [];
                 const partIndex = parts.findIndex(p => p.name === partName);
 
                 if (partIndex !== -1) {
-                    // Part exists, toggle
+                    // Частина існує, перемикаємо
                     parts[partIndex] = { ...parts[partIndex], finished: !parts[partIndex].finished };
                 } else {
-                    // Part doesn't exist in store, add it
+                    // Частина не існує в сховищі, додаємо її
                     parts.push({ name: partName, finished: true });
                 }
 
                 task.parts = parts;
                 task.name = name || '';
-                task.regionId = regionId; // Ensure regionId is up to date
+                task.regionId = regionId; // Переконатися, що regionId актуальний
                 updatedTasks[existingTaskIndex] = task;
                 return updatedTasks;
             } else {
-                // Task doesn't exist, create it with the part
+                // Завдання не існує, створюємо його разом з частиною
                 const newTask: Region_task = {
                     id: taskId,
                     name: name || '',
@@ -109,12 +109,12 @@ export class UserTasksStore {
         this.saveToIndexedDb();
     }
 
-    /** Check if a task is finished */
+    /** Перевірка, чи завершено завдання */
     isTaskFinished(taskId: string): boolean {
         return this.userTasks().find(t => t.id === taskId)?.finished ?? false;
     }
 
-    /** Check if a part is finished */
+    /** Перевірка, чи завершена частина */
     isPartFinished(taskId: string, partName: string): boolean {
         const task = this.userTasks().find(t => t.id === taskId);
         return task?.parts?.find(p => p.name === partName)?.finished ?? false;

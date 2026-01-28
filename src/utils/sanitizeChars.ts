@@ -1,7 +1,7 @@
 export function sanitizeChars(data: any): any {
   if (!data) return data;
 
-  // Deep clone to avoid mutating the original state (which would break the UI)
+  // Глибоке клонування, щоб уникнути мутації початкового стану (що може зламати UI)
   const clone = structuredClone(data);
 
   const removeAvatar = (obj: any) => {
@@ -17,13 +17,13 @@ export function sanitizeChars(data: any): any {
     }
 
     Object.keys(obj).forEach(key => {
-      // Avoid infinite recursion if circular (though data shouldn't be)
-      // and recurse into children
+      // Уникнення нескінченної рекурсії, якщо є циклічні посилання (хоча дані не повинні їх мати)
+      // і рекурсивний перехід до дочірніх елементів
       removeAvatar(obj[key]);
     });
   };
 
-  // Specific properties to check as per requirement
+  // Специфічні властивості для перевірки згідно з вимогами
   if (clone.opening_characters) removeAvatar(clone.opening_characters);
   if (clone.special_guests) removeAvatar(clone.special_guests);
   if (clone.acts) removeAvatar(clone.acts);

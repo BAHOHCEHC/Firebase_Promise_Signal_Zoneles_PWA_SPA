@@ -31,7 +31,7 @@ export class ModeModal implements OnInit {
   acts = signal<Act[]>([]);
   selectedActs = signal<Set<string>>(new Set());
 
-  // Computed properties
+  // Обчислені властивості
   normalActs = computed(() =>
     this.acts().filter(a => a.type !== 'Arcana_fight')
       .sort((a, b) => a.name - b.name)

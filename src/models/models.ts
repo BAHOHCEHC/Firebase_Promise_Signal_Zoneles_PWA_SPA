@@ -6,7 +6,6 @@ export interface Mode {
   chambers: Act[]
 }
 
-
 export interface Act {
   id: string;
   name: number;
@@ -180,8 +179,6 @@ export type Wave_type =
 
 
 export type ModalType = 'categories' | 'group' | 'enemy' | 'region' | 'task';
-
-
 
 export interface Region {
   id?: string;

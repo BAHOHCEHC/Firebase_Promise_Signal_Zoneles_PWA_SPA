@@ -49,7 +49,7 @@ export class SeasonsEditorComponent implements OnInit {
   public readonly OPENING_CHARACTER_LIMIT = 6;
   public readonly SPECIAL_GUEST_LIMIT = 4;
 
-  // --- State Signals ---
+  // --- Сигнали стану ---
   public seasonDetails = signal<Season_details>({
     elemental_type_limided: [],
     opening_characters: [],
@@ -61,14 +61,14 @@ export class SeasonsEditorComponent implements OnInit {
   public isEditMode = signal(false);
   public loading = signal(true);
 
-  // --- Modals State ---
+  // --- Стан модальних вікон ---
   public showElementModal = signal(false);
   public showCharactersModal = signal(false);
   public showAddEnemyModal = signal(false);
   public showVariationModal = signal(false);
   public resetInProgress = signal(false);
 
-  // --- Modal Context Signals ---
+  // --- Сигнали контексту модальних вікон ---
   public characterModalMode = signal<'opening' | 'special'>('opening');
   public currentActForEnemy = signal<Act | null>(null);
   public currentWaveForEnemy = signal<Wave | null>(null);
@@ -76,7 +76,7 @@ export class SeasonsEditorComponent implements OnInit {
   public currentVariationIndex = signal<number>(-1);
   public currentActForVariation = signal<Act | null>(null);
 
-  // --- Computed Selections ---
+  // --- Обчислені вибори ---
   public currentInitialEnemies = computed(() => this.currentWaveForEnemy()?.included_enemy ?? []);
 
   public currentInitialOptions = computed(() => {
@@ -113,7 +113,7 @@ export class SeasonsEditorComponent implements OnInit {
 
   public currentActOptions = computed(() => (this.currentActForEnemy()?.options as any) || {});
 
-  // --- Filtered Acts ---
+  // --- Відфільтровані акти ---
   public hasData = computed(() => {
     const d = this.seasonDetails();
     return (
@@ -140,7 +140,7 @@ export class SeasonsEditorComponent implements OnInit {
     () => new Set(this.seasonDetails().elemental_type_limided.map((e) => e.name)),
   );
 
-  // Element helpers
+  // Допоміжні елементи
   public elementTypes: ElementTypeName[] = [
     'pyro',
     'hydro',
@@ -153,39 +153,39 @@ export class SeasonsEditorComponent implements OnInit {
 
   async ngOnInit() {
     this.loading.set(true);
-    // Init services
+    // Ініціалізація сервісів
     await this.enemiesService.initializeData();
 
-    // Load chars
+    // Завантаження персонажів
     const chars = await this.characterService.getAllCharacters();
     this.allCharacters.set(chars);
 
-    // Load Season Details
+    // Завантаження деталей сезону
     const details = await this.seasonService.loadSeasonDetails();
     if (details) {
-      // If loaded, we might need to merge with existing acts if structure changed?
-      // But prompt says "at initialization loads data from collection season_details for additional setting of acts created earlier".
-      // So we should verify acts match known acts?
-      // Assuming season_details acts are the source of truth for this editor.
-      // However, if acts were added in "act-and-modes-editor", we should probably fetch ALL acts and see if season_details has them.
-      // If season_details is partial, we fill it.
-      // For now, let's load what we have.
+      // Якщо завантажено, можливо, нам потрібно об'єднати з існуючими актами, якщо структура змінилася?
+      // Але промпт каже "при ініціалізації завантажує дані з колекції season_details для додаткового налаштування актів, створених раніше".
+      // Тому ми повинні перевірити, чи відповідають акти відомим актам?
+      // Припускаємо, що акти season_details є джерелом істини для цього редактора.
+      // Однак, якщо акти були додані в "act-and-modes-editor", нам, ймовірно, слід отримати ВСІ акти і перевірити, чи є вони в season_details.
+      // Якщо season_details частковий, ми заповнюємо його.
+      // Наразі, завантажимо те, що маємо.
 
-      // We also need to fetch acts from 'acts' collection to ensure we have the structure for all acts (e.g. name, type)
-      // because season_details might only store overrides? Or full objects?
-      // Implementation plan assumed season_details stores full Act objects or linked.
-      // I will fetch all ACTS to be sure we have the structure to display.
+      // Нам також потрібно отримати акти з колекції 'acts', щоб переконатися, що у нас є структура для всіх актів (наприклад, ім'я, тип)
+      // тому що season_details може зберігати лише перевизначення? Або повні об'єкти?
+      // План реалізації передбачав, що season_details зберігає повні об'єкти Act або пов'язані.
+      // Я отримаю всі АКТИ, щоб бути впевненим, що у нас є структура для відображення.
       const allActs = await this.seasonService.getAllActs();
 
-      // Merge logic: use season details acts if present, else use allActs (but initialized empty for season-specifics)
-      // Actually, if we reset, we should probably reload Acts from 'acts' collection with empty season settings.
+      // Логіка злиття: використовувати акти деталей сезону, якщо вони є, інакше використовувати allActs (але ініціалізовані порожніми для специфіки сезону)
+      // Власне, якщо ми скидаємо, ми, ймовірно, повинні перезавантажити акти з колекції 'acts' з порожніми налаштуваннями сезону.
 
       if (details.acts && details.acts.length > 0) {
-        // Ensure we have all acts from DB, maybe some new ones appeared
+        // Переконатися, що у нас є всі акти з БД, можливо, з'явилися нові
         const mergedActs = allActs.map((dbAct) => {
           const savedAct = details.acts.find((a) => a.id === dbAct.id);
           if (savedAct) {
-            return { ...dbAct, ...savedAct }; // Prefer saved details but keep ref
+            return { ...dbAct, ...savedAct }; // Віддаємо перевагу збереженим деталям, але зберігаємо посилання
           }
           return dbAct;
         });
@@ -194,7 +194,7 @@ export class SeasonsEditorComponent implements OnInit {
         this.seasonDetails.update((s) => ({ ...s, acts: allActs }));
       }
     } else {
-      // New season setup
+      // Налаштування нового сезону
       const allActs = await this.seasonService.getAllActs();
       this.seasonDetails.update((s) => ({ ...s, acts: allActs }));
     }
@@ -202,10 +202,10 @@ export class SeasonsEditorComponent implements OnInit {
   }
 
   public getElementIconPath(type: ElementTypeName): string {
-    return `assets/images/ElementType_${type}.png`; // Assuming path
+    return `assets/images/ElementType_${type}.png`; // Припускаємо шлях
   }
 
-  // --- Actions ---
+  // --- Дії ---
 
   public async onReset() {
     if (!confirm('Are you sure you want to reset all data?')) return;
@@ -238,7 +238,7 @@ export class SeasonsEditorComponent implements OnInit {
     this.modeService.updateModesByEnemyOptions(sanitizedData);
   }
 
-  // --- Element Modal ---
+  // --- Модальне вікно елементів ---
   public openElementModal() {
     this.showElementModal.set(true);
   }
@@ -270,13 +270,13 @@ export class SeasonsEditorComponent implements OnInit {
     this.closeCharacterModal();
   }
 
-  // --- Enemy Modal (Boss/Arcana) ---
+  // --- Модальне вікно ворога (Бос/Аркана) ---
   public openAddEnemyModal(act: Act): void {
     this.currentActForEnemy.set(act);
     this.currentVariationForEnemy.set(null);
     this.currentWaveForEnemy.set(null);
 
-    // For Boss/Arcana, we automatically target variation[0].wave[0] for initialization
+    // Для Боса/Аркани, ми автоматично вибираємо variation[0].wave[0] для ініціалізації
     if (act.type !== 'Variation_fight') {
       if (!act.variations?.length) {
         act.variations = [
@@ -337,14 +337,14 @@ export class SeasonsEditorComponent implements OnInit {
       ];
       variation.timer = data.options.timer || '';
       variation.defeat = data.options.defeat || '';
-      act.enemy_selection = [...(act.enemy_selection || []), ...processedEnemies]; // Sync for legacy
+      act.enemy_selection = [...(act.enemy_selection || []), ...processedEnemies]; // Синхронізація для сумісності
       act.enemy_options = { ...data.options };
     }
     this.seasonDetails.set({ ...this.seasonDetails() });
     this.closeAddEnemyModal();
   }
 
-  // --- Variation Modal ---
+  // --- Модальне вікно варіацій ---
   public openVariationModal(act: Act, vIdx: number = -1): void {
     this.currentActForVariation.set(act);
     this.currentVariationIndex.set(vIdx);
@@ -409,12 +409,12 @@ export class SeasonsEditorComponent implements OnInit {
     this.showAddEnemyModal.set(true);
   }
 
-  // --- Helpers ---
+  // --- Допоміжні методи ---
   public getVariationName(act: Act): string {
     const s = act.variation_fight_settings;
     if (!s) return '';
     if (s.wave === 'custom') return s.name || 'Custom';
-    return `Wave ${s.wave}`; // Or just "Wave 1 - 2 - 3"? Prompt says: "Wave" + variation_fight_settings.wave
+    return `Wave ${s.wave}`; // Або просто "Wave 1 - 2 - 3"? Промпт каже: "Wave" + variation_fight_settings.wave
   }
 
   private charactersMap = computed(

@@ -13,13 +13,13 @@ export class SeasonDetailsStore {
   constructor() {
     this.loadFromLocalStorage();
 
-    // Auto-save on change
+    // Автозбереження при зміні
     effect(() => {
       this.saveToLocalStorage();
     });
   }
 
-  // --- Actions ---
+  // --- Дії ---
 
   setDetails(details: Season_details) {
     this.seasonDetails.set(details);
@@ -63,7 +63,7 @@ export class SeasonDetailsStore {
     this.seasonDetails.set(finalDetails);
   }
 
-  // --- Persistence ---
+  // --- Збереження ---
 
   private saveToLocalStorage() {
     const data = this.seasonDetails();

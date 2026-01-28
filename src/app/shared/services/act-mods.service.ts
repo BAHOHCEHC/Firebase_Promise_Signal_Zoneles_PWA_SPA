@@ -503,14 +503,14 @@ export class ActModsService {
 
       for (const mode of modes) {
         let modeUpdated = false;
-        // Check if any chamber in this mode needs updating
+        // Перевіряємо, чи потрібно оновлювати якусь кімнату в цьому режимі
         const updatedChambers = mode.chambers.map(chamber => {
           if (chamber.id && seasonActsMap.has(chamber.id)) {
             const updatedAct = seasonActsMap.get(chamber.id)!;
-            // Check for actual changes to avoid unnecessary writes? 
-            // For now, assuming if it's in seasonDetails, we trust the sync request.
-            // But strict equality check might be complex for objects.
-            // Let's just update if ID matches as requested.
+            // Перевіряємо на наявність фактичних змін, щоб уникнути зайвих записів?
+            // Наразі припускаємо, що якщо це в seasonDetails, ми довіряємо запиту на синхронізацію.
+            // Але сувора перевірка рівності може бути складною для об'єктів.
+            // Просто оновлюємо, якщо ID співпадає, як запитано.
             modeUpdated = true;
             return { ...chamber, ...updatedAct };
           }

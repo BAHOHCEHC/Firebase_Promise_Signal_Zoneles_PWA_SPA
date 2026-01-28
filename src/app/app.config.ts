@@ -11,7 +11,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(),
-    // Router
+    // Маршрутизатор
     provideRouter(routes, withPreloading(PreloadAllModules)),
     // Zoneless change detection (без Zone.js)
     provideZonelessChangeDetection(),
